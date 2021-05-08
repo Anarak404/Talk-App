@@ -37,11 +37,9 @@ public class User {
     @NonNull
     private String password;
 
-    @NonNull
     private String photo;
 
     @CreationTimestamp
-    @NonNull
     private LocalDateTime creationDateTime;
 
 }

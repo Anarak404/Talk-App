@@ -35,6 +35,13 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(jwtTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
+    @Override
+    public void configure(org.springframework.security.config.annotation.web.builders.WebSecurity web) {
+        web.ignoring().antMatchers("/v2/api-docs", "/swagger-resources/**",
+                "/swagger-ui.html", "/configuration/**",
+                "/webjars/**", "/public");
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

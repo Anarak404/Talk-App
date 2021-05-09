@@ -1,9 +1,11 @@
 package pl.talkapp.server.model;
 
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
@@ -19,28 +21,29 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(nullable = false)
     @NonNull
-    private String name;
+    String name;
 
     @Column(nullable = false, unique = true)
     @NonNull
-    private String email;
+    String email;
 
     @Column(nullable = false)
     @NonNull
-    private String password;
+    String password;
 
-    private String photo;
+    String photo;
 
     @CreationTimestamp
-    private LocalDateTime creationDateTime;
+    LocalDateTime creationDateTime;
 
 }
 

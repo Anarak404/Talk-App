@@ -13,6 +13,7 @@ import pl.talkapp.server.model.User;
 import pl.talkapp.server.security.JwtTokenProvider;
 import pl.talkapp.server.service.user.UserService;
 
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -27,8 +28,8 @@ public class UserController {
         this.tokenProvider = tokenProvider;
     }
 
-    @PostMapping("/")
-    public ResponseEntity<AuthenticationResponse> register(RegisterRequest credentials) {
+    @PostMapping("")
+    public ResponseEntity<AuthenticationResponse> register(@Valid RegisterRequest credentials) {
 
         try {
             User user = userService.register(credentials.getName(), credentials.getEmail(),
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(LoginRequest credentials) {
+    public ResponseEntity<AuthenticationResponse> login(@Valid LoginRequest credentials) {
         Optional<User> user = userService.login(credentials.getEmail(), credentials.getPassword());
 
         if (user.isPresent()) {

@@ -13,45 +13,50 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.sql.Timestamp;
 
 @Entity
-@Table(name = "app_user")
+@Table(name = "call")
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
-
+public class Call {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(nullable = false)
-    @NonNull
-    String name;
-
-    @Column(nullable = false, unique = true)
-    @NonNull
-    String email;
-
-    @Column(nullable = false)
-    @NonNull
-    String password;
-
-    String photo;
-
     @CreationTimestamp
-    LocalDateTime creationDateTime;
+    @Column(nullable = false)
+    @NonNull
+    Timestamp startDateTime;
 
-    @OneToMany(mappedBy = "caller")
-    private List<Call> callers;
+    Timestamp endDateTime;
 
-    @OneToMany(mappedBy = "attender")
-    private List<Call> attenders;
+    @Column(nullable = false)
+    @NonNull
+    Double callerX;
 
+    @Column(nullable = false)
+    @NonNull
+    Double callerY;
+
+    @Column(nullable = false)
+    @NonNull
+    Double attenderX;
+
+    @Column(nullable = false)
+    @NonNull
+    Double attenderY;
+
+    @ManyToOne
+    @JoinColumn(name="caller")
+    User caller;
+
+    @ManyToOne
+    @JoinColumn(name = "attender")
+    private User attender;
 }
-

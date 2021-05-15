@@ -1,6 +1,7 @@
 package pl.talkapp.server.model;
 
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -24,6 +25,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class Call {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,20 +38,12 @@ public class Call {
 
     Timestamp endDateTime;
 
-    @Column(nullable = false)
-    @NonNull
     Double callerX;
 
-    @Column(nullable = false)
-    @NonNull
     Double callerY;
 
-    @Column(nullable = false)
-    @NonNull
     Double attenderX;
 
-    @Column(nullable = false)
-    @NonNull
     Double attenderY;
 
     @ManyToOne

@@ -6,7 +6,8 @@ import pl.talkapp.server.model.Call;
 import pl.talkapp.server.model.User;
 import pl.talkapp.server.repository.CallRepository;
 
-import java.util.NoSuchElementException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -18,7 +19,8 @@ public class CallServiceImpl implements CallService {
         this.callRepository = callRepository;
     }
 
-    public Long startWithoutLocation(User caller, User attender) {
+    @Override
+    public Call startWithoutLocation(User caller, User attender) {
         Call call = Call.builder()
                 .caller(caller)
                 .attender(attender)
@@ -26,10 +28,11 @@ public class CallServiceImpl implements CallService {
 
         callRepository.save(call);
 
-        return call.getId();
+        return call;
     }
 
-    public Long startWithLocation(User caller, User attender, Double callerX,
+    @Override
+    public Call startWithLocation(User caller, User attender, Double callerX,
                                   Double callerY) {
         Call call = Call.builder()
                 .caller(caller)
@@ -40,32 +43,37 @@ public class CallServiceImpl implements CallService {
 
         callRepository.save(call);
 
-        return call.getId();
+        return call;
     }
 
-    public Long joinWithoutLocation(User caller, User attender) {
-        Call call = getCall(caller, attender);
-
-        return call.getId();
+    @Override
+    public void joinWithoutLocation(Call call, User user) {
+        // TODO: dodać łączenie z websocketami
+        throw new NotYetImplementedException();
     }
 
-    public Long joinWithLocation(User caller, User attender, Double attenderX,
+    @Override
+    public void joinWithLocation(Call call, User user, Double attenderX,
                                  Double attenderY) {
-        Call call = getCall(caller, attender);
-
         call.setAttenderX(attenderX);
         call.setAttenderY(attenderY);
 
         callRepository.save(call);
 
-        return call.getId();
+        // TODO: dodać łączenie z websocketami
     }
 
-    private Call getCall(User caller, User attender) {
-        return callRepository.findCallByCallerAndAttenderAndEndDateTimeIsNull(caller,
-                attender).orElseThrow(() -> {
-            throw new NoSuchElementException("Call does not exist");
-        });
+    @Override
+    public Optional<Call> getOngoingCall(User user1, User user2) {
+        return callRepository.findOngoingCall(user1, user2);
+    }
+
+    @Override
+    public long endCall(Call call) {
+        call.setEndDateTime(Timestamp.valueOf(LocalDateTime.now()));
+        callRepository.save(call);
+
+        return call.getEndDateTime().getTime() - call.getStartDateTime().getTime();
     }
 
 }

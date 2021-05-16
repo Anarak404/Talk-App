@@ -2,7 +2,7 @@ package pl.talkapp.server.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -11,70 +11,82 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import pl.talkapp.server.dto.request.CallRequest;
 import pl.talkapp.server.dto.response.CallResponse;
+import pl.talkapp.server.dto.response.EndCallResponse;
+import pl.talkapp.server.model.Call;
 import pl.talkapp.server.model.User;
-import pl.talkapp.server.repository.UserRepository;
 import pl.talkapp.server.service.call.CallService;
+import pl.talkapp.server.service.user.UserService;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/call")
 public class CallController {
 
     private final CallService callService;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
-    public CallController(CallService callService, UserRepository userRepository) {
+    public CallController(CallService callService, UserService userService) {
         this.callService = callService;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @PostMapping("/private/{id}/start")
     public ResponseEntity<CallResponse> startCall(@Valid CallRequest coordinates,
                                                   @PathVariable Long id) {
-        Long userId = getUserId();
-        User user = userRepository.findById(userId).orElseThrow();
+        User me = userService.getCurrentUser();
+        User participant = userService.getUser(id).orElseThrow();
+        Call call;
 
-        User attender = userRepository.findById(id).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
-        });
-
-        Long callId;
-
-        if (coordinates.getLocationX() != null && coordinates.getLocationY() != null) {
-            callId = callService.startWithLocation(user, attender, coordinates.getLocationX(),
+        if (coordinates.isNotEmpty()) {
+            call = callService.startWithLocation(me, participant, coordinates.getLocationX(),
                     coordinates.getLocationY());
         } else {
-            callId = callService.startWithoutLocation(user, attender);
+            call = callService.startWithoutLocation(me, participant);
         }
 
-        return new ResponseEntity<>(new CallResponse(callId), HttpStatus.CREATED);
+        return new ResponseEntity<>(new CallResponse(call.getId()), HttpStatus.CREATED);
     }
 
     @PutMapping("/private/{id}/join")
     public ResponseEntity<CallResponse> joinCall(@Valid CallRequest coordinates,
                                                  @PathVariable Long id) {
-        Long userId = getUserId();
-        User user = userRepository.findById(userId).orElseThrow();
+        User me = userService.getCurrentUser();
+        User participant = userService.getUser(id).orElseThrow();
 
-        User caller = userRepository.findById(id).orElseThrow(() -> {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User does not exist");
-        });
+        Optional<Call> ongoingCall = callService.getOngoingCall(me, participant);
 
-        Long callId;
+        if (ongoingCall.isPresent()) {
+            Call call = ongoingCall.get();
 
-        if (coordinates.getLocationX() != null && coordinates.getLocationY() != null) {
-            callId = callService.joinWithLocation(caller, user, coordinates.getLocationX(),
-                    coordinates.getLocationY());
-        } else {
-            callId = callService.joinWithoutLocation(caller, user);
+            if (coordinates.isNotEmpty()) {
+                callService.joinWithLocation(call, me, coordinates.getLocationX(),
+                        coordinates.getLocationY());
+            } else {
+                callService.joinWithoutLocation(call, me);
+            }
+
+            return new ResponseEntity<>(new CallResponse(call.getId()), HttpStatus.OK);
         }
 
-        return new ResponseEntity<>(new CallResponse(callId), HttpStatus.OK);
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to join the call!");
     }
 
-    private Long getUserId() {
-        return (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    @GetMapping("/private/{id}/end")
+    public ResponseEntity<EndCallResponse> endCall(@PathVariable Long id) {
+        User me = userService.getCurrentUser();
+        User participant = userService.getUser(id).orElseThrow();
+
+        Optional<Call> ongoingCall = callService.getOngoingCall(me, participant);
+
+        if (ongoingCall.isPresent()) {
+            Call call = ongoingCall.get();
+            Long duration = callService.endCall(call);
+            return new ResponseEntity<>(new EndCallResponse(duration), HttpStatus.OK);
+        }
+
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid operation!");
     }
 
 }

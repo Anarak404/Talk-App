@@ -1,6 +1,7 @@
 package pl.talkapp.server.model;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,9 +24,9 @@ import java.sql.Timestamp;
 @Table(name = "call")
 @Data
 @NoArgsConstructor
-@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
+@AllArgsConstructor
 public class Call {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,10 +48,10 @@ public class Call {
     Double attenderY;
 
     @ManyToOne
-    @JoinColumn(name="caller")
+    @JoinColumn(name="caller", nullable = false)
     User caller;
 
     @ManyToOne
-    @JoinColumn(name = "attender")
-    private User attender;
+    @JoinColumn(name = "attender", nullable = false)
+    User attender;
 }

@@ -1,4 +1,4 @@
-package pl.talkapp.server.dto.request;
+package pl.talkapp.server.dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,14 +10,8 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-public class CallRequest {
+public class EndCallResponse {
 
-    Double locationX;
-
-    Double locationY;
-
-    public boolean isNotEmpty() {
-        return locationX != null && locationY != null;
-    }
+    Long conversationTime;
 
 }

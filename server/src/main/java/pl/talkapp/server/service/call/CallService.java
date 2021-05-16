@@ -8,8 +8,8 @@ public interface CallService {
 
     Long startWithLocation(User caller, User attender, Double callerX, Double callerY);
 
-    Long joinWithoutLocation(Long id);
+    Long joinWithoutLocation(User caller, User attender);
 
-    Long joinWithLocation(Long id, Double attenderX, Double attenderY);
+    Long joinWithLocation(User caller, User attender, Double attenderX, Double attenderY);
 
 }

@@ -6,6 +6,9 @@ import pl.talkapp.server.model.Call;
 import pl.talkapp.server.model.User;
 import pl.talkapp.server.repository.CallRepository;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @Service
 public class CallServiceImpl implements CallService {
 
@@ -40,12 +43,29 @@ public class CallServiceImpl implements CallService {
         return call.getId();
     }
 
-    public Long joinWithoutLocation(Long id) {
-        throw new NotYetImplementedException();
+    public Long joinWithoutLocation(User caller, User attender) {
+        Call call = getCall(caller, attender);
+
+        return call.getId();
     }
 
-    public Long joinWithLocation(Long id, Double attenderX, Double attenderY) {
-        throw new NotYetImplementedException();
+    public Long joinWithLocation(User caller, User attender, Double attenderX,
+                                 Double attenderY) {
+        Call call = getCall(caller, attender);
+
+        call.setAttenderX(attenderX);
+        call.setAttenderY(attenderY);
+
+        callRepository.save(call);
+
+        return call.getId();
+    }
+
+    private Call getCall(User caller, User attender) {
+        return callRepository.findCallByCallerAndAttenderAndEndDateTimeIsNull(caller,
+                attender).orElseThrow(() -> {
+            throw new NoSuchElementException("Call does not exist");
+        });
     }
 
 }

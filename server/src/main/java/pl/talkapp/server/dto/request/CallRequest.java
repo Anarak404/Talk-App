@@ -10,10 +10,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
 @NoArgsConstructor
-public class StartCallRequest {
+public class CallRequest {
 
-    Double callerX;
+    Double locationX;
 
-    Double callerY;
+    Double locationY;
 
 }

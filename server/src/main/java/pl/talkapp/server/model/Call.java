@@ -34,7 +34,6 @@ public class Call {
 
     @CreationTimestamp
     @Column(nullable = false)
-    @NonNull
     Timestamp startDateTime;
 
     Timestamp endDateTime;

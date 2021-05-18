@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.talkapp.server.dto.request.ChangeNameRequest;
 import pl.talkapp.server.dto.request.ChangePasswordRequest;
 import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.model.User;
@@ -33,5 +34,13 @@ public class UserProfileController {
                 data.getNewPassword());
 
         return new ResponseEntity<>(new ResultResponse(success), HttpStatus.OK);
+    }
+
+    @PutMapping("/nick")
+    public ResponseEntity<ResultResponse> changeName(@Valid ChangeNameRequest name) {
+        User me = userService.getCurrentUser();
+        userProfileService.changeName(me, name.getName());
+
+        return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
     }
 }

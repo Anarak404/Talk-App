@@ -4,4 +4,6 @@ import pl.talkapp.server.model.User;
 
 public interface UserProfileService {
     boolean changePassword(User user, String currentPassword, String newPassword);
+
+    void changeName(User user, String nick);
 }

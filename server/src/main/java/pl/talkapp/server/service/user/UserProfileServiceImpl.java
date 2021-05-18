@@ -26,4 +26,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 
         return false;
     }
+
+    @Override
+    public void changeName(User user, String nick) {
+        user.setName(nick);
+        userRepository.save(user);
+    }
 }

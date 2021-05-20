@@ -55,6 +55,12 @@ public class User {
     @OneToMany(mappedBy = "attender")
     List<Call> attenders;
 
+    @OneToMany(mappedBy = "user")
+    List<UserBlacklist> users;
+
+    @OneToMany(mappedBy = "blacklistUser")
+    List<UserBlacklist> blacklistUsers;
+
     @ManyToOne
     @JoinColumn(name = "status", nullable = false)
     Status status;

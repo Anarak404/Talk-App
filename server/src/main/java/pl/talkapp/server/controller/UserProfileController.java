@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.talkapp.server.dto.request.ChangeNameRequest;
 import pl.talkapp.server.dto.request.ChangePasswordRequest;
 import pl.talkapp.server.dto.response.ResultResponse;
-import pl.talkapp.server.model.User;
+import pl.talkapp.server.entity.User;
 import pl.talkapp.server.service.user.UserProfileService;
 import pl.talkapp.server.service.user.UserService;
 

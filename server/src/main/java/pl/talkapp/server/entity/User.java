@@ -1,4 +1,4 @@
-package pl.talkapp.server.model;
+package pl.talkapp.server.entity;
 
 import lombok.AccessLevel;
 import lombok.Data;

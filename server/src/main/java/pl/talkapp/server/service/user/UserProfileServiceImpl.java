@@ -2,7 +2,7 @@ package pl.talkapp.server.service.user;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import pl.talkapp.server.model.User;
+import pl.talkapp.server.entity.User;
 import pl.talkapp.server.repository.UserRepository;
 
 @Service

@@ -3,7 +3,7 @@ package pl.talkapp.server;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import pl.talkapp.server.model.Status;
+import pl.talkapp.server.entity.Status;
 import pl.talkapp.server.repository.StatusRepository;
 
 import java.util.Arrays;
@@ -26,7 +26,7 @@ public class ServerApplication implements CommandLineRunner {
     @Override
     public void run(String... args) {
         Set<Status> statuses =
-                Arrays.stream(pl.talkapp.server.Status.values())
+                Arrays.stream(pl.talkapp.server.model.Status.values())
                         .map(status -> new Status(status))
                         .collect(Collectors.toSet());
 

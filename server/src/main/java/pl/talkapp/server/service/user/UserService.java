@@ -1,6 +1,6 @@
 package pl.talkapp.server.service.user;
 
-import pl.talkapp.server.model.User;
+import pl.talkapp.server.entity.User;
 
 import java.util.Optional;
 

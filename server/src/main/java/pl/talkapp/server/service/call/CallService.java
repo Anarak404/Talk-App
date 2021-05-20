@@ -1,7 +1,7 @@
 package pl.talkapp.server.service.call;
 
-import pl.talkapp.server.model.Call;
-import pl.talkapp.server.model.User;
+import pl.talkapp.server.entity.Call;
+import pl.talkapp.server.entity.User;
 
 import java.util.Optional;
 

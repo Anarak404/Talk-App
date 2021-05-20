@@ -12,8 +12,8 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.talkapp.server.dto.request.CallRequest;
 import pl.talkapp.server.dto.response.CallResponse;
 import pl.talkapp.server.dto.response.EndCallResponse;
-import pl.talkapp.server.model.Call;
-import pl.talkapp.server.model.User;
+import pl.talkapp.server.entity.Call;
+import pl.talkapp.server.entity.User;
 import pl.talkapp.server.service.call.CallService;
 import pl.talkapp.server.service.user.UserService;
 

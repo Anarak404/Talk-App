@@ -2,8 +2,8 @@ package pl.talkapp.server.service.call;
 
 import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.stereotype.Service;
-import pl.talkapp.server.model.Call;
-import pl.talkapp.server.model.User;
+import pl.talkapp.server.entity.Call;
+import pl.talkapp.server.entity.User;
 import pl.talkapp.server.repository.CallRepository;
 
 import java.sql.Timestamp;

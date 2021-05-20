@@ -3,7 +3,9 @@ package pl.talkapp.server.service.user;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import pl.talkapp.server.model.Status;
 import pl.talkapp.server.model.User;
+import pl.talkapp.server.repository.StatusRepository;
 import pl.talkapp.server.repository.UserRepository;
 
 import java.util.Optional;
@@ -13,15 +15,20 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final StatusRepository statusRepository;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
+                           StatusRepository statusRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.statusRepository = statusRepository;
     }
 
     @Override
     public User register(String name, String email, String password) {
         User user = new User(name, email, passwordEncoder.encode(password));
+        Status status = statusRepository.getOne(1L);
+        user.setStatus(status);
         return userRepository.save(user);
     }
 

@@ -9,7 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.talkapp.server.dto.request.LoginRequest;
 import pl.talkapp.server.dto.request.RegisterRequest;
 import pl.talkapp.server.dto.response.AuthenticationResponse;
-import pl.talkapp.server.model.User;
+import pl.talkapp.server.entity.User;
 import pl.talkapp.server.security.JwtTokenProvider;
 import pl.talkapp.server.service.user.UserService;
 

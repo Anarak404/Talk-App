@@ -1,4 +1,4 @@
-package pl.talkapp.server.model;
+package pl.talkapp.server.entity;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
@@ -48,10 +50,14 @@ public class User {
     LocalDateTime creationDateTime;
 
     @OneToMany(mappedBy = "caller")
-    private List<Call> callers;
+    List<Call> callers;
 
     @OneToMany(mappedBy = "attender")
-    private List<Call> attenders;
+    List<Call> attenders;
+
+    @ManyToOne
+    @JoinColumn(name = "status", nullable = false)
+    Status status;
 
 }
 

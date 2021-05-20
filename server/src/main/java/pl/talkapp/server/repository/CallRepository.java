@@ -3,8 +3,8 @@ package pl.talkapp.server.repository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import pl.talkapp.server.model.Call;
-import pl.talkapp.server.model.User;
+import pl.talkapp.server.entity.Call;
+import pl.talkapp.server.entity.User;
 
 import java.util.Optional;
 

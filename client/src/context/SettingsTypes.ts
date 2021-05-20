@@ -25,4 +25,4 @@ export enum AppTheme {
 
 export type StringSet = Record<StringId, string>;
 
-export type StringId = '';
+export type StringId = 'emailLabel';

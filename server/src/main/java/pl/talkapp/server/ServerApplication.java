@@ -27,7 +27,7 @@ public class ServerApplication implements CommandLineRunner {
     public void run(String... args) {
         Set<Status> statuses =
                 Arrays.stream(pl.talkapp.server.model.Status.values())
-                        .map(status -> new Status(status))
+                        .map(Status::new)
                         .collect(Collectors.toSet());
 
         try {

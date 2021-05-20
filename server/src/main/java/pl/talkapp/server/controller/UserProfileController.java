@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.talkapp.server.dto.request.ChangeNameRequest;
 import pl.talkapp.server.dto.request.ChangePasswordRequest;
+import pl.talkapp.server.dto.request.StatusRequest;
 import pl.talkapp.server.dto.response.ResultResponse;
+import pl.talkapp.server.entity.Status;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.service.user.UserProfileService;
 import pl.talkapp.server.service.user.UserService;
@@ -40,6 +42,25 @@ public class UserProfileController {
     public ResponseEntity<ResultResponse> changeName(@Valid ChangeNameRequest name) {
         User me = userService.getCurrentUser();
         userProfileService.changeName(me, name.getName());
+
+        return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
+    }
+
+    @PutMapping("/status")
+    public ResponseEntity<ResultResponse> changeStatus(@Valid StatusRequest status) {
+        User me = userService.getCurrentUser();
+        Status statusName = userProfileService.getOnline();
+
+        switch (status.getStatus()) {
+            case OFFLINE:
+                statusName = userProfileService.getOffline();
+                break;
+            case BUSY:
+                statusName = userProfileService.getBusy();
+                break;
+        }
+
+        userProfileService.setStatus(me, statusName);
 
         return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
     }

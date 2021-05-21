@@ -10,6 +10,7 @@ const strings: StringSet = {
   retypePasswordLabel: 'Powtórz hasło',
   retypePasswordPlaceholder: 'Hasło',
   register: 'Zarejestruj się',
+  login: 'Zaloguj się',
 };
 
 export default strings;

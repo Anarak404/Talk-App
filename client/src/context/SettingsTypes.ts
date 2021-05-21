@@ -34,4 +34,5 @@ export type StringId =
   | 'passwordPlaceholder'
   | 'retypePasswordLabel'
   | 'retypePasswordPlaceholder'
-  | 'register';
+  | 'register'
+  | 'login';

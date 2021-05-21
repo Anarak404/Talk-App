@@ -9,7 +9,8 @@ const strings: StringSet = {
   passwordPlaceholder: 'Password',
   retypePasswordLabel: 'Retype password',
   retypePasswordPlaceholder: 'Password',
-  register: 'Register',
+  register: 'Sign up',
+  login: 'Sign in',
 };
 
 export default strings;

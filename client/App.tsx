@@ -1,23 +1,23 @@
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Register } from './src/components/authentication';
+import { Login, Register } from './src/components/authentication';
 import { SettingsContextProvider } from './src/context/SettingsContext';
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
     <SettingsContextProvider>
-      <View style={styles.view}>
-        <Register />
-      </View>
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+        </Stack.Navigator>
+      </NavigationContainer>
     </SettingsContextProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  view: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-});

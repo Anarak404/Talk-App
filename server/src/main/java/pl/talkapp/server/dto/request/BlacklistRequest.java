@@ -4,18 +4,15 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import javax.validation.constraints.NotBlank;
+import pl.talkapp.server.model.BlacklistAction;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class LoginRequest {
+public class BlacklistRequest {
 
-    @NotBlank
-    String email;
+    Long id;
 
-    @NotBlank
-    String password;
+    BlacklistAction action;
 
 }

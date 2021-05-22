@@ -4,18 +4,13 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import javax.validation.constraints.NotBlank;
+import pl.talkapp.server.model.Status;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class LoginRequest {
+public class StatusRequest {
 
-    @NotBlank
-    String email;
-
-    @NotBlank
-    String password;
+    Status status;
 
 }

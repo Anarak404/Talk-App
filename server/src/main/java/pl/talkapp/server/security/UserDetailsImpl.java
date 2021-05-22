@@ -2,7 +2,7 @@ package pl.talkapp.server.security;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import pl.talkapp.server.model.User;
+import pl.talkapp.server.entity.User;
 
 import java.util.Collection;
 import java.util.Collections;

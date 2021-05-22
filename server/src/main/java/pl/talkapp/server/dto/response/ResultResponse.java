@@ -3,8 +3,8 @@ package pl.talkapp.server.dto.response;
 import lombok.Value;
 
 @Value
-public class AuthenticationResponse {
+public class ResultResponse {
 
-    String token;
+    boolean isSuccess;
 
 }

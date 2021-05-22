@@ -4,7 +4,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import pl.talkapp.server.model.User;
+import pl.talkapp.server.entity.User;
 import pl.talkapp.server.repository.UserRepository;
 import pl.talkapp.server.security.UserDetailsImpl;
 

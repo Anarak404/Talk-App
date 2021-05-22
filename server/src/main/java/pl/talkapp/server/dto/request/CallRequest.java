@@ -5,17 +5,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import javax.validation.constraints.NotBlank;
-
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class LoginRequest {
+public class CallRequest {
 
-    @NotBlank
-    String email;
+    Double locationX;
 
-    @NotBlank
-    String password;
+    Double locationY;
+
+    public boolean isNotEmpty() {
+        return locationX != null && locationY != null;
+    }
 
 }

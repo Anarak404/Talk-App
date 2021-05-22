@@ -61,6 +61,12 @@ public class User {
     @OneToMany(mappedBy = "blacklistUser")
     List<UserBlacklist> blacklistUsers;
 
+    @OneToMany(mappedBy = "sender")
+    List<Message> messages;
+
+    @OneToMany(mappedBy = "receiver")
+    List<PrivateMessage> receivedMessages;
+
     @ManyToOne
     @JoinColumn(name = "status", nullable = false)
     Status status;

@@ -73,6 +73,9 @@ public class User {
     @OneToMany(mappedBy = "friend")
     List<UserFriend> userFriends;
 
+    @OneToMany(mappedBy = "owner")
+    List<Server> servers;
+
     @ManyToOne
     @JoinColumn(name = "status", nullable = false)
     Status status;

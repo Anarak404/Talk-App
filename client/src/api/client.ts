@@ -1,6 +1,6 @@
 import { ErrorResponse, IError, mapToErrorResponse } from './error';
 
-const apiUrl = 'http://localhost:8080/api';
+const apiUrl = 'http://192.168.0.73:8080';
 
 async function handleResponse<T>(response: Response): Promise<T> {
   const data: T | IError = await response.json();

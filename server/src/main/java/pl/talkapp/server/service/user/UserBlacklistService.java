@@ -11,4 +11,8 @@ public interface UserBlacklistService {
     void setMuted(User user, User blacklistUser);
 
     void setBlocked(User user, User blacklistUser);
+
+    void setUnmuted(User user, User blacklistUser);
+
+    void setUnblocked(User user, User blacklistUser);
 }

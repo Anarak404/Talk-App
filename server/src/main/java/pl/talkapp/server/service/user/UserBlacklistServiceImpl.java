@@ -42,6 +42,36 @@ public class UserBlacklistServiceImpl implements UserBlacklistService {
         blacklistRepository.save(u);
     }
 
+    @Override
+    public void setUnmuted(User user, User blacklistUser) {
+        Optional<UserBlacklist> b = blacklistRepository.findByUserAndBlacklistUser(user,
+                blacklistUser);
+
+        b.ifPresent(u -> {
+            if (!u.isBlocked()) {
+                blacklistRepository.delete(u);
+            } else {
+                u.setMuted(false);
+                blacklistRepository.save(u);
+            }
+        });
+    }
+
+    @Override
+    public void setUnblocked(User user, User blacklistUser) {
+        Optional<UserBlacklist> b = blacklistRepository.findByUserAndBlacklistUser(user,
+                blacklistUser);
+
+        b.ifPresent(u -> {
+            if (!u.isMuted()) {
+                blacklistRepository.delete(u);
+            } else {
+                u.setBlocked(false);
+                blacklistRepository.save(u);
+            }
+        });
+    }
+
     private UserBlacklist getUserData(User user, User blacklistUser) {
         Optional<UserBlacklist> blacklistData =
                 blacklistRepository.findByUserAndBlacklistUser(user, blacklistUser);

@@ -2,6 +2,7 @@ package pl.talkapp.server.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,6 +42,15 @@ public class UserFriendController {
         User me = userService.getCurrentUser();
         User f = userService.getUser(friend.getId()).orElseThrow();
         friendsService.addFriend(me, f);
+
+        return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
+    }
+
+    @DeleteMapping("")
+    public ResponseEntity<ResultResponse> deleteFriend(@RequestBody FriendRequest friend) {
+        User me = userService.getCurrentUser();
+        User f = userService.getUser(friend.getId()).orElseThrow();
+        friendsService.deleteFriend(me, f);
 
         return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
     }

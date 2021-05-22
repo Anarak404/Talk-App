@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,7 +34,7 @@ public class CallController {
     }
 
     @PostMapping("/private/{id}/start")
-    public ResponseEntity<CallResponse> startCall(@Valid CallRequest coordinates,
+    public ResponseEntity<CallResponse> startCall(@Valid @RequestBody CallRequest coordinates,
                                                   @PathVariable Long id) {
         User me = userService.getCurrentUser();
         User participant = userService.getUser(id).orElseThrow();
@@ -50,7 +51,7 @@ public class CallController {
     }
 
     @PutMapping("/private/{id}/join")
-    public ResponseEntity<CallResponse> joinCall(@Valid CallRequest coordinates,
+    public ResponseEntity<CallResponse> joinCall(@Valid @RequestBody CallRequest coordinates,
                                                  @PathVariable Long id) {
         User me = userService.getCurrentUser();
         User participant = userService.getUser(id).orElseThrow();

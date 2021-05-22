@@ -3,6 +3,7 @@ package pl.talkapp.server.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("")
-    public ResponseEntity<AuthenticationResponse> register(@Valid RegisterRequest credentials) {
+    public ResponseEntity<AuthenticationResponse> register(@Valid @RequestBody RegisterRequest credentials) {
 
         try {
             User user = userService.register(credentials.getName(), credentials.getEmail(),
@@ -46,7 +47,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@Valid LoginRequest credentials) {
+    public ResponseEntity<AuthenticationResponse> login(@Valid @RequestBody LoginRequest credentials) {
         Optional<User> user = userService.login(credentials.getEmail(), credentials.getPassword());
 
         if (user.isPresent()) {

@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import { useNavigation } from '@react-navigation/core';
+import React, { useCallback, useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button, Icon, Input } from 'react-native-elements';
 import { settingsContext } from '../../../context/SettingsContext';
@@ -6,6 +7,11 @@ import { ScreenTemplate } from '../../ScreenTemplate';
 
 export function Register() {
   const { getString } = useContext(settingsContext);
+  const { navigate } = useNavigation();
+
+  const signinView = useCallback(() => {
+    navigate('Login');
+  }, [navigate]);
 
   return (
     <ScreenTemplate>
@@ -37,6 +43,12 @@ export function Register() {
           secureTextEntry
         />
         <Button title={getString('register')} />
+        <Button
+          title={getString('login')}
+          type="outline"
+          containerStyle={styles.button}
+          onPress={signinView}
+        />
       </View>
     </ScreenTemplate>
   );
@@ -48,5 +60,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 8,
+  },
+  button: {
+    marginTop: 10,
   },
 });

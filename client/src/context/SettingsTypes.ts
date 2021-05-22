@@ -35,4 +35,10 @@ export type StringId =
   | 'retypePasswordLabel'
   | 'retypePasswordPlaceholder'
   | 'register'
-  | 'login';
+  | 'login'
+  | 'invalidEmailLabel'
+  | 'invalidNickLabel'
+  | 'invalidPasswordLabel'
+  | 'passwordsNotEqualLabel'
+  | 'emailConflict'
+  | 'serverError';

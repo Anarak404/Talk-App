@@ -16,8 +16,8 @@ export class ErrorResponse extends Error {
   constructor(error: IError) {
     super(error.message);
 
-    if (typeof error.message === 'string') {
-      (error.message as unknown as Date) = new Date(error.message);
+    if (typeof error.timestamp === 'string') {
+      error.timestamp = new Date(error.timestamp);
     }
 
     this._error = error;

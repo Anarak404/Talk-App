@@ -67,6 +67,12 @@ public class User {
     @OneToMany(mappedBy = "receiver")
     List<PrivateMessage> receivedMessages;
 
+    @OneToMany(mappedBy = "user")
+    List<UserFriend> friendList;
+
+    @OneToMany(mappedBy = "friend")
+    List<UserFriend> userFriends;
+
     @ManyToOne
     @JoinColumn(name = "status", nullable = false)
     Status status;

@@ -3,6 +3,7 @@ package pl.talkapp.server.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.talkapp.server.dto.request.ChangeNameRequest;
@@ -29,7 +30,7 @@ public class UserProfileController {
     }
 
     @PutMapping("/password")
-    public ResponseEntity<ResultResponse> changePassword(@Valid ChangePasswordRequest data) {
+    public ResponseEntity<ResultResponse> changePassword(@Valid @RequestBody ChangePasswordRequest data) {
         User me = userService.getCurrentUser();
 
         boolean success = userProfileService.changePassword(me, data.getCurrentPassword(),
@@ -47,7 +48,7 @@ public class UserProfileController {
     }
 
     @PutMapping("/status")
-    public ResponseEntity<ResultResponse> changeStatus(@Valid StatusRequest status) {
+    public ResponseEntity<ResultResponse> changeStatus(@Valid @RequestBody StatusRequest status) {
         User me = userService.getCurrentUser();
         Status statusName = userProfileService.getOnline();
 

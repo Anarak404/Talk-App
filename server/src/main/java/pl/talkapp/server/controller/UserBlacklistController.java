@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -40,7 +41,7 @@ public class UserBlacklistController {
     }
 
     @PutMapping("")
-    public ResponseEntity<ResultResponse> addToBlacklist(BlacklistRequest data) {
+    public ResponseEntity<ResultResponse> addToBlacklist(@RequestBody BlacklistRequest data) {
         User me = userService.getCurrentUser();
         User participant = userService.getUser(data.getId()).orElseThrow();
 
@@ -58,7 +59,7 @@ public class UserBlacklistController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<ResultResponse> deleteFromBlacklist(BlacklistRequest data) {
+    public ResponseEntity<ResultResponse> deleteFromBlacklist(@RequestBody BlacklistRequest data) {
         User me = userService.getCurrentUser();
         User participant = userService.getUser(data.getId()).orElseThrow();
 

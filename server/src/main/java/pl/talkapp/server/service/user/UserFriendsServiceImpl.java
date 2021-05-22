@@ -23,4 +23,14 @@ public class UserFriendsServiceImpl implements UserFriendsService {
                 .map(UserFriend::getFriend)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public void addFriend(User user, User friend) {
+        UserFriend f = UserFriend.builder()
+                .user(user)
+                .friend(friend)
+                .build();
+
+        friendRepository.save(f);
+    }
 }

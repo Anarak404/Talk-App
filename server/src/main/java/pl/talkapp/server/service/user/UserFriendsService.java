@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface UserFriendsService {
     List<User> getFriends(User user);
+
+    void addFriend(User user, User friend);
 }

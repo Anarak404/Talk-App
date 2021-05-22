@@ -3,9 +3,13 @@ package pl.talkapp.server.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.talkapp.server.dto.request.FriendRequest;
 import pl.talkapp.server.dto.response.FriendListResponse;
+import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.service.user.UserFriendsService;
 import pl.talkapp.server.service.user.UserService;
@@ -30,5 +34,14 @@ public class UserFriendController {
         List<User> friends = friendsService.getFriends(me);
 
         return new ResponseEntity<>(new FriendListResponse(friends), HttpStatus.OK);
+    }
+
+    @PutMapping("")
+    public ResponseEntity<ResultResponse> addFriend(@RequestBody FriendRequest friend) {
+        User me = userService.getCurrentUser();
+        User f = userService.getUser(friend.getId()).orElseThrow();
+        friendsService.addFriend(me, f);
+
+        return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
     }
 }

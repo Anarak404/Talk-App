@@ -7,4 +7,8 @@ import java.util.List;
 
 public interface UserBlacklistService {
     List<Blacklist> getBlacklistUsers(User user);
+
+    void setMuted(User user, User blacklistUser);
+
+    void setBlocked(User user, User blacklistUser);
 }

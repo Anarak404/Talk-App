@@ -8,10 +8,13 @@ import pl.talkapp.server.entity.UserBlacklist;
 import pl.talkapp.server.entity.UserBlacklistKey;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserBlacklistRepository extends CrudRepository<UserBlacklist, UserBlacklistKey> {
 
     @Query("SELECT b FROM UserBlacklist b WHERE b.user = ?1")
     List<UserBlacklist> getBlacklistForUser(User user);
+
+    Optional<UserBlacklist> findByUserAndBlacklistUser(User user, User blacklistUser);
 }

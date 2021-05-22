@@ -41,4 +41,5 @@ export type StringId =
   | 'invalidPasswordLabel'
   | 'passwordsNotEqualLabel'
   | 'emailConflict'
-  | 'serverError';
+  | 'serverError'
+  | 'authenticationFailed';

@@ -18,6 +18,7 @@ const strings: StringSet = {
   passwordsNotEqualLabel: 'Hasła muszą być takie same',
   emailConflict: 'Użytkownik z podanym emailem już istnieje',
   serverError: 'Upss... Coś poszło nie tak. Spróbuj ponownie później!',
+  authenticationFailed: 'Nieprawidłowy login lub hasło',
 };
 
 export default strings;

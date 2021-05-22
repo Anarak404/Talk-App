@@ -12,3 +12,7 @@ export const isStrongPassword = (password: string) => {
 export const isValidNick = (nick: string) => {
   return nick.trim().length >= 3;
 };
+
+export const isBlank = (text: string) => {
+  return text.trim().length === 0;
+};

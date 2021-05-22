@@ -18,6 +18,7 @@ const strings: StringSet = {
   passwordsNotEqualLabel: 'Passwords are not equal',
   emailConflict: 'User with the given email already exists',
   serverError: 'Upss... Something went wrong. Try again later!',
+  authenticationFailed: 'Invalid login or password',
 };
 
 export default strings;

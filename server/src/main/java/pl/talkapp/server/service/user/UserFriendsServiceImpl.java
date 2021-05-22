@@ -6,6 +6,7 @@ import pl.talkapp.server.entity.UserFriend;
 import pl.talkapp.server.repository.UserFriendRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,5 +33,11 @@ public class UserFriendsServiceImpl implements UserFriendsService {
                 .build();
 
         friendRepository.save(f);
+    }
+
+    @Override
+    public void deleteFriend(User user, User friend) {
+        Optional<UserFriend> f = friendRepository.findByUserAndFriend(user, friend);
+        f.ifPresent(friendRepository::delete);
     }
 }

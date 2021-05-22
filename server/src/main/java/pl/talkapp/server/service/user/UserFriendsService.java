@@ -8,4 +8,6 @@ public interface UserFriendsService {
     List<User> getFriends(User user);
 
     void addFriend(User user, User friend);
+
+    void deleteFriend(User user, User friend);
 }

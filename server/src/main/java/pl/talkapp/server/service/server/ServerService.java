@@ -7,4 +7,6 @@ public interface ServerService {
     Server createServer(User user, String name);
 
     boolean deleteServer(User user, Long id);
+
+    boolean changeName(User user, Long id, String name);
 }

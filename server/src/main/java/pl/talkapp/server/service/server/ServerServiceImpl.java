@@ -28,11 +28,7 @@ public class ServerServiceImpl implements ServerService {
 
     @Override
     public boolean deleteServer(User user, Long id) {
-        Optional<Server> server = serverRepository.findById(id);
-
-        Server s = server.orElseThrow(() -> {
-            throw new NoSuchElementException("Server does not exist!");
-        });
+        Server s = getServer(id);
 
         if (s.getOwner() == user) {
             serverRepository.delete(s);
@@ -40,5 +36,26 @@ public class ServerServiceImpl implements ServerService {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean changeName(User user, Long id, String name) {
+        Server s = getServer(id);
+
+        if (s.getOwner() == user) {
+            s.setName(name);
+            serverRepository.save(s);
+            return true;
+        }
+
+        return false;
+    }
+
+    private Server getServer(Long id) {
+        Optional<Server> server = serverRepository.findById(id);
+
+        return server.orElseThrow(() -> {
+            throw new NoSuchElementException("Server does not exist!");
+        });
     }
 }

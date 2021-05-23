@@ -1,19 +1,19 @@
 import React from 'react';
 import { createContext, useState } from 'react';
 import { HttpClient } from '../api/client';
-import { IUserContext, IUserContextProps } from './UserTypes';
+import { ISessionContext, ISessionContextProps } from './SessionTypes';
 
-const defaultValue: IUserContext = {
+const defaultValue: ISessionContext = {
   loggedIn: false,
   setToken: (token: string) => void 0,
   httpClient: new HttpClient(),
 };
 
-export const userContext = createContext<IUserContext>(defaultValue);
+export const sessionContext = createContext<ISessionContext>(defaultValue);
 
-const { Provider } = userContext;
+const { Provider } = sessionContext;
 
-export function UserContextProvider({ children }: IUserContextProps) {
+export function SessionContextProvider({ children }: ISessionContextProps) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [httpClient] = useState(new HttpClient());
 

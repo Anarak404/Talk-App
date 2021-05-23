@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { Dimensions } from 'react-native';
-import { userContext } from '../context/UserContext';
+import { sessionContext } from '../context/SessionContext';
 import { Login, Register } from './authentication';
 import { Hello } from './Hello';
 
@@ -13,7 +13,7 @@ const Drawer = createDrawerNavigator();
 const windowWidth = Dimensions.get('window').width;
 
 export function Navigation() {
-  const { loggedIn } = useContext(userContext);
+  const { loggedIn } = useContext(sessionContext);
 
   return (
     <NavigationContainer>

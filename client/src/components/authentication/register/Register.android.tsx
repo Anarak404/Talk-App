@@ -5,7 +5,7 @@ import { Alert, Keyboard, StyleSheet, ToastAndroid, View } from 'react-native';
 import { Button, Icon, Input } from 'react-native-elements';
 import { ErrorResponse, register } from '../../../api';
 import { settingsContext } from '../../../context/SettingsContext';
-import { userContext } from '../../../context/UserContext';
+import { sessionContext } from '../../../context/SessionContext';
 import {
   isEmail,
   isStrongPassword,
@@ -15,7 +15,7 @@ import { ScreenTemplate } from '../../ScreenTemplate';
 
 export function Register() {
   const { getString } = useContext(settingsContext);
-  const { httpClient, setToken } = useContext(userContext);
+  const { httpClient, setToken } = useContext(sessionContext);
   const { navigate } = useNavigation();
 
   const [email, setEmail] = useState('');

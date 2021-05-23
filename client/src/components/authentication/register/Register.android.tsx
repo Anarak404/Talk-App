@@ -15,7 +15,7 @@ import { ScreenTemplate } from '../../ScreenTemplate';
 
 export function Register() {
   const { getString } = useContext(settingsContext);
-  const { httpClient } = useContext(userContext);
+  const { httpClient, setToken } = useContext(userContext);
   const { navigate } = useNavigation();
 
   const [email, setEmail] = useState('');
@@ -53,9 +53,7 @@ export function Register() {
     setLoading(true);
 
     register(httpClient, { email, password, name })
-      .then((e) => {
-        Alert.alert('Success', `token: ${e.token}`);
-      })
+      .then((e) => setToken(e.token))
       .catch((e: ErrorResponse) => {
         const message =
           e.error.status === StatusCodes.CONFLICT

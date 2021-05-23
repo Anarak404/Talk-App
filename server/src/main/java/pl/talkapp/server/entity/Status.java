@@ -14,9 +14,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.List;
 
 @Entity
 @Table(name = "status")
@@ -33,8 +31,5 @@ public class Status {
     @Column(nullable = false, unique = true)
     @NonNull
     pl.talkapp.server.model.Status name;
-
-    @OneToMany(mappedBy = "status")
-    List<User> users;
 
 }

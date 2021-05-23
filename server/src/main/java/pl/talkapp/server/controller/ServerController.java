@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import pl.talkapp.server.dto.request.ChangeNameRequest;
 import pl.talkapp.server.dto.request.CreateServerRequest;
 import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.dto.response.ServerResponse;
@@ -54,5 +55,22 @@ public class ServerController {
 
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unable to delete server - you " +
                 "are not an owner!");
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResultResponse> changeName(@Valid @RequestBody ChangeNameRequest name,
+                                                     @PathVariable Long id) {
+        User me = userService.getCurrentUser();
+        try {
+            boolean result = serverService.changeName(me, id, name.getName());
+            if (result) {
+                return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+
+        throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unable to change server name - " +
+                "you are not an owner!");
     }
 }

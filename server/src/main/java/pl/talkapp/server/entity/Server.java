@@ -39,6 +39,6 @@ public class Server {
     Timestamp creationDateTime;
 
     @ManyToOne
-    @JoinColumn(name = "owner")
+    @JoinColumn(name = "owner", nullable = false)
     User owner;
 }

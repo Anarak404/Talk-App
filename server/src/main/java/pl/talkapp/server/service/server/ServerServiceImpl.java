@@ -5,6 +5,9 @@ import pl.talkapp.server.entity.Server;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.repository.ServerRepository;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
 @Service
 public class ServerServiceImpl implements ServerService {
 
@@ -21,5 +24,21 @@ public class ServerServiceImpl implements ServerService {
         serverRepository.save(server);
 
         return server;
+    }
+
+    @Override
+    public boolean deleteServer(User user, Long id) {
+        Optional<Server> server = serverRepository.findById(id);
+
+        Server s = server.orElseThrow(() -> {
+            throw new NoSuchElementException("Server does not exist!");
+        });
+
+        if (s.getOwner() == user) {
+            serverRepository.delete(s);
+            return true;
+        }
+
+        return false;
     }
 }

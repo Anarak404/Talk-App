@@ -7,7 +7,6 @@ import pl.talkapp.server.repository.UserFriendRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class UserFriendsServiceImpl implements UserFriendsService {
@@ -19,10 +18,8 @@ public class UserFriendsServiceImpl implements UserFriendsService {
     }
 
     @Override
-    public List<User> getFriends(User user) {
-        return friendRepository.getFriendsForUser(user).stream()
-                .map(UserFriend::getFriend)
-                .collect(Collectors.toList());
+    public List<UserFriend> getFriends(User user) {
+        return friendRepository.getFriendsForUser(user);
     }
 
     @Override

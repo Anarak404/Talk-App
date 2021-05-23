@@ -12,6 +12,7 @@ import pl.talkapp.server.dto.request.FriendRequest;
 import pl.talkapp.server.dto.response.FriendListResponse;
 import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.entity.User;
+import pl.talkapp.server.entity.UserFriend;
 import pl.talkapp.server.service.user.UserFriendsService;
 import pl.talkapp.server.service.user.UserService;
 
@@ -32,7 +33,7 @@ public class UserFriendController {
     @GetMapping("")
     public ResponseEntity<FriendListResponse> getFriends() {
         User me = userService.getCurrentUser();
-        List<User> friends = friendsService.getFriends(me);
+        List<UserFriend> friends = friendsService.getFriends(me);
 
         return new ResponseEntity<>(new FriendListResponse(friends), HttpStatus.OK);
     }

@@ -18,6 +18,7 @@ import pl.talkapp.server.service.user.UserBlacklistService;
 import pl.talkapp.server.service.user.UserService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user/blacklist")
@@ -35,7 +36,9 @@ public class UserBlacklistController {
     @GetMapping("")
     public ResponseEntity<BlacklistResponse> getBlacklist() {
         User me = userService.getCurrentUser();
-        List<Blacklist> blacklist = blacklistService.getBlacklistUsers(me);
+        List<Blacklist> blacklist = blacklistService.getBlacklistUsers(me).stream()
+                .map(Blacklist::new)
+                .collect(Collectors.toList());
 
         return new ResponseEntity<>(new BlacklistResponse(blacklist), HttpStatus.OK);
     }

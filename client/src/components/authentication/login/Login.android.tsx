@@ -5,11 +5,13 @@ import { Alert, Keyboard, StyleSheet, ToastAndroid, View } from 'react-native';
 import { Button, Icon, Input } from 'react-native-elements';
 import { ErrorResponse, login } from '../../../api';
 import { settingsContext } from '../../../context/SettingsContext';
+import { userContext } from '../../../context/UserContext';
 import { isBlank } from '../../../utils/validators';
 import { ScreenTemplate } from '../../ScreenTemplate';
 
 export function Login() {
   const { getString } = useContext(settingsContext);
+  const { httpClient } = useContext(userContext);
   const { navigate } = useNavigation();
 
   const [email, setEmail] = useState('');
@@ -29,7 +31,7 @@ export function Login() {
 
     setLoading(true);
 
-    login({ email, password })
+    login(httpClient, { email, password })
       .then((e) => {
         Alert.alert('Success', `token: ${e.token}`);
       })

@@ -1,8 +1,8 @@
-import { post } from '../client';
+import { HttpClient } from '../client';
 import { IAuthenticationResponse } from './types';
 
-export const register = async (e: IRegisterRequest) => {
-  return await post<IAuthenticationResponse>('/user', e);
+export const register = async (httpClient: HttpClient, e: IRegisterRequest) => {
+  return await httpClient.post<IAuthenticationResponse>('/user', e, false);
 };
 
 export interface IRegisterRequest {

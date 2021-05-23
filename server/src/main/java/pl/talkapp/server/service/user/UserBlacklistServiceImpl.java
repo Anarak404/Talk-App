@@ -22,7 +22,7 @@ public class UserBlacklistServiceImpl implements UserBlacklistService {
     @Override
     public List<Blacklist> getBlacklistUsers(User user) {
         return blacklistRepository.getBlacklistForUser(user).stream()
-                .map(u -> new Blacklist(u.getBlacklistUser(), u.isMuted(), u.isBlocked()))
+                .map(Blacklist::new)
                 .collect(Collectors.toList());
     }
 

@@ -51,6 +51,8 @@ public class UserBlacklistController {
                 break;
             case BLOCK:
                 blacklistService.setBlocked(me, participant);
+                break;
+            default:
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Supported actions: " +
                         "MUTE, BLOCK!");
         }

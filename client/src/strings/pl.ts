@@ -19,6 +19,7 @@ const strings: StringSet = {
   emailConflict: 'Użytkownik z podanym emailem już istnieje',
   serverError: 'Upss... Coś poszło nie tak. Spróbuj ponownie później!',
   authenticationFailed: 'Nieprawidłowy login lub hasło',
+  messagePlaceholder: 'Napisz wiadomość',
 };
 
 export default strings;

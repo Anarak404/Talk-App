@@ -42,4 +42,5 @@ export type StringId =
   | 'passwordsNotEqualLabel'
   | 'emailConflict'
   | 'serverError'
-  | 'authenticationFailed';
+  | 'authenticationFailed'
+  | 'messagePlaceholder';

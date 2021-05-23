@@ -3,6 +3,7 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 import React, { useCallback } from 'react';
 import { UserContextProvider } from '../../context/UserContext';
 import { DrawerParamList } from '../Navigation';
+import { SendMessageBar } from './SendMessageBar';
 import { UserHeader } from './UserHeader';
 
 interface IProps {
@@ -18,6 +19,7 @@ export function UserView({ route, navigation }: IProps) {
   return (
     <UserContextProvider userId={route.params.id}>
       <UserHeader openDrawer={openDrawer} />
+      <SendMessageBar />
     </UserContextProvider>
   );
 }

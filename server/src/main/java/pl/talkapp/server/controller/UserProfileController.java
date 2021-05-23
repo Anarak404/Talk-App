@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.talkapp.server.dto.request.ChangeNameRequest;
 import pl.talkapp.server.dto.request.ChangePasswordRequest;
+import pl.talkapp.server.dto.request.NameRequest;
 import pl.talkapp.server.dto.request.StatusRequest;
 import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.entity.Status;
@@ -40,7 +40,7 @@ public class UserProfileController {
     }
 
     @PutMapping("/nick")
-    public ResponseEntity<ResultResponse> changeName(@Valid ChangeNameRequest name) {
+    public ResponseEntity<ResultResponse> changeName(@Valid NameRequest name) {
         User me = userService.getCurrentUser();
         userProfileService.changeName(me, name.getName());
 

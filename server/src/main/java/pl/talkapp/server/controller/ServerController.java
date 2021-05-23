@@ -4,13 +4,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import pl.talkapp.server.dto.request.ChangeNameRequest;
-import pl.talkapp.server.dto.request.CreateServerRequest;
+import pl.talkapp.server.dto.request.NameRequest;
 import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.dto.response.ServerResponse;
 import pl.talkapp.server.entity.Server;
@@ -33,12 +33,13 @@ public class ServerController {
         this.userService = userService;
     }
 
-    @PutMapping("")
-    public ResponseEntity<ServerResponse> createServer(@Valid @RequestBody CreateServerRequest name) {
+    @PostMapping("")
+    public ResponseEntity<ServerResponse> createServer(@Valid @RequestBody NameRequest name) {
         User me = userService.getCurrentUser();
         Server server = serverService.createServer(me, name.getName());
 
-        return new ResponseEntity<>(new ServerResponse(new ServerModel(server)), HttpStatus.OK);
+        return new ResponseEntity<>(new ServerResponse(new ServerModel(server)),
+                HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{id}")
@@ -58,7 +59,7 @@ public class ServerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ResultResponse> changeName(@Valid @RequestBody ChangeNameRequest name,
+    public ResponseEntity<ResultResponse> changeName(@Valid @RequestBody NameRequest name,
                                                      @PathVariable Long id) {
         User me = userService.getCurrentUser();
         try {

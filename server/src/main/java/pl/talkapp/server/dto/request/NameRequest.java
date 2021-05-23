@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class ChangeNameRequest {
+public class NameRequest {
 
     @NotBlank
     @Size(min = 3)

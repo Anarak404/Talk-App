@@ -76,9 +76,6 @@ public class UserBlacklistServiceImpl implements UserBlacklistService {
         Optional<UserBlacklist> blacklistData =
                 blacklistRepository.findByUserAndBlacklistUser(user, blacklistUser);
 
-        return blacklistData.orElseGet(() -> UserBlacklist.builder()
-                .user(user)
-                .blacklistUser(blacklistUser)
-                .build());
+        return blacklistData.orElseGet(() -> new UserBlacklist(user, blacklistUser));
     }
 }

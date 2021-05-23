@@ -1,8 +1,6 @@
 package pl.talkapp.server.entity;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -19,8 +17,6 @@ import javax.persistence.Table;
 @Table(name = "user_blacklist")
 @Data
 @NoArgsConstructor
-@Builder
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserBlacklist {
     @EmbeddedId
@@ -41,4 +37,10 @@ public class UserBlacklist {
 
     @Column(columnDefinition = "boolean default false")
     boolean blocked;
+
+    public UserBlacklist(User user, User blacklistUser) {
+        this.user = user;
+        this.blacklistUser = blacklistUser;
+        id = new UserBlacklistKey(user.getId(), blacklistUser.getId());
+    }
 }

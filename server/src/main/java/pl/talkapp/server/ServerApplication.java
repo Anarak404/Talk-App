@@ -7,7 +7,7 @@ import pl.talkapp.server.entity.Status;
 import pl.talkapp.server.repository.StatusRepository;
 
 import java.util.Arrays;
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
@@ -25,10 +25,10 @@ public class ServerApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        Set<Status> statuses =
+        List<Status> statuses =
                 Arrays.stream(pl.talkapp.server.model.Status.values())
                         .map(Status::new)
-                        .collect(Collectors.toSet());
+                        .collect(Collectors.toList());
 
         try {
             statusRepository.saveAll(statuses);

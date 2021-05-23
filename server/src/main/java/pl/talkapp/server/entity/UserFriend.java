@@ -1,8 +1,6 @@
 package pl.talkapp.server.entity;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -20,8 +18,6 @@ import java.sql.Timestamp;
 @Table(name = "user_friend")
 @Data
 @NoArgsConstructor
-@Builder
-@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserFriend {
     @EmbeddedId
@@ -39,4 +35,10 @@ public class UserFriend {
 
     @CreationTimestamp
     Timestamp date;
+
+    public UserFriend(User user, User friend) {
+        this.user = user;
+        this.friend = friend;
+        id = new UserFriendKey(user.getId(), friend.getId());
+    }
 }

@@ -5,10 +5,14 @@ import React, { useContext } from 'react';
 import { Dimensions } from 'react-native';
 import { sessionContext } from '../context/SessionContext';
 import { Login, Register } from './authentication';
-import { Hello } from './Hello';
+import { UserView } from './user/UserScreen';
+
+export type DrawerParamList = {
+  User: { id: number };
+};
 
 const Stack = createStackNavigator();
-const Drawer = createDrawerNavigator();
+const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const windowWidth = Dimensions.get('window').width;
 
@@ -19,7 +23,11 @@ export function Navigation() {
     <NavigationContainer>
       {loggedIn ? (
         <Drawer.Navigator edgeWidth={windowWidth / 3} drawerType="slide">
-          <Drawer.Screen name="Hello" component={Hello} />
+          <Drawer.Screen
+            name="User"
+            component={UserView}
+            initialParams={{ id: 0 }}
+          />
         </Drawer.Navigator>
       ) : (
         <Stack.Navigator

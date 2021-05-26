@@ -46,4 +46,7 @@ public class Server {
 
     @OneToMany(mappedBy = "server")
     List<TextChannel> textChannels;
+
+    @OneToMany(mappedBy = "server")
+    List<ServerUser> serverUsers;
 }

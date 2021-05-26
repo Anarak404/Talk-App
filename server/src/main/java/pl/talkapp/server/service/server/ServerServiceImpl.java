@@ -2,8 +2,11 @@ package pl.talkapp.server.service.server;
 
 import org.springframework.stereotype.Service;
 import pl.talkapp.server.entity.Server;
+import pl.talkapp.server.entity.TextChannel;
 import pl.talkapp.server.entity.User;
+import pl.talkapp.server.exception.UnauthorizedAccessException;
 import pl.talkapp.server.repository.ServerRepository;
+import pl.talkapp.server.repository.TextChannelRepository;
 
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -12,9 +15,12 @@ import java.util.Optional;
 public class ServerServiceImpl implements ServerService {
 
     private final ServerRepository serverRepository;
+    private final TextChannelRepository textChannelRepository;
 
-    public ServerServiceImpl(ServerRepository serverRepository) {
+    public ServerServiceImpl(ServerRepository serverRepository,
+                             TextChannelRepository textChannelRepository) {
         this.serverRepository = serverRepository;
+        this.textChannelRepository = textChannelRepository;
     }
 
     @Override
@@ -49,6 +55,21 @@ public class ServerServiceImpl implements ServerService {
         }
 
         return false;
+    }
+
+    @Override
+    public TextChannel createTextChannel(Long id, User user, String name) {
+        Server s = getServer(id);
+
+        if (s.getOwner() == user) {
+            TextChannel t = new TextChannel(name);
+            t.setServer(s);
+            textChannelRepository.save(t);
+            return t;
+        }
+
+        throw new UnauthorizedAccessException("Unable to create text channel - you are not an " +
+                "owner!");
     }
 
     private Server getServer(Long id) {

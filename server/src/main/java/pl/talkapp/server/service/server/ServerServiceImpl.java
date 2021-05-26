@@ -72,6 +72,23 @@ public class ServerServiceImpl implements ServerService {
                 "owner!");
     }
 
+    @Override
+    public void deleteTextChannel(User user, Long serverId, Long channelId) {
+        Server s = getServer(serverId);
+
+        if (s.getOwner() != user) {
+            throw new UnauthorizedAccessException("Unable to delete text channel - you are not an" +
+                    " owner!");
+        }
+
+        TextChannel channel = s.getTextChannels().stream()
+                .filter(t -> t.getId().equals(channelId))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Channel do not exist!"));
+
+        textChannelRepository.delete(channel);
+    }
+
     private Server getServer(Long id) {
         Optional<Server> server = serverRepository.findById(id);
 

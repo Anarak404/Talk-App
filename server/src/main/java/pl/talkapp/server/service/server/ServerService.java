@@ -12,4 +12,6 @@ public interface ServerService {
     boolean changeName(User user, Long id, String name);
 
     TextChannel createTextChannel(Long id, User user, String name);
+
+    void deleteTextChannel(User user, Long serverId, Long channelId);
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.talkapp.server.dto.request.FriendRequest;
+import pl.talkapp.server.dto.request.IdRequest;
 import pl.talkapp.server.dto.response.FriendListResponse;
 import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.entity.User;
@@ -39,7 +39,7 @@ public class UserFriendController {
     }
 
     @PutMapping("")
-    public ResponseEntity<ResultResponse> addFriend(@RequestBody FriendRequest friend) {
+    public ResponseEntity<ResultResponse> addFriend(@RequestBody IdRequest friend) {
         User me = userService.getCurrentUser();
         User f = userService.getUser(friend.getId()).orElseThrow();
         friendsService.addFriend(me, f);
@@ -48,7 +48,7 @@ public class UserFriendController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<ResultResponse> deleteFriend(@RequestBody FriendRequest friend) {
+    public ResponseEntity<ResultResponse> deleteFriend(@RequestBody IdRequest friend) {
         User me = userService.getCurrentUser();
         User f = userService.getUser(friend.getId()).orElseThrow();
         friendsService.deleteFriend(me, f);

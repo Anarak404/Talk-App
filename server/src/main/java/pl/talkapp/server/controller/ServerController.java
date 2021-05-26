@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import pl.talkapp.server.dto.request.IdRequest;
 import pl.talkapp.server.dto.request.NameRequest;
 import pl.talkapp.server.dto.request.TextChannelRequest;
 import pl.talkapp.server.dto.response.ResultResponse;
@@ -98,5 +99,23 @@ public class ServerController {
         }
 
         return new ResponseEntity<>(t, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/channel/{id}")
+    public ResponseEntity<ResultResponse> deleteTextChannel(@Valid @RequestBody IdRequest data,
+                                                            @PathVariable Long id) {
+        User me = userService.getCurrentUser();
+        ResultResponse r;
+        try {
+            serverService.deleteTextChannel(me, data.getId(), id);
+            r = new ResultResponse(true);
+
+        } catch (NoSuchElementException e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        } catch (UnauthorizedAccessException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
+        }
+
+        return new ResponseEntity<>(r, HttpStatus.OK);
     }
 }

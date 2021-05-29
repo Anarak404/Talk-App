@@ -20,13 +20,13 @@ public class ChannelListener {
     public void handleJoinChannel(JoinChannelEvent<ConnectionPayload> event) {
         ConnectionPayload payload = event.getPayload();
 
-        payload.getChannelMembers().forEach(user ->
-                template.convertAndSendToUser(user, "/channel/addPeer",
-                        new AddPeer(payload.getUserId(), false))
+        payload.getChannelMembers().forEach(user -> {
+                    template.convertAndSendToUser(user, "/channel/addPeer",
+                            new AddPeer(payload.getUserId(), false));
+                    template.convertAndSendToUser(payload.getUserId(), "/channel/addPeer",
+                            new AddPeer(user, true));
+                }
         );
-
-        template.convertAndSendToUser(payload.getUserId(), "/channel/addPeer",
-                new AddPeer(payload.getUserId(), true));
     }
 
 }

@@ -8,11 +8,11 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
-public class ICECandidatePayload {
+public class SessionDescriptionPayload {
 
     @Min(1)
     @NotNull
     String peerId;
 
-    Object iceCandidate;
+    Object sessionDescription;
 }

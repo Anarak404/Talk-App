@@ -78,7 +78,7 @@ public class ConnectionServiceImpl implements ConnectionService {
             // notify connected users about disconnect of member
             eventPublisher.publishEvent(new DisconnectChannelEvent<>(this,
                     new ConnectionPayload(userId,
-                    members)));
+                    Set.copyOf(members))));
         }
 
         connections.remove(userId);

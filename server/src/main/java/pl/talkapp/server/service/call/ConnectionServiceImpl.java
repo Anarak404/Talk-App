@@ -2,13 +2,15 @@ package pl.talkapp.server.service.call;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import pl.talkapp.server.eventBus.ChannelEvent;
 import pl.talkapp.server.eventBus.ConnectionPayload;
+import pl.talkapp.server.eventBus.DisconnectChannelEvent;
+import pl.talkapp.server.eventBus.JoinChannelEvent;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ConnectionServiceImpl implements ConnectionService {
@@ -16,54 +18,57 @@ public class ConnectionServiceImpl implements ConnectionService {
     private final static String privatePrefix = "p";
     private final static String serverPrefix = "s";
 
-    // key = channel, value = Set of session ids
+    // key = channel, value = Set of users id
     private final Map<String, Set<String>> channels;
 
-    // key = session id, value = channel
+    // key = user id, value = channel
     private final Map<String, String> connections;
 
     private final ApplicationEventPublisher eventPublisher;
 
     public ConnectionServiceImpl(ApplicationEventPublisher eventPublisher) {
         this.eventPublisher = eventPublisher;
-        channels = new HashMap<>();
-        connections = new HashMap<>();
+        channels = new ConcurrentHashMap<>();
+        connections = new ConcurrentHashMap<>();
     }
 
     private String channelName(String prefix, long id) {
         return String.format("%s-%d", prefix, id);
     }
 
-    private void join(String channel, String sessionId) {
-        Set<String> sessions = channels.getOrDefault(channel, new HashSet<>());
-        sessions.add(sessionId);
-        Set<String> members = channels.put(channel, sessions);
+    private void join(String channel, String userId) {
+        Set<String> ids = channels.getOrDefault(channel,
+                Collections.synchronizedSet(new HashSet<>()));
+        Set<String> members = Set.copyOf(ids);
 
-        eventPublisher.publishEvent(new ChannelEvent<>(this, new ConnectionPayload(sessionId,
-            members)));
+        ids.add(userId);
+        channels.put(channel, ids);
+
+        eventPublisher.publishEvent(new JoinChannelEvent<>(this, new ConnectionPayload(userId,
+                members)));
     }
 
     @Override
-    public void joinPrivateChannel(long channelId, String sessionId) {
+    public void joinPrivateChannel(long channelId, String userId) {
         String channel = channelName(privatePrefix, channelId);
-        join(channel, sessionId);
-        connections.put(sessionId, channel);
+        join(channel, userId);
+        connections.put(userId, channel);
     }
 
     @Override
-    public void joinServerChannel(long serverId, String sessionId) {
+    public void joinServerChannel(long serverId, String userId) {
         String channel = channelName(serverPrefix, serverId);
-        join(channel, sessionId);
-        connections.put(sessionId, channel);
+        join(channel, userId);
+        connections.put(userId, channel);
     }
 
     @Override
-    public void disconnect(String sessionId) {
-        String channel = connections.get(sessionId);
+    public void disconnect(String userId) {
+        String channel = connections.get(userId);
 
         if (channel != null) {
             Set<String> members = channels.getOrDefault(channel, new HashSet<>());
-            members.remove(sessionId);
+            members.remove(userId);
 
             // remove channel if no users connected
             if (members.isEmpty()) {
@@ -71,10 +76,11 @@ public class ConnectionServiceImpl implements ConnectionService {
             }
 
             // notify connected users about disconnect of member
-            eventPublisher.publishEvent(new ChannelEvent<>(this, new ConnectionPayload(sessionId,
-                members)));
+            eventPublisher.publishEvent(new DisconnectChannelEvent<>(this,
+                    new ConnectionPayload(userId,
+                    members)));
         }
 
-        connections.remove(sessionId);
+        connections.remove(userId);
     }
 }

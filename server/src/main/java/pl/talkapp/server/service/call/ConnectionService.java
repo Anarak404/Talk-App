@@ -2,9 +2,9 @@ package pl.talkapp.server.service.call;
 
 public interface ConnectionService {
 
-    void joinPrivateChannel(long channelId, String sessionId);
+    void joinPrivateChannel(long channelId, String userId);
 
-    void joinServerChannel(long serverId, String sessionId);
+    void joinServerChannel(long serverId, String userId);
 
-    void disconnect(String sessionId);
+    void disconnect(String userId);
 }

@@ -1,14 +1,14 @@
 package pl.talkapp.server.eventBus;
 
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
-@Value
+@Getter
 @EqualsAndHashCode(callSuper = true)
-public class ChannelEvent<T> extends ApplicationEvent {
+public abstract class ChannelEvent<T> extends ApplicationEvent {
 
-    T payload;
+    protected final T payload;
 
     public ChannelEvent(Object source, T payload) {
         super(source);

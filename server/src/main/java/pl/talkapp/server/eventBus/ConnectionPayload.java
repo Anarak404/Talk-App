@@ -7,7 +7,7 @@ import java.util.Set;
 @Value
 public class ConnectionPayload {
 
-    String sessionId;
+    String userId;
     Set<String> channelMembers;
 
 }

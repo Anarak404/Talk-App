@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import pl.talkapp.server.service.call.ConnectionService;
 
+import java.util.Objects;
+
 @Component
 public class SessionListener {
 
@@ -18,8 +20,8 @@ public class SessionListener {
     @EventListener
     public void handleSessionDisconnect(SessionDisconnectEvent event) {
         SimpMessageHeaderAccessor headers = SimpMessageHeaderAccessor.wrap(event.getMessage());
-        String sessionId = headers.getSessionId();
-        connectionService.disconnect(sessionId);
+        String userId = Objects.requireNonNull(headers.getUser()).getName();
+        connectionService.disconnect(userId);
     }
 
 }

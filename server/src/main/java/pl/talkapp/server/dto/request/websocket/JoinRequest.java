@@ -1,4 +1,4 @@
-package pl.talkapp.server.dto.request;
+package pl.talkapp.server.dto.request.websocket;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -9,12 +9,11 @@ import javax.validation.constraints.NotNull;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JoinWebSocketRequest {
+public class JoinRequest {
 
     @Min(1)
     @NotNull
     Long channelId;
 
-    boolean isPrivate;
-
+    boolean privateCall;
 }

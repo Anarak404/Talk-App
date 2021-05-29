@@ -36,6 +36,10 @@ public class ServerUser {
     @CreationTimestamp
     Timestamp joinDateTime;
 
+    @ManyToOne
+    @JoinColumn(name = "role", nullable = false)
+    Role role;
+
     public ServerUser(Server server, User user) {
         this.server = server;
         this.user = user;

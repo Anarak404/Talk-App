@@ -40,8 +40,8 @@ export function Login() {
             : getString('serverError');
 
         ToastAndroid.show(message, ToastAndroid.LONG);
-      })
-      .finally(() => setLoading(false));
+        setLoading(false);
+      });
   };
 
   return (

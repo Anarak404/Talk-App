@@ -1,11 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { StatusCodes } from 'http-status-codes';
 import React, { useCallback, useContext, useState } from 'react';
-import { Alert, Keyboard, StyleSheet, ToastAndroid, View } from 'react-native';
+import { Keyboard, StyleSheet, ToastAndroid, View } from 'react-native';
 import { Button, Icon, Input } from 'react-native-elements';
 import { ErrorResponse, login } from '../../../api';
-import { settingsContext } from '../../../context/SettingsContext';
 import { sessionContext } from '../../../context/SessionContext';
+import { settingsContext } from '../../../context/SettingsContext';
 import { isBlank } from '../../../utils/validators';
 import { ScreenTemplate } from '../../ScreenTemplate';
 

@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Header } from 'react-native-elements';
+import { callContext } from '../../context/CallContext';
 
 interface IProps {
   openDrawer(): void;
 }
 
 export function UserHeader({ openDrawer }: IProps) {
+  const { startCall } = useContext(callContext);
+
   return (
     <Header
       placement="left"
@@ -18,6 +21,7 @@ export function UserHeader({ openDrawer }: IProps) {
       rightComponent={{
         icon: 'call',
         size,
+        onPress: startCall,
       }}
       centerContainerStyle={styles.centerContainer}
     />

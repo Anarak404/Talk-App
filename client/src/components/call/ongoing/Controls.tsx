@@ -8,6 +8,7 @@ export function Controls() {
       <FAB
         buttonStyle={[styles.buttonStyle, styles.disconnectButton]}
         icon={<Icon name="call-end" size={iconSize} />}
+        containerStyle={styles.buttonContainer}
       />
     </View>
   );
@@ -21,8 +22,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
   },
-  buttonStyle: {
+  buttonContainer: {
     borderRadius: 50,
+  },
+  buttonStyle: {
     width: buttonSize,
     height: buttonSize,
   },

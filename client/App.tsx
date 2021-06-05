@@ -1,8 +1,10 @@
 import React from 'react';
 import { Navigation } from './src/components/Navigation';
-import { SettingsContextProvider } from './src/context/SettingsContext';
-import { SessionContextProvider } from './src/context/SessionContext';
-import { CallContextProvider } from './src/context/CallContext';
+import {
+  SettingsContextProvider,
+  SessionContextProvider,
+  CallContextProvider,
+} from './src/contexts';
 
 export default function App() {
   return (

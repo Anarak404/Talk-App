@@ -1,6 +1,6 @@
 import React from 'react';
 import { createContext, useState } from 'react';
-import { HttpClient } from '../api/client';
+import { HttpClient } from '../../api/client';
 import { ISessionContext, ISessionContextProps } from './SessionTypes';
 
 const defaultValue: ISessionContext = {

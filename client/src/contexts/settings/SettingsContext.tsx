@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useState } from 'react';
-import eng from '../strings/eng';
-import pl from '../strings/pl';
+import eng from '../../strings/eng';
+import pl from '../../strings/pl';
 import {
   AppTheme,
   ISettingsContext,

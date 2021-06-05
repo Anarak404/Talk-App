@@ -1,4 +1,4 @@
-import { StringSet } from '../context/SettingsTypes';
+import { StringSet } from '../contexts';
 
 const strings: StringSet = {
   emailLabel: 'Your email address',

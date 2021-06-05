@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Header } from 'react-native-elements';
-import { callContext } from '../../context/CallContext';
+import { callContext } from '../../contexts';
 
 interface IProps {
   openDrawer(): void;

@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Input } from 'react-native-elements';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
-import { settingsContext } from '../../context/SettingsContext';
+import { settingsContext } from '../../contexts';
 
 export function SendMessageBar() {
   const { getString } = useContext(settingsContext);

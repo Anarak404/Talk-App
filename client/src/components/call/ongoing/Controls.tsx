@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { FAB, Icon } from 'react-native-elements';
-import { callContext } from '../../../context/CallContext';
+import { callContext } from '../../../contexts';
 
 export function Controls() {
   const { endCall } = useContext(callContext);

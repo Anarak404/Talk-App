@@ -4,8 +4,7 @@ import React, { useCallback, useContext, useState } from 'react';
 import { Keyboard, StyleSheet, ToastAndroid, View } from 'react-native';
 import { Button, Icon, Input } from 'react-native-elements';
 import { ErrorResponse, login } from '../../../api';
-import { sessionContext } from '../../../context/SessionContext';
-import { settingsContext } from '../../../context/SettingsContext';
+import { sessionContext, settingsContext } from '../../../contexts';
 import { isBlank } from '../../../utils/validators';
 import { ScreenTemplate } from '../../ScreenTemplate';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { HttpClient } from '../api/client';
+import { HttpClient } from '../../api/client';
 
 export interface ISessionContext {
   loggedIn: boolean;

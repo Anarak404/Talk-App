@@ -10,7 +10,7 @@ import { ScreenTemplate } from '../../ScreenTemplate';
 
 export function Login() {
   const { getString } = useContext(settingsContext);
-  const { httpClient, setToken } = useContext(sessionContext);
+  const { httpClient, logIn } = useContext(sessionContext);
   const { navigate } = useNavigation();
 
   const [email, setEmail] = useState('');
@@ -31,7 +31,7 @@ export function Login() {
     setLoading(true);
 
     login(httpClient, { email, password })
-      .then((e) => setToken(e.token))
+      .then((e) => logIn(e.token))
       .catch((e: ErrorResponse) => {
         const message =
           e.error.status === StatusCodes.UNAUTHORIZED

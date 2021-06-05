@@ -3,8 +3,9 @@ import { HttpClient } from '../../api/client';
 
 export interface ISessionContext {
   loggedIn: boolean;
-  setToken(token: string): void;
+  logIn(token: string): void;
   httpClient: HttpClient;
+  token: string;
 }
 
 export interface ISessionContextProps {

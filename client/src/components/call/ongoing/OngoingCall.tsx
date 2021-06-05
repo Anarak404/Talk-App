@@ -1,11 +1,19 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Text } from 'react-native-elements';
+import { StyleSheet, View } from 'react-native';
+import { Avatars } from './Avatars';
+import { Controls } from './Controls';
 
 export function OngoingCall() {
   return (
-    <View>
-      <Text>OngoingCall</Text>
+    <View style={styles.container}>
+      <Avatars />
+      <Controls />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 20,
+  },
+});

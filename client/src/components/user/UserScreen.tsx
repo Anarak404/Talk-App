@@ -14,15 +14,21 @@ interface IProps {
 }
 
 export function UserView({ route, navigation }: IProps) {
-  const { inCall } = useContext(callContext);
+  const { inCall, attenderId } = useContext(callContext);
 
   const openDrawer = useCallback(() => {
     navigation.openDrawer();
   }, [navigation]);
 
+  const userId = route.params.id;
+
   return (
-    <UserContextProvider userId={route.params.id}>
-      {inCall ? <OngoingCall /> : <UserHeader openDrawer={openDrawer} />}
+    <UserContextProvider userId={userId}>
+      {inCall && userId === attenderId ? (
+        <OngoingCall />
+      ) : (
+        <UserHeader openDrawer={openDrawer} />
+      )}
       <SendMessageBar />
     </UserContextProvider>
   );

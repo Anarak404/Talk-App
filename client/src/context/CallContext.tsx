@@ -5,6 +5,7 @@ const defaultValue: ICallContext = {
   muted: false,
   inCall: false,
   calling: false,
+  attenderId: 0,
   toggleMute: () => void 0,
   endCall: () => void 0,
   startCall: () => void 0,
@@ -20,6 +21,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
   const [muted, setMuted] = useState(false);
   const [inCall, setInCall] = useState(false);
   const [calling, setCalling] = useState(false);
+  const [attenderId, setAttenderId] = useState(0);
 
   const toggleMute = useCallback(() => {
     setMuted((v) => !v);
@@ -48,6 +50,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
         muted,
         inCall,
         calling,
+        attenderId,
         toggleMute,
         endCall,
         startCall,

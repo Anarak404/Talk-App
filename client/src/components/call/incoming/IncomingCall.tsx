@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Overlay, Text } from 'react-native-elements';
-import { CallAvatar } from '../CallAvatar';
+import { UserAvatar } from '../UserAvatar';
 import { Controls } from './Controls';
 
 export function IncomingCall() {
@@ -10,7 +10,7 @@ export function IncomingCall() {
   return (
     <Overlay isVisible fullScreen>
       <View style={styles.profile}>
-        <CallAvatar name={name} size={200} />
+        <UserAvatar name={name} size={200} />
         <Text style={styles.text}>{name}</Text>
       </View>
       <Controls style={styles.controls} />

@@ -8,7 +8,7 @@ interface IProps {
   photo?: string;
 }
 
-export function CallAvatar({ size, name, photo }: IProps) {
+export function UserAvatar({ size, name, photo }: IProps) {
   name = name.trim().toUpperCase();
 
   if (name.length > 2) {

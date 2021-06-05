@@ -25,24 +25,24 @@ export function Navigation() {
   return (
     <NavigationContainer>
       {loggedIn ? (
-        <Drawer.Navigator edgeWidth={windowWidth / 3} drawerType="slide">
-          <Drawer.Screen
-            name="User"
-            component={UserView}
-            initialParams={{ id: 0 }}
-          />
-        </Drawer.Navigator>
-      ) : (
         <>
-          <Stack.Navigator
-            initialRouteName="Login"
-            screenOptions={{ headerShown: false }}
-          >
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="Register" component={Register} />
-          </Stack.Navigator>
+          <Drawer.Navigator edgeWidth={windowWidth / 3} drawerType="slide">
+            <Drawer.Screen
+              name="User"
+              component={UserView}
+              initialParams={{ id: 0 }}
+            />
+          </Drawer.Navigator>
           {calling && <IncomingCall />}
         </>
+      ) : (
+        <Stack.Navigator
+          initialRouteName="Login"
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Register" component={Register} />
+        </Stack.Navigator>
       )}
     </NavigationContainer>
   );

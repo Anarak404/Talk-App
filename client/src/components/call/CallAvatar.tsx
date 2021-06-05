@@ -9,8 +9,15 @@ interface IProps {
 }
 
 export function CallAvatar({ size, name, photo }: IProps) {
-  if (name.trim().length > 2) {
-    name = name.substr(0, 2).toUpperCase();
+  name = name.trim().toUpperCase();
+
+  if (name.length > 2) {
+    const words = name.split(' ');
+    if (words.length > 1) {
+      name = words[0].substr(0, 1) + words[1].substr(0, 1);
+    } else {
+      name = name.substr(0, 2);
+    }
   }
 
   return (

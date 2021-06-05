@@ -2,15 +2,25 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { UserAvatar } from '../UserAvatar';
 
-export function Avatars() {
+interface IUser {
+  name: string;
+  photo?: string;
+}
+
+interface IProps {
+  me: IUser;
+  attender: IUser;
+}
+
+export function Avatars({ me, attender }: IProps) {
   return (
     <View style={styles.avatarContainer}>
-      <UserAvatar size={avatarSize} name="FD" />
+      <UserAvatar size={avatarSize} name={me.name} photo={me.photo} />
       <View style={styles.divider} />
       <UserAvatar
         size={avatarSize}
-        name="FD"
-        photo="https://i.kym-cdn.com/entries/icons/facebook/000/026/489/crying.jpg"
+        name={attender.name}
+        photo={attender.photo}
       />
     </View>
   );

@@ -15,13 +15,10 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class ConnectionServiceImpl implements ConnectionService {
 
-    private final static String privatePrefix = "p";
-    private final static String serverPrefix = "s";
-
-    // key = channel, value = Set of users id
+    // key = callId, value = Set of users id
     private final Map<String, Set<String>> channels;
 
-    // key = user id, value = channel
+    // key = user id, value = channel (empty string if no channel)
     private final Map<String, String> connections;
 
     private final ApplicationEventPublisher eventPublisher;
@@ -30,10 +27,6 @@ public class ConnectionServiceImpl implements ConnectionService {
         this.eventPublisher = eventPublisher;
         channels = new ConcurrentHashMap<>();
         connections = new ConcurrentHashMap<>();
-    }
-
-    private String channelName(String prefix, long id) {
-        return String.format("%s-%d", prefix, id);
     }
 
     private void join(String channel, String userId) {
@@ -49,15 +42,8 @@ public class ConnectionServiceImpl implements ConnectionService {
     }
 
     @Override
-    public void joinPrivateChannel(long channelId, String userId) {
-        String channel = channelName(privatePrefix, channelId);
-        join(channel, userId);
-        connections.put(userId, channel);
-    }
-
-    @Override
-    public void joinServerChannel(long serverId, String userId) {
-        String channel = channelName(serverPrefix, serverId);
+    public void joinCall(Long callId, String userId) {
+        String channel = callId.toString();
         join(channel, userId);
         connections.put(userId, channel);
     }

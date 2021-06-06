@@ -5,8 +5,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import pl.talkapp.server.dto.request.IdRequest;
 import pl.talkapp.server.dto.request.websocket.ICECandidatePayload;
-import pl.talkapp.server.dto.request.websocket.JoinRequest;
 import pl.talkapp.server.dto.request.websocket.SessionDescriptionPayload;
 import pl.talkapp.server.service.call.ConnectionService;
 
@@ -25,16 +25,10 @@ public class WebSocketController {
     }
 
     @MessageMapping("/join")
-    public void joinChannel(@Payload JoinRequest req,
-                            SimpMessageHeaderAccessor headerAccessor) {
-        String userId = Objects.requireNonNull(headerAccessor.getUser()).getName();
-        Long channelId = req.getChannelId();
-
-        if (req.isPrivateCall()) {
-            connectionService.joinPrivateChannel(channelId, userId);
-        } else {
-            connectionService.joinServerChannel(channelId, userId);
-        }
+    public void joinChannel(@Payload IdRequest req, SimpMessageHeaderAccessor headerAccessor) {
+        String userId = headerAccessor.getUser().getName();
+        Long callId = req.getId();
+        connectionService.joinCall(callId, userId);
     }
 
     @MessageMapping("/relayICECandidate")
@@ -43,8 +37,8 @@ public class WebSocketController {
         String peerId = payload.getPeerId();
         String me = Objects.requireNonNull(headerAccessor.getUser()).getName();
 
-        template.convertAndSendToUser(peerId, "/channel/relayICECandidate",
-                new ICECandidatePayload(me, payload.getIceCandidate()));
+        template.convertAndSendToUser(peerId, "/channel/ICECandidate",
+            new ICECandidatePayload(me, payload.getIceCandidate()));
     }
 
     @MessageMapping("/relaySessionDescription")
@@ -53,8 +47,8 @@ public class WebSocketController {
         String peerId = payload.getPeerId();
         String me = Objects.requireNonNull(headerAccessor.getUser()).getName();
 
-        template.convertAndSendToUser(peerId, "/channel/relaySessionDescription",
-                new SessionDescriptionPayload(me, payload.getSessionDescription()));
+        template.convertAndSendToUser(peerId, "/channel/sessionDescription",
+            new SessionDescriptionPayload(me, payload.getSessionDescription()));
     }
 
     @MessageMapping("/disconnect")

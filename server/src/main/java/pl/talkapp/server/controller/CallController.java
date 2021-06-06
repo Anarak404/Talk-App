@@ -33,7 +33,7 @@ public class CallController {
         this.userService = userService;
     }
 
-    @PostMapping("/private/{id}/start")
+    @PostMapping("/start/{id}")
     public ResponseEntity<CallResponse> startCall(@Valid @RequestBody CallRequest coordinates,
                                                   @PathVariable Long id) {
         User me = userService.getCurrentUser();

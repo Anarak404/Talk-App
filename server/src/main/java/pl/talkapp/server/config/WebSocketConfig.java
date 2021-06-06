@@ -1,29 +1,36 @@
 package pl.talkapp.server.config;
 
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.channel.DirectChannel;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.messaging.support.ChannelInterceptor;
+import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.server.HandshakeHandler;
+import pl.talkapp.server.security.JwtTokenProvider;
 
 @Configuration
 @EnableWebSocket
+@EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    private final HandshakeHandler handshakeHandler;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public WebSocketConfig(HandshakeHandler handshakeHandler) {
-        this.handshakeHandler = handshakeHandler;
+    public WebSocketConfig(JwtTokenProvider jwtTokenProvider) {
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/join").setHandshakeHandler(handshakeHandler);
-        registry.addEndpoint("/join").setHandshakeHandler(handshakeHandler).withSockJS();
+        registry.addEndpoint("/join");
+        registry.addEndpoint("/join").withSockJS();
     }
 
     @Override
@@ -33,10 +40,26 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.setUserDestinationPrefix("/user");
     }
 
-    @Bean
-    public SimpMessagingTemplate messagingTemplate() {
-        return new SimpMessagingTemplate(new DirectChannel());
-    }
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(new ChannelInterceptor() {
+            @Override
+            public Message<?> preSend(Message<?> message, MessageChannel channel) {
+                StompHeaderAccessor accessor = MessageHeaderAccessor.getAccessor(message,
+                    StompHeaderAccessor.class);
 
+                if (StompCommand.CONNECT == accessor.getCommand()) {
+                    String token = accessor.getLogin();
+                    try {
+                        Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                        accessor.setUser(authentication);
+                    } catch (Exception e) {
+                        throw new IllegalArgumentException("Authentication failed!");
+                    }
+                }
+                return message;
+            }
+        });
+    }
 }
 

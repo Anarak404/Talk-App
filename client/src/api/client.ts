@@ -75,7 +75,7 @@ export class HttpClient {
     }
 
     const headers = new Headers();
-    headers.append('Authorization', `Bearer ${this.token}`);
+    headers.append('Authorization', `Bearer ${this._token}`);
     return headers;
   }
 }

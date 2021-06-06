@@ -1,9 +1,23 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { mediaDevices, MediaStream } from 'react-native-webrtc';
 import SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
-import { sessionContext } from '../session/SessionContext';
-import { ICallContext, ICallContextProps } from './CallTypes';
 import { startCall as startCallApi } from '../../api';
+import { sessionContext } from '../session/SessionContext';
+import { PeerConnection } from './call';
+import {
+  IAddPeer,
+  ICallContext,
+  ICallContextProps,
+  IIceCandidate,
+  ISessionDescription,
+} from './CallTypes';
 
 const defaultValue: ICallContext = {
   muted: false,
@@ -29,8 +43,22 @@ export function CallContextProvider({ children }: ICallContextProps) {
   const [calling, setCalling] = useState(false);
   const [attenderId, setAttenderId] = useState(0);
   const [connection, setConnection] = useState<Stomp.Client>();
+  const [peer, setPeer] = useState<PeerConnection>();
+  const [stream, setStream] = useState<MediaStream>();
 
-  const { httpClient } = useContext(sessionContext);
+  useEffect(() => {
+    mediaDevices
+      .getUserMedia({
+        audio: true,
+      })
+      .then((e) => {
+        if (typeof e !== 'boolean') {
+          setStream(e);
+        }
+      });
+  }, []);
+
+  const { httpClient, token } = useContext(sessionContext);
 
   const toggleMute = useCallback(() => {
     setMuted((v) => !v);
@@ -40,28 +68,64 @@ export function CallContextProvider({ children }: ICallContextProps) {
     setInCall(false);
   }, [setInCall]);
 
+  const disconnect = useCallback(() => {
+    connection?.disconnect();
+    setConnection(undefined);
+    setInCall(false);
+    setAttenderId(0);
+  }, [setConnection, setInCall, setAttenderId, connection]);
+
   const connectToCall = useCallback(
-    (id: number) => {
+    async (callId: number) => {
       const client = Stomp.over(new SockJS(url));
-      console.log(id);
+
+      client.connect(
+        {
+          login: token,
+        },
+        () => {
+          client.subscribe('/channel/addPeer', (m) => {
+            const body: IAddPeer = JSON.parse(m.body);
+            const { peerId, createOffer } = body;
+            const peerConnection = new PeerConnection(client, peerId, stream);
+
+            if (createOffer) {
+              peerConnection.createOffer();
+            }
+          });
+
+          client.subscribe('/channel/ICECandidate', (m) => {
+            const body: IIceCandidate = JSON.parse(m.body);
+            const { iceCandidate } = body;
+            peer?.addIceCandidate(iceCandidate);
+          });
+
+          client.subscribe('/channel/sessionDescription', (m) => {
+            const body: ISessionDescription = JSON.parse(m.body);
+            const { sessionDescription } = body;
+            peer?.setRemoteDescription(sessionDescription);
+          });
+
+          client.send(`/app/join`, JSON.stringify({ id: callId }));
+        },
+        () => disconnect()
+      );
+
       setConnection(client);
     },
-    [setConnection]
+    [setConnection, token, PeerConnection]
   );
 
   const startCall = useCallback(
     (userId: number) => {
       startCallApi(httpClient, userId, {})
         .then((d) => connectToCall(d.id))
-        .catch((e) => {
-          setAttenderId(0);
-          setInCall(false);
-        });
+        .catch(() => disconnect());
 
       setAttenderId(userId);
       setInCall(true);
     },
-    [setInCall, setAttenderId, startCallApi, connectToCall]
+    [setInCall, setAttenderId, startCallApi, connectToCall, disconnect]
   );
 
   const answerCall = useCallback(() => {

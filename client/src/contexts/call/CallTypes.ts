@@ -1,4 +1,8 @@
 import React from 'react';
+import {
+  RTCIceCandidateType,
+  RTCSessionDescriptionType,
+} from 'react-native-webrtc';
 
 export interface ICallContext {
   muted: boolean;
@@ -14,4 +18,19 @@ export interface ICallContext {
 
 export interface ICallContextProps {
   children?: React.ReactNode;
+}
+
+export interface IAddPeer {
+  peerId: number;
+  createOffer: boolean;
+}
+
+export interface IIceCandidate {
+  peerId: number;
+  iceCandidate: RTCIceCandidateType;
+}
+
+export interface ISessionDescription {
+  peerId: number;
+  sessionDescription: RTCSessionDescriptionType;
 }

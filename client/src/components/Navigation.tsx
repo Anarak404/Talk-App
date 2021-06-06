@@ -29,7 +29,7 @@ export function Navigation() {
             <Drawer.Screen
               name="User"
               component={UserView}
-              initialParams={{ id: 0 }}
+              initialParams={{ id: 2 }}
             />
           </Drawer.Navigator>
           {calling && <IncomingCall />}

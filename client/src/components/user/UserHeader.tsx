@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Header } from 'react-native-elements';
-import { callContext } from '../../contexts';
+import { userContext } from '../../contexts';
 
 interface IProps {
   openDrawer(): void;
 }
 
 export function UserHeader({ openDrawer }: IProps) {
-  const { startCall } = useContext(callContext);
+  const { startCall } = useContext(userContext);
 
   return (
     <Header

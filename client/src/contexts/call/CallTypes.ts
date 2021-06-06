@@ -7,7 +7,7 @@ export interface ICallContext {
   attenderId: number;
   toggleMute(): void;
   endCall(): void;
-  startCall(): void;
+  startCall(userId: number): void;
   rejectCall(): void;
   answerCall(): void;
 }

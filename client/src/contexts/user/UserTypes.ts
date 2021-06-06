@@ -2,6 +2,7 @@ import React from 'react';
 
 export interface IUserContext {
   status: Status;
+  startCall(): void;
 }
 
 export interface IUserContextProps {

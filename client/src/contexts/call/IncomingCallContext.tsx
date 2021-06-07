@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 import { sessionContext } from '../session/SessionContext';
+import { callContext } from './CallContext';
 import {
   IIncomingCallContext,
   IIncomingCallContextProps,
@@ -7,6 +8,8 @@ import {
 
 const defaultValue: IIncomingCallContext = {
   caller: { id: 0, name: '', photo: null },
+  answer: () => void 0,
+  reject: () => void 0,
 };
 
 export const incomingCallContext =
@@ -18,8 +21,17 @@ export function IncomingCallContextProvider({
   children,
 }: IIncomingCallContextProps) {
   const { incomingCall, rejectOrAnswerCall } = useContext(sessionContext);
+  const {} = useContext(callContext);
   const [caller] = useState(incomingCall.caller);
   const [id] = useState(incomingCall.id);
 
-  return <Provider value={{ caller }}>{children}</Provider>;
+  const answer = useCallback(() => {
+    rejectOrAnswerCall();
+  }, [rejectOrAnswerCall]);
+
+  const reject = useCallback(() => {
+    rejectOrAnswerCall();
+  }, [rejectOrAnswerCall]);
+
+  return <Provider value={{ caller, answer, reject }}>{children}</Provider>;
 }

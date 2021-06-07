@@ -26,8 +26,6 @@ const defaultValue: ICallContext = {
   toggleMute: () => void 0,
   endCall: () => void 0,
   startCall: (userId: number) => void 0,
-  answerCall: () => void 0,
-  rejectCall: () => void 0,
 };
 
 export const callContext = createContext<ICallContext>(defaultValue);
@@ -82,28 +80,25 @@ export function CallContextProvider({ children }: ICallContextProps) {
           login: token,
         },
         () => {
+          // TODO: change subscribe path
           client.subscribe('/channel/addPeer', (m) => {
             const body: IAddPeer = JSON.parse(m.body);
             const { peerId, createOffer } = body;
             const peerConnection = new PeerConnection(client, peerId, stream);
-
             if (createOffer) {
               peerConnection.createOffer();
             }
           });
-
           client.subscribe('/channel/ICECandidate', (m) => {
             const body: IIceCandidate = JSON.parse(m.body);
             const { iceCandidate } = body;
             peer?.addIceCandidate(iceCandidate);
           });
-
           client.subscribe('/channel/sessionDescription', (m) => {
             const body: ISessionDescription = JSON.parse(m.body);
             const { sessionDescription } = body;
             peer?.setRemoteDescription(sessionDescription);
           });
-
           client.send(`/app/join`, JSON.stringify({ id: callId }));
         },
         () => disconnect()
@@ -126,12 +121,6 @@ export function CallContextProvider({ children }: ICallContextProps) {
     [setInCall, setAttenderId, startCallApi, connectToCall, disconnect]
   );
 
-  const answerCall = useCallback(() => {
-    setInCall(true);
-  }, [setInCall]);
-
-  const rejectCall = useCallback(() => {}, []);
-
   return (
     <Provider
       value={{
@@ -141,8 +130,6 @@ export function CallContextProvider({ children }: ICallContextProps) {
         toggleMute,
         endCall,
         startCall,
-        answerCall,
-        rejectCall,
       }}
     >
       {children}

@@ -2,6 +2,8 @@ import React from 'react';
 
 export interface IIncomingCallContext {
   caller: ICaller;
+  answer(): void;
+  reject(): void;
 }
 
 export interface IIncomingCallContextProps {

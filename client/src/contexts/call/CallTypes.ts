@@ -11,8 +11,6 @@ export interface ICallContext {
   toggleMute(): void;
   endCall(): void;
   startCall(userId: number): void;
-  rejectCall(): void;
-  answerCall(): void;
 }
 
 export interface ICallContextProps {

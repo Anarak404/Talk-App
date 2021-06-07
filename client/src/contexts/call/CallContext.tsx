@@ -22,7 +22,6 @@ import {
 const defaultValue: ICallContext = {
   muted: false,
   inCall: false,
-  calling: false,
   attenderId: 0,
   toggleMute: () => void 0,
   endCall: () => void 0,
@@ -40,7 +39,6 @@ const url = 'http://192.168.0.73:8080/join';
 export function CallContextProvider({ children }: ICallContextProps) {
   const [muted, setMuted] = useState(false);
   const [inCall, setInCall] = useState(false);
-  const [calling, setCalling] = useState(false);
   const [attenderId, setAttenderId] = useState(0);
   const [connection, setConnection] = useState<Stomp.Client>();
   const [peer, setPeer] = useState<PeerConnection>();
@@ -129,20 +127,16 @@ export function CallContextProvider({ children }: ICallContextProps) {
   );
 
   const answerCall = useCallback(() => {
-    setCalling(false);
     setInCall(true);
-  }, [setCalling, setInCall]);
+  }, [setInCall]);
 
-  const rejectCall = useCallback(() => {
-    setCalling(false);
-  }, [setCalling]);
+  const rejectCall = useCallback(() => {}, []);
 
   return (
     <Provider
       value={{
         muted,
         inCall,
-        calling,
         attenderId,
         toggleMute,
         endCall,

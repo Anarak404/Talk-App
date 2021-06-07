@@ -1,11 +1,16 @@
-export { UserContextProvider, userContext } from './user/UserContext';
-export { CallContextProvider, callContext } from './call/CallContext';
+export { callContext, CallContextProvider } from './call/CallContext';
 export {
-  SessionContextProvider,
+  incomingCallContext,
+  IncomingCallContextProvider,
+} from './call/IncomingCallContext';
+export { ICaller, IIncomingCall } from './call/IncomingCallTypes';
+export {
   sessionContext,
+  SessionContextProvider,
 } from './session/SessionContext';
 export {
-  SettingsContextProvider,
   settingsContext,
+  SettingsContextProvider,
 } from './settings/SettingsContext';
 export { StringSet } from './settings/SettingsTypes';
+export { userContext, UserContextProvider } from './user/UserContext';

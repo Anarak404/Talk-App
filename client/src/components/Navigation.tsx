@@ -3,7 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import React, { useContext } from 'react';
 import { Dimensions } from 'react-native';
-import { callContext, sessionContext } from '../contexts';
+import { IncomingCallContextProvider, sessionContext } from '../contexts';
 import { Login, Register } from './authentication';
 import { IncomingCall } from './call';
 import { UserView } from './user/UserScreen';
@@ -18,8 +18,7 @@ const Drawer = createDrawerNavigator<DrawerParamList>();
 const windowWidth = Dimensions.get('window').width;
 
 export function Navigation() {
-  const { loggedIn } = useContext(sessionContext);
-  const { calling } = useContext(callContext);
+  const { loggedIn, isIncomingCall } = useContext(sessionContext);
 
   return (
     <NavigationContainer>
@@ -32,7 +31,11 @@ export function Navigation() {
               initialParams={{ id: 2 }}
             />
           </Drawer.Navigator>
-          {calling && <IncomingCall />}
+          {isIncomingCall && (
+            <IncomingCallContextProvider>
+              <IncomingCall />
+            </IncomingCallContextProvider>
+          )}
         </>
       ) : (
         <Stack.Navigator

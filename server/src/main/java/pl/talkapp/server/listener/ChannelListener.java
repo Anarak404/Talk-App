@@ -26,9 +26,9 @@ public class ChannelListener {
             String me = payload.getUserId();
 
             template.convertAndSendToUser(user, "/channel/addPeer",
-                    new AddPeer(me, false));
+                new AddPeer(me, false));
             template.convertAndSendToUser(me, "/channel/addPeer",
-                    new AddPeer(user, true));
+                new AddPeer(user, true));
         });
     }
 

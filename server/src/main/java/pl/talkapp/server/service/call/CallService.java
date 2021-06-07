@@ -19,4 +19,6 @@ public interface CallService {
 
     long endCall(Call call);
 
+    void notifyUser(User caller, Long callTo, Long callId);
+
 }

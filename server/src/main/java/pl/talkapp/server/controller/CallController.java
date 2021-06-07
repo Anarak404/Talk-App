@@ -42,10 +42,12 @@ public class CallController {
 
         if (coordinates.isNotEmpty()) {
             call = callService.startWithLocation(me, participant, coordinates.getLocationX(),
-                    coordinates.getLocationY());
+                coordinates.getLocationY());
         } else {
             call = callService.startWithoutLocation(me, participant);
         }
+
+        callService.notifyUser(me, id, call.getId());
 
         return new ResponseEntity<>(new CallResponse(call.getId()), HttpStatus.CREATED);
     }
@@ -63,7 +65,7 @@ public class CallController {
 
             if (coordinates.isNotEmpty()) {
                 callService.joinWithLocation(call, me, coordinates.getLocationX(),
-                        coordinates.getLocationY());
+                    coordinates.getLocationY());
             } else {
                 callService.joinWithoutLocation(call, me);
             }

@@ -50,7 +50,7 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
       client.connect(
         { login: token },
         () => {
-          client.subscribe('/call', (m) => {
+          client.subscribe('/user/call', (m) => {
             const body: IIncomingCall = JSON.parse(m.body);
             setIncomingCall(body);
             setIsIncomingCall(true);

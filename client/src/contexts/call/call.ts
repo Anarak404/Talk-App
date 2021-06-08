@@ -1,6 +1,5 @@
 import {
   EventOnCandidate,
-  mediaDevices,
   MediaStream,
   RTCIceCandidate,
   RTCIceCandidateType,
@@ -19,14 +18,15 @@ export class PeerConnection {
     stream: MediaStream | undefined
   ) {
     const onIceCandidate = (e: EventOnCandidate) => {
-      const { candidate, sdpMLineIndex } = e.candidate;
-      client.send(
-        '/app/relayICECandidate',
-        JSON.stringify({
-          peerId,
-          iceCandidate: { candidate, sdpMLineIndex },
-        })
-      );
+      if (e.candidate) {
+        client.send(
+          '/app/relayICECandidate',
+          JSON.stringify({
+            peerId,
+            iceCandidate: e.candidate,
+          })
+        );
+      }
     };
 
     const configuration = {
@@ -34,12 +34,12 @@ export class PeerConnection {
     };
 
     this.connection = new RTCPeerConnection(configuration);
-    this.connection.onicecandidate = onIceCandidate;
     if (stream) {
       this.connection.addStream(stream);
     } else {
       console.log('Error, no stream!');
     }
+    this.connection.onicecandidate = onIceCandidate;
   }
 
   public async createOffer() {
@@ -54,7 +54,6 @@ export class PeerConnection {
   }
 
   public addIceCandidate(candidate: RTCIceCandidateType) {
-    console.log('adding ice candidate');
     this.connection.addIceCandidate(new RTCIceCandidate(candidate));
   }
 
@@ -63,14 +62,15 @@ export class PeerConnection {
       new RTCSessionDescription(session)
     );
     if (session.type === 'offer') {
-      console.log('creating answer');
       const description = await this.connection.createAnswer();
       await this.connection.setLocalDescription(description);
       this.client.send(
         '/app/relaySessionDescription',
-        JSON.stringify({ peerId: this.peerId, sessionDescription: description })
+        JSON.stringify({
+          peerId: this.peerId,
+          sessionDescription: description,
+        })
       );
-      console.log('answer send');
     }
   }
 }

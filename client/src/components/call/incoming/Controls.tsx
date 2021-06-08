@@ -1,24 +1,29 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { FAB } from 'react-native-elements/dist/buttons/FAB';
+import { incomingCallContext } from '../../../contexts';
 
 interface IProps {
   style?: StyleProp<ViewStyle>;
 }
 
 export function Controls({ style }: IProps) {
+  const { answer, reject } = useContext(incomingCallContext);
+
   return (
     <View style={[style, styles.container]}>
       <FAB
         icon={<Icon name="call" size={iconSize} />}
         buttonStyle={[styles.buttonStyle, styles.answerButton]}
         containerStyle={styles.buttonContainer}
+        onPress={answer}
       />
       <FAB
         icon={<Icon name="call-end" size={iconSize} />}
         buttonStyle={[styles.buttonStyle, styles.rejectButton]}
         containerStyle={styles.buttonContainer}
+        onPress={reject}
       />
     </View>
   );

@@ -11,6 +11,7 @@ export interface ICallContext {
   toggleMute(): void;
   endCall(): void;
   startCall(userId: number): void;
+  joinCall(callId: number): void;
 }
 
 export interface ICallContextProps {

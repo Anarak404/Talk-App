@@ -21,13 +21,13 @@ export function IncomingCallContextProvider({
   children,
 }: IIncomingCallContextProps) {
   const { incomingCall, rejectOrAnswerCall } = useContext(sessionContext);
-  const {} = useContext(callContext);
+  const { joinCall } = useContext(callContext);
   const [caller] = useState(incomingCall.caller);
-  const [id] = useState(incomingCall.id);
 
   const answer = useCallback(() => {
+    joinCall(incomingCall.id);
     rejectOrAnswerCall();
-  }, [rejectOrAnswerCall]);
+  }, [rejectOrAnswerCall, joinCall, incomingCall.id]);
 
   const reject = useCallback(() => {
     rejectOrAnswerCall();

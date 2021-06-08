@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { mediaDevices, MediaStream } from 'react-native-webrtc';
@@ -26,6 +27,7 @@ const defaultValue: ICallContext = {
   toggleMute: () => void 0,
   endCall: () => void 0,
   startCall: (userId: number) => void 0,
+  joinCall: (callId: number) => void 0,
 };
 
 export const callContext = createContext<ICallContext>(defaultValue);
@@ -39,7 +41,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
   const [inCall, setInCall] = useState(false);
   const [attenderId, setAttenderId] = useState(0);
   const [connection, setConnection] = useState<Stomp.Client>();
-  const [peer, setPeer] = useState<PeerConnection>();
+  const peer = useRef<PeerConnection>();
   const [stream, setStream] = useState<MediaStream>();
 
   useEffect(() => {
@@ -81,23 +83,24 @@ export function CallContextProvider({ children }: ICallContextProps) {
         },
         () => {
           // TODO: change subscribe path
-          client.subscribe('/channel/addPeer', (m) => {
+          client.subscribe('/user/channel/addPeer', (m) => {
             const body: IAddPeer = JSON.parse(m.body);
             const { peerId, createOffer } = body;
             const peerConnection = new PeerConnection(client, peerId, stream);
             if (createOffer) {
               peerConnection.createOffer();
             }
+            peer.current = peerConnection;
           });
-          client.subscribe('/channel/ICECandidate', (m) => {
+          client.subscribe('/user/channel/ICECandidate', (m) => {
             const body: IIceCandidate = JSON.parse(m.body);
             const { iceCandidate } = body;
-            peer?.addIceCandidate(iceCandidate);
+            peer.current?.addIceCandidate(iceCandidate);
           });
-          client.subscribe('/channel/sessionDescription', (m) => {
+          client.subscribe('/user/channel/sessionDescription', (m) => {
             const body: ISessionDescription = JSON.parse(m.body);
             const { sessionDescription } = body;
-            peer?.setRemoteDescription(sessionDescription);
+            peer.current?.setRemoteDescription(sessionDescription);
           });
           client.send(`/app/join`, JSON.stringify({ id: callId }));
         },
@@ -121,6 +124,13 @@ export function CallContextProvider({ children }: ICallContextProps) {
     [setInCall, setAttenderId, startCallApi, connectToCall, disconnect]
   );
 
+  const joinCall = useCallback(
+    (callId: number) => {
+      connectToCall(callId);
+    },
+    [connectToCall]
+  );
+
   return (
     <Provider
       value={{
@@ -130,6 +140,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
         toggleMute,
         endCall,
         startCall,
+        joinCall,
       }}
     >
       {children}

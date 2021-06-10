@@ -11,7 +11,7 @@ export interface ISessionContext {
   isIncomingCall: boolean;
   incomingCall: IIncomingCall;
   rejectOrAnswerCall(): void;
-  websocket: Stomp.Client | undefined;
+  websocket?: Stomp.Client;
 }
 
 export interface ISessionContextProps {

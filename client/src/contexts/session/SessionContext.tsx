@@ -22,6 +22,7 @@ const defaultValue: ISessionContext = {
   isIncomingCall: false,
   incomingCall: defaultIncomingCall,
   rejectOrAnswerCall: () => void 0,
+  websocket: undefined,
 };
 
 export const sessionContext = createContext<ISessionContext>(defaultValue);
@@ -97,6 +98,7 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
         isIncomingCall,
         incomingCall,
         rejectOrAnswerCall,
+        websocket: client,
       }}
     >
       {children}

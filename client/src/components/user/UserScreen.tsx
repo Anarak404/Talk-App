@@ -2,12 +2,11 @@ import { RouteProp } from '@react-navigation/core';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import React, { useCallback, useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { callContext } from '../../contexts';
-import { UserContextProvider } from '../../contexts';
+import { callContext, UserContextProvider } from '../../contexts';
 import { OngoingCall } from '../call';
 import { IMessage, Messages } from '../messages';
 import { DrawerParamList } from '../Navigation';
-import { SendMessageBar } from './SendMessageBar';
+import { NewMessage } from './NewMessage';
 import { UserHeader } from './UserHeader';
 
 interface IProps {
@@ -32,7 +31,7 @@ export function UserView({ route, navigation }: IProps) {
         <UserHeader openDrawer={openDrawer} />
       )}
       <Messages messages={testMessages} style={styles.messages} />
-      <SendMessageBar />
+      <NewMessage />
     </UserContextProvider>
   );
 }

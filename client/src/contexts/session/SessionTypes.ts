@@ -1,4 +1,5 @@
 import React from 'react';
+import * as Stomp from 'webstomp-client';
 import { HttpClient } from '../../api/client';
 import { IIncomingCall } from '../call/IncomingCallTypes';
 
@@ -10,6 +11,7 @@ export interface ISessionContext {
   isIncomingCall: boolean;
   incomingCall: IIncomingCall;
   rejectOrAnswerCall(): void;
+  websocket: Stomp.Client | undefined;
 }
 
 export interface ISessionContextProps {

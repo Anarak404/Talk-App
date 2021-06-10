@@ -4,7 +4,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.model.Message;
-import pl.talkapp.server.model.websocket.Sender;
+import pl.talkapp.server.model.UserModel;
 import pl.talkapp.server.model.websocket.Response;
 import pl.talkapp.server.repository.UserRepository;
 
@@ -27,7 +27,7 @@ public class MessageServiceImpl implements MessageService {
             .orElseThrow(() -> new IllegalStateException("Invalid sender id!"));
 
         // TODO:  save messages to db
-        Response response = new Response(new Sender(sender), message.getContent(),
+        Response response = new Response(new UserModel(sender), message.getContent(),
             LocalDateTime.now());
 
         template.convertAndSend(String.format("/messages/%d", message.getReceiverId()),
@@ -40,7 +40,7 @@ public class MessageServiceImpl implements MessageService {
             .orElseThrow(() -> new IllegalStateException("Invalid sender id!"));
 
         // TODO: save messages to db
-        Response response = new Response(new Sender(sender), message.getContent(),
+        Response response = new Response(new UserModel(sender), message.getContent(),
             LocalDateTime.now());
 
         template.convertAndSendToUser(message.getReceiverId().toString(), "/messages", response);

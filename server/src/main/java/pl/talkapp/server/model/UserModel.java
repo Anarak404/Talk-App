@@ -9,14 +9,11 @@ public class UserModel {
 
     String name;
 
-    String email;
-
     String photo;
 
     public UserModel(User user) {
         id = user.getId();
         name = user.getName();
-        email = user.getEmail();
         photo = user.getPhoto();
     }
 }

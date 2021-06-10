@@ -11,11 +11,14 @@ public class ServerModel {
 
     String name;
 
+    String photo;
+
     Timestamp creationDateTime;
 
     public ServerModel(Server server) {
         id = server.getId();
         name = server.getName();
+        photo = server.getPhoto();
         creationDateTime = server.getCreationDateTime();
     }
 }

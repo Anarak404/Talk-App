@@ -2,11 +2,14 @@ package pl.talkapp.server.service.server;
 
 import org.springframework.stereotype.Service;
 import pl.talkapp.server.entity.Server;
+import pl.talkapp.server.entity.ServerUser;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.repository.ServerRepository;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ServerServiceImpl implements ServerService {
@@ -49,6 +52,11 @@ public class ServerServiceImpl implements ServerService {
         }
 
         return false;
+    }
+
+    @Override
+    public List<Server> getServersForUser(User user) {
+        return user.getServerUsers().stream().map(ServerUser::getServer).collect(Collectors.toList());
     }
 
     private Server getServer(Long id) {

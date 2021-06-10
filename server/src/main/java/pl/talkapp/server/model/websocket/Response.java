@@ -11,5 +11,6 @@ public class Response {
     UserModel sender;
     String message;
     LocalDateTime dateTime;
+    Long id;
 
 }

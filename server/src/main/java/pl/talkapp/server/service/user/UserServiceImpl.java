@@ -13,19 +13,15 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserProfileService userProfileService;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
-                           UserProfileService userProfileService) {
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
-        this.userProfileService = userProfileService;
     }
 
     @Override
     public User register(String name, String email, String password) {
         User user = new User(name, email, passwordEncoder.encode(password));
-        user.setStatus(userProfileService.getOnline());
         return userRepository.save(user);
     }
 

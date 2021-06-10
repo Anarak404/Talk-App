@@ -10,23 +10,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-import pl.talkapp.server.dto.request.IdRequest;
 import pl.talkapp.server.dto.request.NameRequest;
-import pl.talkapp.server.dto.request.TextChannelRequest;
 import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.dto.response.ServerResponse;
-import pl.talkapp.server.dto.response.TextChannelResponse;
 import pl.talkapp.server.entity.Server;
-import pl.talkapp.server.entity.TextChannel;
 import pl.talkapp.server.entity.User;
-import pl.talkapp.server.exception.UnauthorizedAccessException;
 import pl.talkapp.server.model.ServerModel;
-import pl.talkapp.server.model.TextChannelModel;
 import pl.talkapp.server.service.server.ServerService;
 import pl.talkapp.server.service.user.UserService;
 
 import javax.validation.Valid;
-import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/server")
@@ -80,42 +73,5 @@ public class ServerController {
 
         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Unable to change server name - " +
                 "you are not an owner!");
-    }
-
-    @PostMapping("/channel")
-    public ResponseEntity<TextChannelResponse> createTextChannel(@Valid @RequestBody TextChannelRequest data) {
-        User me = userService.getCurrentUser();
-        TextChannelResponse t;
-
-        try {
-            TextChannel textChannel = serverService.createTextChannel(data.getId(), me,
-                    data.getName());
-            t = new TextChannelResponse(new TextChannelModel(textChannel));
-
-        } catch (NoSuchElementException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (UnauthorizedAccessException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }
-
-        return new ResponseEntity<>(t, HttpStatus.CREATED);
-    }
-
-    @DeleteMapping("/channel/{id}")
-    public ResponseEntity<ResultResponse> deleteTextChannel(@Valid @RequestBody IdRequest data,
-                                                            @PathVariable Long id) {
-        User me = userService.getCurrentUser();
-        ResultResponse r;
-        try {
-            serverService.deleteTextChannel(me, data.getId(), id);
-            r = new ResultResponse(true);
-
-        } catch (NoSuchElementException e) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
-        } catch (UnauthorizedAccessException e) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, e.getMessage());
-        }
-
-        return new ResponseEntity<>(r, HttpStatus.OK);
     }
 }

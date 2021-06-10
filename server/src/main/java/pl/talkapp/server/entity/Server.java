@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.List;
@@ -44,8 +45,8 @@ public class Server {
     @JoinColumn(name = "owner", nullable = false)
     User owner;
 
-    @OneToMany(mappedBy = "server")
-    List<TextChannel> textChannels;
+    @OneToOne(mappedBy = "server")
+    ServerMessage serverMessage;
 
     @OneToMany(mappedBy = "server")
     List<ServerUser> serverUsers;

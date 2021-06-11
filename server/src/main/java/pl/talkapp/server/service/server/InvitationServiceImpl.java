@@ -45,7 +45,7 @@ public class InvitationServiceImpl implements InvitationService {
 
     @Override
     public String generateCode(Long serverId) {
-        String uuid = UUID.randomUUID().toString().substring(CODE_LENGTH);
+        String uuid = UUID.randomUUID().toString().substring(0, CODE_LENGTH);
 
         Optional<String> key = codes.entrySet().stream()
                 .filter(x -> x.getValue().equals(serverId))

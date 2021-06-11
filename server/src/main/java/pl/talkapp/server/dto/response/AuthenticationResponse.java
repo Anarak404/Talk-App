@@ -1,7 +1,6 @@
 package pl.talkapp.server.dto.response;
 
 import lombok.Value;
-import pl.talkapp.server.model.FriendModel;
 import pl.talkapp.server.model.ServerModel;
 import pl.talkapp.server.model.UserModel;
 
@@ -16,6 +15,6 @@ public class AuthenticationResponse {
 
     List<ServerModel> servers;
 
-    List<FriendModel> friends;
+    List<UserModel> friends;
 
 }

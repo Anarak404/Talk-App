@@ -11,7 +11,6 @@ import pl.talkapp.server.dto.request.LoginRequest;
 import pl.talkapp.server.dto.request.RegisterRequest;
 import pl.talkapp.server.dto.response.AuthenticationResponse;
 import pl.talkapp.server.entity.User;
-import pl.talkapp.server.model.FriendModel;
 import pl.talkapp.server.model.ServerModel;
 import pl.talkapp.server.model.UserModel;
 import pl.talkapp.server.security.JwtTokenProvider;
@@ -65,8 +64,8 @@ public class UserController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                         "Authentication failed"));
 
-        List<FriendModel> friends = friendsService.getFriends(user).stream()
-                .map(FriendModel::new)
+        List<UserModel> friends = friendsService.getFriends(user).stream()
+                .map(f -> new UserModel(f.getFriend()))
                 .collect(Collectors.toList());
 
         List<ServerModel> servers = serverService.getServersForUser(user).stream()

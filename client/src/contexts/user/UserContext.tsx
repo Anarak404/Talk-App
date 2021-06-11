@@ -14,6 +14,7 @@ import { IUserContext, IUserContextProps } from './UserTypes';
 const defaultValue: IUserContext = {
   startCall: () => void 0,
   sendMessage: (message: string) => void 0,
+  user: undefined,
 };
 
 export const userContext = createContext<IUserContext>(defaultValue);
@@ -51,6 +52,8 @@ export function UserContextProvider({ userId, children }: IUserContextProps) {
   );
 
   return (
-    <Provider value={{ startCall: start, sendMessage }}>{children}</Provider>
+    <Provider value={{ startCall: start, sendMessage, user }}>
+      {children}
+    </Provider>
   );
 }

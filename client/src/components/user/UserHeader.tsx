@@ -8,7 +8,7 @@ interface IProps {
 }
 
 export function UserHeader({ openDrawer }: IProps) {
-  const { startCall } = useContext(userContext);
+  const { startCall, user } = useContext(userContext);
 
   return (
     <Header
@@ -17,6 +17,10 @@ export function UserHeader({ openDrawer }: IProps) {
         icon: 'menu',
         onPress: openDrawer,
         size,
+      }}
+      centerComponent={{
+        text: user?.name,
+        style: styles.name,
       }}
       rightComponent={{
         icon: 'call',
@@ -33,5 +37,8 @@ const size = 30;
 const styles = StyleSheet.create({
   centerContainer: {
     justifyContent: 'center',
+  },
+  name: {
+    alignSelf: 'center',
   },
 });

@@ -2,9 +2,11 @@ package pl.talkapp.server.entity;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -47,27 +49,36 @@ public class User {
     @CreationTimestamp
     LocalDateTime creationDateTime;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "caller")
     List<Call> callers;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "attender")
     List<Call> attenders;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "sender")
     List<Message> messages;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "receiver")
     List<PrivateMessage> receivedMessages;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "user")
     List<UserFriend> friendList;
 
+    @Getter(AccessLevel.NONE)
+    @ToString.Exclude
     @OneToMany(mappedBy = "friend")
     List<UserFriend> userFriends;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "owner")
     List<Server> servers;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "user")
     List<ServerUser> serverUsers;
 

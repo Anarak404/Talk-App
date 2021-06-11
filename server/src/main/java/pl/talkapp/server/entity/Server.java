@@ -5,11 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -41,13 +43,16 @@ public class Server {
     @CreationTimestamp
     Timestamp creationDateTime;
 
-    @ManyToOne
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner", nullable = false)
     User owner;
 
+    @ToString.Exclude
     @OneToOne(mappedBy = "server")
     ServerMessage serverMessage;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "server")
     List<ServerUser> serverUsers;
 }

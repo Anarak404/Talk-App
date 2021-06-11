@@ -13,5 +13,9 @@ export {
   SettingsContextProvider,
 } from './settings/SettingsContext';
 export { StringSet } from './settings/SettingsTypes';
-export { dataStoreContext, DataStoreContextProvider } from './store/DataStore';
+export {
+  dataStoreContext,
+  DataStoreContextProvider,
+} from './store/DataStoreContext';
+export { IUser } from './store/DataStoreTypes';
 export { userContext, UserContextProvider } from './user/UserContext';

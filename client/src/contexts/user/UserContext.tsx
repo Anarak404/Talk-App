@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { callContext } from '../call/CallContext';
 import { sessionContext } from '../session/SessionContext';
-import { dataStoreContext } from '../store/DataStore';
+import { dataStoreContext } from '../store/DataStoreContext';
 import { IUser } from '../store/DataStoreTypes';
 import { IUserContext, IUserContextProps } from './UserTypes';
 

@@ -1,8 +1,11 @@
 import React, { createContext, useCallback, useEffect, useState } from 'react';
+import { useContext } from 'react';
 import SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
 import { IIncomingCall } from '..';
+import { IAuthenticationResponse } from '../../api';
 import { HttpClient } from '../../api/client';
+import { dataStoreContext } from '../store/DataStoreContext';
 import { ISessionContext, ISessionContextProps } from './SessionTypes';
 
 const defaultIncomingCall: IIncomingCall = {
@@ -16,7 +19,7 @@ const defaultIncomingCall: IIncomingCall = {
 
 const defaultValue: ISessionContext = {
   loggedIn: false,
-  logIn: (token: string) => void 0,
+  logIn: (user: IAuthenticationResponse) => void 0,
   httpClient: new HttpClient(),
   token: '',
   isIncomingCall: false,
@@ -39,10 +42,14 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
   const [incomingCall, setIncomingCall] =
     useState<IIncomingCall>(defaultIncomingCall);
 
+  const { saveUsers } = useContext(dataStoreContext);
+
   const logIn = useCallback(
-    (token: string) => {
+    ({ token, user, friends, servers }: IAuthenticationResponse) => {
       setLoggedIn(true);
       setToken(token);
+      saveUsers([user, ...friends]);
+      // todo: save servers
       httpClient.token = token;
 
       const url = 'http://192.168.0.73:8080/connect';

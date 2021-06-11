@@ -1,6 +1,14 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { callContext } from '../call/CallContext';
 import { sessionContext } from '../session/SessionContext';
+import { dataStoreContext } from '../store/DataStore';
+import { IUser } from '../store/DataStoreTypes';
 import { IUserContext, IUserContextProps } from './UserTypes';
 
 const defaultValue: IUserContext = {
@@ -14,8 +22,19 @@ const { Provider } = userContext;
 
 export function UserContextProvider({ userId, children }: IUserContextProps) {
   const [id] = useState(userId);
+  const [user, setUser] = useState<IUser>();
+
   const { startCall } = useContext(callContext);
   const { websocket } = useContext(sessionContext);
+  const { findUser } = useContext(dataStoreContext);
+
+  useEffect(() => {
+    const user = findUser(id);
+    if (user) {
+      setUser(user);
+    }
+    // TODO: fetch user from server if not found
+  }, [id]);
 
   const start = useCallback(() => {
     startCall(id);

@@ -1,19 +1,22 @@
 import React from 'react';
 import { Navigation } from './src/components/Navigation';
 import {
-  SettingsContextProvider,
-  SessionContextProvider,
   CallContextProvider,
+  DataStoreContextProvider,
+  SessionContextProvider,
+  SettingsContextProvider,
 } from './src/contexts';
 
 export default function App() {
   return (
-    <SettingsContextProvider>
-      <SessionContextProvider>
-        <CallContextProvider>
-          <Navigation />
-        </CallContextProvider>
-      </SessionContextProvider>
-    </SettingsContextProvider>
+    <DataStoreContextProvider>
+      <SettingsContextProvider>
+        <SessionContextProvider>
+          <CallContextProvider>
+            <Navigation />
+          </CallContextProvider>
+        </SessionContextProvider>
+      </SettingsContextProvider>
+    </DataStoreContextProvider>
   );
 }

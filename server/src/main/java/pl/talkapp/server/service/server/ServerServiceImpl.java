@@ -5,6 +5,7 @@ import pl.talkapp.server.entity.Server;
 import pl.talkapp.server.entity.ServerUser;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.repository.ServerRepository;
+import pl.talkapp.server.repository.ServerUserRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -15,9 +16,12 @@ import java.util.stream.Collectors;
 public class ServerServiceImpl implements ServerService {
 
     private final ServerRepository serverRepository;
+    private final ServerUserRepository serverUserRepository;
 
-    public ServerServiceImpl(ServerRepository serverRepository) {
+    public ServerServiceImpl(ServerRepository serverRepository,
+                             ServerUserRepository serverUserRepository) {
         this.serverRepository = serverRepository;
+        this.serverUserRepository = serverUserRepository;
     }
 
     @Override
@@ -25,6 +29,9 @@ public class ServerServiceImpl implements ServerService {
         Server server = new Server(name);
         server.setOwner(user);
         serverRepository.save(server);
+
+        ServerUser serverUser = new ServerUser(server, user);
+        serverUserRepository.save(serverUser);
 
         return server;
     }

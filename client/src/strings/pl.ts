@@ -20,6 +20,7 @@ const strings: StringSet = {
   serverError: 'Upss... Coś poszło nie tak. Spróbuj ponownie później!',
   authenticationFailed: 'Nieprawidłowy login lub hasło',
   messagePlaceholder: 'Napisz wiadomość',
+  settings: 'Ustawienia',
 };
 
 export default strings;

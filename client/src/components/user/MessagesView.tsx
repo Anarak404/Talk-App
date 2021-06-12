@@ -18,5 +18,6 @@ export function MessagesView() {
 const styles = StyleSheet.create({
   messages: {
     padding: 10,
+    flex: 1,
   },
 });

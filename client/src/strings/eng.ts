@@ -20,6 +20,7 @@ const strings: StringSet = {
   serverError: 'Upss... Something went wrong. Try again later!',
   authenticationFailed: 'Invalid login or password',
   messagePlaceholder: 'Write a message',
+  settings: 'Settings',
 };
 
 export default strings;

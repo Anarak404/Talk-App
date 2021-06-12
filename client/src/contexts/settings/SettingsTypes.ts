@@ -43,4 +43,5 @@ export type StringId =
   | 'emailConflict'
   | 'serverError'
   | 'authenticationFailed'
-  | 'messagePlaceholder';
+  | 'messagePlaceholder'
+  | 'settings';

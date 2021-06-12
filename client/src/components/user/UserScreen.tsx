@@ -12,7 +12,7 @@ interface IProps {
   navigation: DrawerNavigationProp<DrawerParamList, 'User'>;
 }
 
-export function UserView({ route, navigation }: IProps) {
+export function UserScreen({ route, navigation }: IProps) {
   const { inCall, attenderId } = useContext(callContext);
 
   const openDrawer = useCallback(() => {

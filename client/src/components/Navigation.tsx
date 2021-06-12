@@ -11,10 +11,12 @@ import { IncomingCallContextProvider, sessionContext } from '../contexts';
 import { Login, Register } from './authentication';
 import { IncomingCall } from './call';
 import { DrawerContent } from './menu/DrawerContent';
-import { UserView } from './user/UserScreen';
+import { SettingsScreen } from './settings/SettingsScreen';
+import { UserScreen } from './user/UserScreen';
 
 export type DrawerParamList = {
   User: { id: number };
+  Settings: {};
 };
 
 export type UserScreenNavigationProp = DrawerNavigationProp<
@@ -40,12 +42,10 @@ export function Navigation() {
               drawerType="slide"
               drawerContent={DrawerContent}
               drawerStyle={{ width: '80%' }}
+              initialRouteName="Settings"
             >
-              <Drawer.Screen
-                name="User"
-                component={UserView}
-                initialParams={{ id: 2 }}
-              />
+              <Drawer.Screen name="User" component={UserScreen} />
+              <Drawer.Screen name="Settings" component={SettingsScreen} />
             </Drawer.Navigator>
             {isIncomingCall && (
               <IncomingCallContextProvider>

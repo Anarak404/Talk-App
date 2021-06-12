@@ -52,7 +52,7 @@ public class MessageServiceImpl implements MessageService {
 
         ServerMessage serverMessage = serverMessageRepository.save(m);
 
-        Response response = new Response(new UserModel(sender.get()), message.getContent(),
+        Response response = new Response(new UserModel(sender.get()), null, message.getContent(),
                 serverMessage.getDateTime().toLocalDateTime(), serverMessage.getId());
 
         template.convertAndSend(String.format("/messages/%d", message.getReceiverId()),
@@ -75,7 +75,8 @@ public class MessageServiceImpl implements MessageService {
 
         PrivateMessage privateMessage = privateMessageRepository.save(m);
 
-        Response response = new Response(new UserModel(sender.get()), message.getContent(),
+        Response response = new Response(new UserModel(sender.get()),
+                new UserModel(receiver.get()), message.getContent(),
                 privateMessage.getDateTime().toLocalDateTime(), privateMessage.getId());
 
         template.convertAndSendToUser(message.getReceiverId().toString(), "/messages", response);

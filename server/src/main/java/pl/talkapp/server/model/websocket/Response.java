@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 public class Response {
 
     UserModel sender;
+    UserModel receiver;
     String message;
     LocalDateTime dateTime;
     Long id;

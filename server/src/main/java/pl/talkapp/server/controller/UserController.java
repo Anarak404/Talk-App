@@ -19,7 +19,6 @@ import pl.talkapp.server.model.ServerModel;
 import pl.talkapp.server.model.UserModel;
 import pl.talkapp.server.security.JwtTokenProvider;
 import pl.talkapp.server.service.server.ServerService;
-import pl.talkapp.server.service.user.UserFriendsService;
 import pl.talkapp.server.service.user.UserService;
 
 import javax.validation.Valid;
@@ -34,14 +33,12 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenProvider tokenProvider;
     private final ServerService serverService;
-    private final UserFriendsService friendsService;
 
     public UserController(UserService userService, JwtTokenProvider tokenProvider,
-                          ServerService serverService, UserFriendsService friendsService) {
+                          ServerService serverService) {
         this.userService = userService;
         this.tokenProvider = tokenProvider;
         this.serverService = serverService;
-        this.friendsService = friendsService;
     }
 
     @PostMapping("")
@@ -79,21 +76,6 @@ public class UserController {
         return getResponse(user);
     }
 
-    private ResponseEntity<AuthenticationResponse> getResponse(User user) {
-        List<UserModel> friends = friendsService.getFriends(user).stream()
-                .map(f -> new UserModel(f.getFriend()))
-                .collect(Collectors.toList());
-
-        List<ServerModel> servers = serverService.getServersForUser(user).stream()
-                .map(ServerModel::new)
-                .collect(Collectors.toList());
-
-        return new ResponseEntity<>(
-                new AuthenticationResponse(tokenProvider.createToken(user.getId()),
-                        tokenProvider.createRefreshToken(user.getId()),
-                        new UserModel(user), servers, friends), HttpStatus.OK);
-    }
-
     @GetMapping("/refresh-token")
     public ResponseEntity<TokenResponse> refreshToken() {
         User user = userService.getCurrentUser();
@@ -110,5 +92,18 @@ public class UserController {
         }
 
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with email do not exist!");
+    }
+
+    private ResponseEntity<AuthenticationResponse> getResponse(User user) {
+        List<UserModel> history = userService.getHistory(user);
+
+        List<ServerModel> servers = serverService.getServersForUser(user).stream()
+                .map(ServerModel::new)
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(
+                new AuthenticationResponse(tokenProvider.createToken(user.getId()),
+                        tokenProvider.createRefreshToken(user.getId()),
+                        new UserModel(user), servers, history), HttpStatus.OK);
     }
 }

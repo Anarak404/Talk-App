@@ -17,4 +17,6 @@ public interface UserFriendRepository extends CrudRepository<UserFriend, UserFri
     List<UserFriend> getFriendsForUser(User user);
 
     Optional<UserFriend> findByUserAndFriend(User user, User friend);
+
+    List<UserFriend> findAllByUser(User user);
 }

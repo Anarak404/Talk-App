@@ -1,7 +1,9 @@
 package pl.talkapp.server.service.user;
 
 import pl.talkapp.server.entity.User;
+import pl.talkapp.server.model.UserModel;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface UserService {
@@ -16,4 +18,6 @@ public interface UserService {
     Optional<User> getUser(Long id);
 
     User findUserByEmail(String email);
+
+    List<UserModel> getHistory(User user);
 }

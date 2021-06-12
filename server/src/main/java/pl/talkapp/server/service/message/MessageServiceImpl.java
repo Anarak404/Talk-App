@@ -7,6 +7,7 @@ import pl.talkapp.server.entity.Server;
 import pl.talkapp.server.entity.ServerMessage;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.model.Message;
+import pl.talkapp.server.model.MessageModel;
 import pl.talkapp.server.model.UserModel;
 import pl.talkapp.server.model.websocket.Response;
 import pl.talkapp.server.repository.PrivateMessageRepository;
@@ -14,7 +15,13 @@ import pl.talkapp.server.repository.ServerMessageRepository;
 import pl.talkapp.server.repository.ServerRepository;
 import pl.talkapp.server.repository.UserRepository;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -81,5 +88,27 @@ public class MessageServiceImpl implements MessageService {
 
         template.convertAndSendToUser(message.getReceiverId().toString(), "/messages", response);
         template.convertAndSendToUser(message.getSenderId().toString(), "/messages", response);
+    }
+
+    @Override
+    public List<MessageModel> getConversationWithUser(User me, User receiver) {
+        Map<MessageModel, LocalDateTime> conversation = new HashMap<>();
+
+        List<PrivateMessage> sentMessages =
+                privateMessageRepository.findAllBySenderAndReceiver(me, receiver);
+        List<PrivateMessage> receivedMessages =
+                privateMessageRepository.findAllByReceiverAndSender(me, receiver);
+
+        sentMessages.forEach(message -> conversation.put(new MessageModel(new UserModel(me),
+                message.getContent()), message.getDateTime().toLocalDateTime()));
+
+        receivedMessages.forEach(message -> conversation.put(new MessageModel(new UserModel(receiver),
+                message.getContent()), message.getDateTime().toLocalDateTime()));
+
+        List<Map.Entry<MessageModel, LocalDateTime>> sortedConversation =
+                new ArrayList<>(conversation.entrySet());
+        sortedConversation.sort(((o1, o2) -> o2.getValue().compareTo(o1.getValue())));
+
+        return sortedConversation.stream().map(Map.Entry::getKey).collect(Collectors.toList());
     }
 }

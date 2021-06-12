@@ -22,12 +22,16 @@ export const userContext = createContext<IUserContext>(defaultValue);
 const { Provider } = userContext;
 
 export function UserContextProvider({ userId, children }: IUserContextProps) {
-  const [id] = useState(userId);
+  const [id, setId] = useState(userId);
   const [user, setUser] = useState<IUser>();
 
   const { startCall } = useContext(callContext);
   const { websocket } = useContext(sessionContext);
   const { findUser } = useContext(dataStoreContext);
+
+  useEffect(() => {
+    setId(userId);
+  }, [userId]);
 
   useEffect(() => {
     const user = findUser(id);

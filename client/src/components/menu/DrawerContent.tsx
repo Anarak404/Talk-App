@@ -8,15 +8,15 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Friends } from './Friends';
 import { Servers } from './Servers';
 
-export function DrawerContent(
-  props: DrawerContentComponentProps<DrawerContentOptions>
-) {
+export function DrawerContent({
+  navigation,
+}: DrawerContentComponentProps<DrawerContentOptions>) {
   return (
     <SafeAreaView style={styles.drawer}>
       <View style={styles.leftBar}>
         <Servers />
       </View>
-      <Friends style={styles.friends} />
+      <Friends style={styles.friends} navigation={navigation} />
     </SafeAreaView>
   );
 }
@@ -25,7 +25,6 @@ const styles = StyleSheet.create({
   drawer: {
     flex: 1,
     flexDirection: 'row',
-    backgroundColor: 'grey',
     width: '100%',
     display: 'flex',
   },

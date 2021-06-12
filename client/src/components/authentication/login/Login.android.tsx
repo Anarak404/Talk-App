@@ -31,7 +31,7 @@ export function Login() {
     setLoading(true);
 
     login(httpClient, { email, password })
-      .then((e) => logIn(e.token))
+      .then((e) => logIn(e))
       .catch((e: ErrorResponse) => {
         const message =
           e.error.status === StatusCodes.UNAUTHORIZED

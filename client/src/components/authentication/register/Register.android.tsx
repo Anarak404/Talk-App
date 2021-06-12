@@ -52,7 +52,7 @@ export function Register() {
     setLoading(true);
 
     register(httpClient, { email, password, name })
-      .then((e) => logIn(e.token))
+      .then((e) => logIn(e))
       .catch((e: ErrorResponse) => {
         const message =
           e.error.status === StatusCodes.CONFLICT

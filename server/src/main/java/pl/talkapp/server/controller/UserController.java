@@ -67,6 +67,17 @@ public class UserController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                         "Authentication failed"));
 
+        return getResponse(user);
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<AuthenticationResponse> userInformation() {
+        User user = userService.getCurrentUser();
+
+        return getResponse(user);
+    }
+
+    private ResponseEntity<AuthenticationResponse> getResponse(User user) {
         List<UserModel> friends = friendsService.getFriends(user).stream()
                 .map(f -> new UserModel(f.getFriend()))
                 .collect(Collectors.toList());

@@ -14,4 +14,6 @@ public interface UserService {
     User getCurrentUser();
 
     Optional<User> getUser(Long id);
+
+    User findUserByEmail(String email);
 }

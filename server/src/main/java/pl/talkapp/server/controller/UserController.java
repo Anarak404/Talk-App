@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import pl.talkapp.server.dto.request.EmailRequest;
 import pl.talkapp.server.dto.request.LoginRequest;
 import pl.talkapp.server.dto.request.RegisterRequest;
 import pl.talkapp.server.dto.response.AuthenticationResponse;
 import pl.talkapp.server.dto.response.TokenResponse;
+import pl.talkapp.server.dto.response.UserInfoResponse;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.model.ServerModel;
 import pl.talkapp.server.model.UserModel;
@@ -98,5 +100,15 @@ public class UserController {
 
         return new ResponseEntity<>(new TokenResponse(tokenProvider.createToken(user.getId()),
                 tokenProvider.createRefreshToken(user.getId())), HttpStatus.OK);
+    }
+
+    @PostMapping("/search")
+    public ResponseEntity<UserInfoResponse> findUser(@Valid @RequestBody EmailRequest email) {
+        User user = userService.findUserByEmail(email.getEmail());
+        if (user != null) {
+            return new ResponseEntity<>(new UserInfoResponse(new UserModel(user)), HttpStatus.OK);
+        }
+
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with email do not exist!");
     }
 }

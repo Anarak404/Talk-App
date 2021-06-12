@@ -2,6 +2,7 @@ package pl.talkapp.server.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import pl.talkapp.server.dto.request.LoginRequest;
 import pl.talkapp.server.dto.request.RegisterRequest;
 import pl.talkapp.server.dto.response.AuthenticationResponse;
+import pl.talkapp.server.dto.response.TokenResponse;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.model.ServerModel;
 import pl.talkapp.server.model.UserModel;
@@ -49,6 +51,7 @@ public class UserController {
 
             return new ResponseEntity<>(
                     new AuthenticationResponse(tokenProvider.createToken(user.getId()),
+                            tokenProvider.createRefreshToken(user.getId()),
                             new UserModel(user), Collections.emptyList(), Collections.emptyList()),
                     HttpStatus.OK);
 
@@ -74,7 +77,15 @@ public class UserController {
 
         return new ResponseEntity<>(
                 new AuthenticationResponse(tokenProvider.createToken(user.getId()),
+                        tokenProvider.createRefreshToken(user.getId()),
                         new UserModel(user), servers, friends), HttpStatus.OK);
     }
 
+    @GetMapping("/refresh-token")
+    public ResponseEntity<TokenResponse> refreshToken() {
+        User user = userService.getCurrentUser();
+
+        return new ResponseEntity<>(new TokenResponse(tokenProvider.createToken(user.getId()),
+                tokenProvider.createRefreshToken(user.getId())), HttpStatus.OK);
+    }
 }

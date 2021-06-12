@@ -11,6 +11,8 @@ public class AuthenticationResponse {
 
     String token;
 
+    String refreshToken;
+
     UserModel user;
 
     List<ServerModel> servers;

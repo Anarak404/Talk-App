@@ -31,8 +31,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(tokenProvider.getAuthentication(token));
             }
         } catch (Exception e) {
-//            TODO: obsługa refresh token
-            SecurityContextHolder.clearContext();
+            token = tokenProvider.resolveRefreshToken(request);
+            try {
+                if (token != null && tokenProvider.validateToken(token)) {
+                    SecurityContextHolder.getContext().setAuthentication(tokenProvider.getAuthentication(token));
+                }
+            } catch (Exception e2) {
+                SecurityContextHolder.clearContext();
+            }
         }
 
         filterChain.doFilter(request, response);

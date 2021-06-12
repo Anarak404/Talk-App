@@ -9,7 +9,7 @@ import React, {
 import { mediaDevices, MediaStream } from 'react-native-webrtc';
 import SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
-import { startCall as startCallApi } from '../../api';
+import { serverAddress, startCall as startCallApi } from '../../api';
 import { sessionContext } from '../session/SessionContext';
 import { PeerConnection } from './call';
 import {
@@ -34,7 +34,7 @@ export const callContext = createContext<ICallContext>(defaultValue);
 
 const { Provider } = callContext;
 
-const url = 'http://192.168.0.73:8080/join';
+const url = `${serverAddress}/join`;
 
 export function CallContextProvider({ children }: ICallContextProps) {
   const [muted, setMuted] = useState(false);

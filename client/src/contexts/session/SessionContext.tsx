@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
 import { IIncomingCall } from '..';
-import { IAuthenticationResponse } from '../../api';
+import { IAuthenticationResponse, serverAddress } from '../../api';
 import { HttpClient } from '../../api/client';
 import { dataStoreContext } from '../store/DataStoreContext';
 import { ISessionContext, ISessionContextProps } from './SessionTypes';
@@ -52,7 +52,7 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
       // todo: save servers
       httpClient.token = token;
 
-      const url = 'http://192.168.0.73:8080/connect';
+      const url = `${serverAddress}/connect`;
       const client = Stomp.over(new SockJS(url));
 
       client.connect(

@@ -1,7 +1,8 @@
+import { serverAddress } from '.';
 import { ErrorResponse, IError, mapToErrorResponse } from './error';
 
 export class HttpClient {
-  private static apiUrl = 'http://192.168.0.73:8080';
+  private static apiUrl = serverAddress;
   private _token = '';
 
   public set token(token: string) {

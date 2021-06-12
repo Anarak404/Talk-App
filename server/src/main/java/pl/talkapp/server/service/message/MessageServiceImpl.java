@@ -105,9 +105,24 @@ public class MessageServiceImpl implements MessageService {
         receivedMessages.forEach(message -> conversation.put(new MessageModel(new UserModel(receiver),
                 message.getContent()), message.getDateTime().toLocalDateTime()));
 
+        return getMessageModels(conversation);
+    }
+
+    @Override
+    public List<MessageModel> getServerConversation(Server server) {
+        Map<MessageModel, LocalDateTime> conversation = new HashMap<>();
+        List<ServerMessage> serverMessages = serverMessageRepository.findAllByServer(server);
+
+        serverMessages.forEach(message -> conversation.put(new MessageModel(new UserModel(message.getSender()),
+                message.getContent()), message.getDateTime().toLocalDateTime()));
+
+        return getMessageModels(conversation);
+    }
+
+    private List<MessageModel> getMessageModels(Map<MessageModel, LocalDateTime> conversation) {
         List<Map.Entry<MessageModel, LocalDateTime>> sortedConversation =
                 new ArrayList<>(conversation.entrySet());
-        sortedConversation.sort(((o1, o2) -> o2.getValue().compareTo(o1.getValue())));
+        sortedConversation.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
 
         return sortedConversation.stream().map(Map.Entry::getKey).collect(Collectors.toList());
     }

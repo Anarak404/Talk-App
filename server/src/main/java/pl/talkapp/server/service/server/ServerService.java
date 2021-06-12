@@ -13,4 +13,6 @@ public interface ServerService {
     boolean changeName(User user, Long id, String name);
 
     List<Server> getServersForUser(User user);
+
+    Server getServer(Long id);
 }

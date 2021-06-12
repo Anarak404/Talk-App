@@ -18,12 +18,15 @@ import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.dto.response.ServerResponse;
 import pl.talkapp.server.entity.Server;
 import pl.talkapp.server.entity.User;
+import pl.talkapp.server.model.MessageModel;
 import pl.talkapp.server.model.ServerModel;
+import pl.talkapp.server.service.message.MessageService;
 import pl.talkapp.server.service.server.InvitationService;
 import pl.talkapp.server.service.server.ServerService;
 import pl.talkapp.server.service.user.UserService;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -33,12 +36,14 @@ public class ServerController {
     private final ServerService serverService;
     private final UserService userService;
     private final InvitationService invitationService;
+    private final MessageService messageService;
 
     public ServerController(ServerService serverService, UserService userService,
-                            InvitationService invitationService) {
+                            InvitationService invitationService, MessageService messageService) {
         this.serverService = serverService;
         this.userService = userService;
         this.invitationService = invitationService;
+        this.messageService = messageService;
     }
 
     @PostMapping("")
@@ -100,5 +105,16 @@ public class ServerController {
         }
 
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid code!");
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<List<MessageModel>> getServerConversation(@PathVariable Long id) {
+        try {
+            Server server = serverService.getServer(id);
+            List<MessageModel> conversation = messageService.getServerConversation(server);
+            return new ResponseEntity<>(conversation, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
     }
 }

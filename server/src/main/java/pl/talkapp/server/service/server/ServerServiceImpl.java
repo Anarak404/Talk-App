@@ -66,7 +66,8 @@ public class ServerServiceImpl implements ServerService {
         return user.getServerUsers().stream().map(ServerUser::getServer).collect(Collectors.toList());
     }
 
-    private Server getServer(Long id) {
+    @Override
+    public Server getServer(Long id) {
         Optional<Server> server = serverRepository.findById(id);
 
         return server.orElseThrow(() -> {

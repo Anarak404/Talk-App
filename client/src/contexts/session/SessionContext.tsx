@@ -42,13 +42,14 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
   const [incomingCall, setIncomingCall] =
     useState<IIncomingCall>(defaultIncomingCall);
 
-  const { saveUsers } = useContext(dataStoreContext);
+  const { saveUsers, saveFriends } = useContext(dataStoreContext);
 
   const logIn = useCallback(
     ({ token, user, friends, servers }: IAuthenticationResponse) => {
       setLoggedIn(true);
       setToken(token);
       saveUsers([user, ...friends]);
+      saveFriends([...friends.map((f) => f.id)]);
       // todo: save servers
       httpClient.token = token;
 

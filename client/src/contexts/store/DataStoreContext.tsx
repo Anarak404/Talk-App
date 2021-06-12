@@ -17,6 +17,8 @@ const defaultValue: IDataStoreContext = {
   saveUser: (user: IUser) => void 0,
   saveUsers: (users: IUser[]) => void 0,
   friends: [],
+  saveFriends: (friends: number[]) => void 0,
+  saveFriend: (friend: number) => void 0,
 };
 
 export const dataStoreContext = createContext<IDataStoreContext>(defaultValue);
@@ -29,7 +31,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
   const [friends, setFriends] = useState<number[]>([]);
 
   const { getItem: getUsers, setItem: persistUsers } = useAsyncStorage('users');
-  const { getItem: getFriends, setItem: saveFriends } =
+  const { getItem: getFriends, setItem: persistFriends } =
     useAsyncStorage('friends');
 
   useEffect(() => {
@@ -51,7 +53,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
   }, [users]);
 
   useEffect(() => {
-    saveFriends(JSON.stringify(friends));
+    persistFriends(JSON.stringify(friends));
   }, [friends]);
 
   const findUser = useCallback(
@@ -76,13 +78,44 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
     [setUsers]
   );
 
+  const saveFriend = useCallback(
+    (friendId: number) => {
+      setFriends((friends) => {
+        if (!friends.includes(friendId)) {
+          return [...friends, friendId];
+        }
+        return friends;
+      });
+    },
+    [setFriends]
+  );
+
+  const saveFriends = useCallback(
+    (friendsId: number[]) => {
+      setFriends((friends) => [
+        ...friends.filter((f) => !friendsId.includes(f)),
+        ...friendsId,
+      ]);
+    },
+    [setFriends]
+  );
+
   const friendsList = useMemo(
     () => [...friends.map((x) => findUser(x) as IUser)],
     [friends, findUser]
   );
 
   return (
-    <Provider value={{ findUser, saveUser, saveUsers, friends: friendsList }}>
+    <Provider
+      value={{
+        findUser,
+        saveUser,
+        saveUsers,
+        friends: friendsList,
+        saveFriend,
+        saveFriends,
+      }}
+    >
       {children}
     </Provider>
   );

@@ -5,6 +5,8 @@ export interface IDataStoreContext {
   saveUser(user: IUser): void;
   saveUsers(users: IUser[]): void;
   friends: IUser[];
+  saveFriends(friendsId: number[]): void;
+  saveFriend(friendId: number): void;
 }
 
 export interface IDataStoreContextProps {

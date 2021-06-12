@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { useMemo } from 'react';
 import { callContext } from '../call/CallContext';
 import { sessionContext } from '../session/SessionContext';
 import { dataStoreContext } from '../store/DataStoreContext';
@@ -14,6 +15,7 @@ import { IUserContext, IUserContextProps } from './UserTypes';
 const defaultValue: IUserContext = {
   startCall: () => void 0,
   sendMessage: (message: string) => void 0,
+  messages: [],
   user: undefined,
 };
 
@@ -27,7 +29,7 @@ export function UserContextProvider({ userId, children }: IUserContextProps) {
 
   const { startCall } = useContext(callContext);
   const { websocket } = useContext(sessionContext);
-  const { findUser } = useContext(dataStoreContext);
+  const { findUser, getMessages } = useContext(dataStoreContext);
 
   useEffect(() => {
     setId(userId);
@@ -55,8 +57,10 @@ export function UserContextProvider({ userId, children }: IUserContextProps) {
     [id, websocket]
   );
 
+  const messages = useMemo(() => getMessages(id), [getMessages, id]);
+
   return (
-    <Provider value={{ startCall: start, sendMessage, user }}>
+    <Provider value={{ startCall: start, sendMessage, user, messages }}>
       {children}
     </Provider>
   );

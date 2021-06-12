@@ -1,5 +1,6 @@
 import React from 'react';
-import { IMessage, IMessageStore } from '../../components/messages';
+import { IAuthenticationResponse } from '../../api';
+import { IMessage, IMessageResponse } from '../../components/messages';
 
 export interface IDataStoreContext {
   findUser(id: number): IUser | undefined;
@@ -8,8 +9,9 @@ export interface IDataStoreContext {
   friends: IUser[];
   saveFriends(friendsId: number[]): void;
   saveFriend(friendId: number): void;
-  saveMessage(sender: number, message: IMessage): void;
-  getMessages(sender: number): IMessage[];
+  saveMessage: React.MutableRefObject<(message: IMessageResponse) => void>;
+  getMessages(user: number): IMessage[];
+  saveMe(data: IAuthenticationResponse): void;
 }
 
 export interface IDataStoreContextProps {

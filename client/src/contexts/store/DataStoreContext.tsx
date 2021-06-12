@@ -4,10 +4,14 @@ import React, {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from 'react';
-import { IMessage } from '../../components/messages';
-import { IMessageStore } from '../../components/messages/MessageTypes';
+import { IAuthenticationResponse } from '../../api';
+import {
+  IMessageResponse,
+  IMessageStore,
+} from '../../components/messages/MessageTypes';
 import {
   IDataStoreContext,
   IDataStoreContextProps,
@@ -21,8 +25,9 @@ const defaultValue: IDataStoreContext = {
   friends: [],
   saveFriends: (friends: number[]) => void 0,
   saveFriend: (friend: number) => void 0,
-  saveMessage: (sender: number, message: IMessage) => void 0,
-  getMessages: (sender: number) => [],
+  saveMessage: { current: (message: IMessageResponse) => void 0 },
+  getMessages: (user: number) => [],
+  saveMe: (data: IAuthenticationResponse) => void 0,
 };
 
 export const dataStoreContext = createContext<IDataStoreContext>(defaultValue);
@@ -33,6 +38,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
   const [users, setUsers] = useState<IUser[]>([]);
   const [friends, setFriends] = useState<number[]>([]);
   const [messages, setMessages] = useState<IMessageStore[]>([]);
+  const [me, setMe] = useState<IAuthenticationResponse>();
 
   const { getItem: getUsers, setItem: persistUsers } = useAsyncStorage('users');
   const { getItem: getFriends, setItem: persistFriends } =
@@ -105,26 +111,39 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
   );
 
   const saveMessage = useCallback(
-    (sender: number, message: IMessage) => {
+    (message: IMessageResponse) => {
+      const senderId = message.sender.id;
+      const receiverId = message.receiver.id;
+      // if my message, set key as receiver id, otherwise senderId
+      const key = senderId === me?.user.id ? receiverId : senderId;
+
       setMessages((m) => {
-        const index = m.findIndex((x) => x.sender === sender);
+        const index = m.findIndex((x) => x.key === key);
+        const { name, photo } = message.sender;
+        const newMessage = {
+          id: message.id,
+          text: message.message,
+          name,
+          photo: photo ? photo : undefined,
+        };
 
         if (index === -1) {
-          return [...m, { sender, messages: [message] }];
+          return [...m, { key, messages: [newMessage] }];
         }
 
         const data = m[index];
-        data.messages = [...data.messages, message];
+        data.messages = [...data.messages, newMessage];
         m.splice(index, 1, data);
+
         return [...m];
       });
     },
-    [setMessages]
+    [me, setMessages]
   );
 
   const getMessages = useCallback(
-    (sender: number) => {
-      const m = messages.find((x) => x.sender === sender);
+    (user: number) => {
+      const m = messages.find((x) => x.key === user);
       return m ? [...m.messages] : [];
     },
     [messages]
@@ -135,6 +154,12 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
     [friends, findUser]
   );
 
+  const saveMessageRef = useRef(saveMessage);
+
+  useEffect(() => {
+    saveMessageRef.current = saveMessage;
+  }, [saveMessage]);
+
   return (
     <Provider
       value={{
@@ -144,8 +169,9 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
         friends: friendsList,
         saveFriend,
         saveFriends,
-        saveMessage,
+        saveMessage: saveMessageRef,
         getMessages,
+        saveMe: setMe,
       }}
     >
       {children}

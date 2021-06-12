@@ -1,11 +1,16 @@
-import React, { createContext, useCallback, useEffect, useState } from 'react';
-import { useContext } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
 import { IIncomingCall } from '..';
 import { IAuthenticationResponse, serverAddress } from '../../api';
 import { HttpClient } from '../../api/client';
-import { IMessage, IMessageResponse } from '../../components/messages';
+import { IMessageResponse } from '../../components/messages';
 import { dataStoreContext } from '../store/DataStoreContext';
 import { ISessionContext, ISessionContextProps } from './SessionTypes';
 
@@ -43,15 +48,17 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
   const [incomingCall, setIncomingCall] =
     useState<IIncomingCall>(defaultIncomingCall);
 
-  const { saveUsers, saveFriends, saveMessage } = useContext(dataStoreContext);
+  const { saveUsers, saveFriends, saveMessage, saveMe } =
+    useContext(dataStoreContext);
 
   const logIn = useCallback(
-    ({ token, user, friends, servers }: IAuthenticationResponse) => {
+    (response: IAuthenticationResponse) => {
+      const { user, friends, token } = response;
       setLoggedIn(true);
       setToken(token);
       saveUsers([user, ...friends]);
       saveFriends([...friends.map((f) => f.id)]);
-      // todo: save servers
+      saveMe(response);
       httpClient.token = token;
 
       const url = `${serverAddress}/connect`;
@@ -67,15 +74,8 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
           });
 
           client.subscribe('/user/messages', (response) => {
-            const { id, message, sender, dateTime }: IMessageResponse =
-              JSON.parse(response.body);
-            const m: IMessage = {
-              id,
-              name: sender.name,
-              text: message,
-              photo: sender.photo ? sender.photo : undefined,
-            };
-            saveMessage(sender.id, m);
+            const body: IMessageResponse = JSON.parse(response.body);
+            saveMessage.current(body);
           });
         },
         () => {

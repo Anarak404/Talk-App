@@ -1,12 +1,10 @@
 import { RouteProp } from '@react-navigation/core';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import React, { useCallback, useContext } from 'react';
-import { StyleSheet } from 'react-native';
 import { callContext, UserContextProvider } from '../../contexts';
 import { OngoingCall } from '../call';
-import { IMessage, Messages } from '../messages';
 import { DrawerParamList } from '../Navigation';
-import { NewMessage } from './NewMessage';
+import { MessagesView } from './MessagesView';
 import { UserHeader } from './UserHeader';
 
 interface IProps {
@@ -30,39 +28,7 @@ export function UserView({ route, navigation }: IProps) {
       ) : (
         <UserHeader openDrawer={openDrawer} />
       )}
-      <Messages messages={testMessages} style={styles.messages} />
-      <NewMessage />
+      <MessagesView />
     </UserContextProvider>
-  );
-}
-
-const styles = StyleSheet.create({
-  messages: {
-    padding: 10,
-  },
-});
-
-const templateMessages = [
-  {
-    name: 'Test1',
-    photo:
-      'https://i.kym-cdn.com/entries/icons/facebook/000/026/489/crying.jpg',
-    text: 'Test message',
-  },
-  {
-    name: 'Test2',
-    text: 'Test message'.repeat(7),
-  },
-];
-
-const testMessages: IMessage[] = [];
-let id = 1;
-
-for (let i = 0; i < 10; i++) {
-  testMessages.push(
-    ...templateMessages.map((e) => {
-      const i = id++;
-      return { id: i, ...e };
-    })
   );
 }

@@ -10,11 +10,12 @@ export interface IMessage {
 export interface IMessageResponse {
   id: number;
   sender: IUser;
+  receiver: IUser;
   message: string;
   dateTime: string;
 }
 
 export interface IMessageStore {
-  sender: number;
+  key: number;
   messages: IMessage[];
 }

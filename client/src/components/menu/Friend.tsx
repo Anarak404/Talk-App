@@ -1,7 +1,8 @@
 import { DrawerNavigationHelpers } from '@react-navigation/drawer/lib/typescript/src/types';
 import React, { useCallback } from 'react';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Text } from 'react-native-elements';
 import { IUser } from '../../contexts';
 import { UserAvatar } from '../call';
 

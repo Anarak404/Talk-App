@@ -28,12 +28,12 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
 
   const [friends, setFriends] = useState<number[]>([]);
 
-  const { setItem, getItem } = useAsyncStorage('users');
+  const { getItem: getUsers, setItem: persistUsers } = useAsyncStorage('users');
   const { getItem: getFriends, setItem: saveFriends } =
     useAsyncStorage('friends');
 
   useEffect(() => {
-    getItem().then((d: string | null) => {
+    getUsers().then((d: string | null) => {
       if (d) {
         setUsers(JSON.parse(d));
       }
@@ -47,7 +47,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
   }, []);
 
   useEffect(() => {
-    setItem(JSON.stringify(users));
+    persistUsers(JSON.stringify(users));
   }, [users]);
 
   useEffect(() => {

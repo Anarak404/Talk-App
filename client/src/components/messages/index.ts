@@ -1,2 +1,2 @@
 export { Messages } from './Messages';
-export { IMessage } from './IMessage';
+export { IMessage, IMessageResponse, IMessageStore } from './MessageTypes';

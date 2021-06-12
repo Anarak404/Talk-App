@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
 import { Text } from 'react-native-elements';
 import { UserAvatar } from '../call';
-import { IMessage } from './IMessage';
+import { IMessage } from './MessageTypes';
 
 interface IProp {
   message: IMessage;

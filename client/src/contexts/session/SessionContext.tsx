@@ -5,6 +5,7 @@ import * as Stomp from 'webstomp-client';
 import { IIncomingCall } from '..';
 import { IAuthenticationResponse, serverAddress } from '../../api';
 import { HttpClient } from '../../api/client';
+import { IMessage, IMessageResponse } from '../../components/messages';
 import { dataStoreContext } from '../store/DataStoreContext';
 import { ISessionContext, ISessionContextProps } from './SessionTypes';
 
@@ -42,7 +43,7 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
   const [incomingCall, setIncomingCall] =
     useState<IIncomingCall>(defaultIncomingCall);
 
-  const { saveUsers, saveFriends } = useContext(dataStoreContext);
+  const { saveUsers, saveFriends, saveMessage } = useContext(dataStoreContext);
 
   const logIn = useCallback(
     ({ token, user, friends, servers }: IAuthenticationResponse) => {
@@ -64,6 +65,18 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
             setIncomingCall(body);
             setIsIncomingCall(true);
           });
+
+          client.subscribe('/user/messages', (response) => {
+            const { id, message, sender, dateTime }: IMessageResponse =
+              JSON.parse(response.body);
+            const m: IMessage = {
+              id,
+              name: sender.name,
+              text: message,
+              photo: sender.photo ? sender.photo : undefined,
+            };
+            saveMessage(sender.id, m);
+          });
         },
         () => {
           console.log('ERROR!');
@@ -79,6 +92,8 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
       httpClient,
       setLoggedIn,
       setToken,
+      saveFriends,
+      saveMessage,
     ]
   );
 

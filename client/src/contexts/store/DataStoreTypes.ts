@@ -1,4 +1,5 @@
 import React from 'react';
+import { IMessage, IMessageStore } from '../../components/messages';
 
 export interface IDataStoreContext {
   findUser(id: number): IUser | undefined;
@@ -7,6 +8,8 @@ export interface IDataStoreContext {
   friends: IUser[];
   saveFriends(friendsId: number[]): void;
   saveFriend(friendId: number): void;
+  saveMessage(sender: number, message: IMessage): void;
+  getMessages(sender: number): IMessage[];
 }
 
 export interface IDataStoreContextProps {

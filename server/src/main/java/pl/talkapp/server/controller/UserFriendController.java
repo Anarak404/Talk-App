@@ -16,6 +16,7 @@ import pl.talkapp.server.entity.UserFriend;
 import pl.talkapp.server.service.user.UserFriendsService;
 import pl.talkapp.server.service.user.UserService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -39,7 +40,7 @@ public class UserFriendController {
     }
 
     @PutMapping("")
-    public ResponseEntity<ResultResponse> addFriend(@RequestBody IdRequest friend) {
+    public ResponseEntity<ResultResponse> addFriend(@Valid @RequestBody IdRequest friend) {
         User me = userService.getCurrentUser();
         User f = userService.getUser(friend.getId()).orElseThrow();
         friendsService.addFriend(me, f);
@@ -48,7 +49,7 @@ public class UserFriendController {
     }
 
     @DeleteMapping("")
-    public ResponseEntity<ResultResponse> deleteFriend(@RequestBody IdRequest friend) {
+    public ResponseEntity<ResultResponse> deleteFriend(@Valid @RequestBody IdRequest friend) {
         User me = userService.getCurrentUser();
         User f = userService.getUser(friend.getId()).orElseThrow();
         friendsService.deleteFriend(me, f);

@@ -50,4 +50,6 @@ export type StringId =
   | 'selectLanguage'
   | 'selectTheme'
   | 'PL'
-  | 'ENG';
+  | 'ENG'
+  | 'light'
+  | 'dark';

@@ -20,6 +20,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     padding: 15,
+    marginBottom: 40,
   },
   info: {
     flex: 1,

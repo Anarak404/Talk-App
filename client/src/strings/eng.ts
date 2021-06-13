@@ -27,6 +27,8 @@ const strings: StringSet = {
   selectTheme: 'Select theme',
   PL: 'Polish',
   ENG: 'English',
+  light: 'Light',
+  dark: 'Dark',
 };
 
 export default strings;

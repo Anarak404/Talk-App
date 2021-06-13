@@ -52,4 +52,12 @@ export type StringId =
   | 'PL'
   | 'ENG'
   | 'light'
-  | 'dark';
+  | 'dark'
+  | 'changePassword'
+  | 'changeName'
+  | 'newName'
+  | 'currentPassword'
+  | 'newPassword'
+  | 'profile'
+  | 'changePhoto'
+  | 'photoUrl';

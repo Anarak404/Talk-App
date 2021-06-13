@@ -29,6 +29,14 @@ const strings: StringSet = {
   ENG: 'English',
   light: 'Light',
   dark: 'Dark',
+  changeName: 'Change nick',
+  changePassword: 'Change password',
+  currentPassword: 'Current password',
+  newName: 'New nickname',
+  newPassword: 'New password',
+  profile: 'Profile',
+  changePhoto: 'Change photo',
+  photoUrl: 'Photo url',
 };
 
 export default strings;

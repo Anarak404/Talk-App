@@ -1,8 +1,6 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import React, { useContext } from 'react';
-import { StyleSheet } from 'react-native';
+import React from 'react';
 import { Header } from 'react-native-elements';
-import { settingsContext } from '../../contexts';
 import { DrawerParamList } from '../Navigation';
 import { Settings } from './Settings';
 import { UserInfo } from './UserInfo';
@@ -12,8 +10,6 @@ interface IProps {
 }
 
 export function SettingsScreen({ navigation }: IProps) {
-  const { getString } = useContext(settingsContext);
-
   return (
     <>
       <Header
@@ -23,10 +19,6 @@ export function SettingsScreen({ navigation }: IProps) {
           onPress: navigation.openDrawer,
           size,
         }}
-        centerComponent={{
-          text: getString('settings'),
-          style: styles.name,
-        }}
       />
       <UserInfo />
       <Settings />
@@ -35,13 +27,3 @@ export function SettingsScreen({ navigation }: IProps) {
 }
 
 const size = 30;
-
-const styles = StyleSheet.create({
-  centerContainer: {
-    justifyContent: 'center',
-  },
-  name: {
-    alignSelf: 'center',
-    alignContent: 'center',
-  },
-});

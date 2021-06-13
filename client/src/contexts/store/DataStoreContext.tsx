@@ -27,8 +27,9 @@ const defaultValue: IDataStoreContext = {
   saveFriend: (friend: number) => void 0,
   saveMessage: { current: (message: IMessageResponse) => void 0 },
   getMessages: (user: number) => [],
-  saveMe: (data: IAuthenticationResponse) => void 0,
+  saveAuthenticationResponse: (data: IAuthenticationResponse) => void 0,
   me: { id: 0, name: '', photo: null },
+  saveMe: (me: IUser) => void 0,
 };
 
 export const dataStoreContext = createContext<IDataStoreContext>(defaultValue);
@@ -155,6 +156,20 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
     [friends, findUser]
   );
 
+  const saveMe = useCallback(
+    (me: IUser) => {
+      setMe((m) => {
+        if (m) {
+          return {
+            ...m,
+            user: me,
+          };
+        }
+      });
+    },
+    [setMe]
+  );
+
   const saveMessageRef = useRef(saveMessage);
 
   useEffect(() => {
@@ -172,7 +187,8 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
         saveFriends,
         saveMessage: saveMessageRef,
         getMessages,
-        saveMe: setMe,
+        saveAuthenticationResponse: setMe,
+        saveMe,
         me: me ? { ...me.user } : { id: 0, name: '', photo: null },
       }}
     >

@@ -11,8 +11,9 @@ export interface IDataStoreContext {
   saveFriend(friendId: number): void;
   saveMessage: React.MutableRefObject<(message: IMessageResponse) => void>;
   getMessages(user: number): IMessage[];
-  saveMe(data: IAuthenticationResponse): void;
+  saveAuthenticationResponse(data: IAuthenticationResponse): void;
   me: IUser;
+  saveMe(me: IUser): void;
 }
 
 export interface IDataStoreContextProps {

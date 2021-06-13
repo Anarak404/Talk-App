@@ -38,6 +38,8 @@ const strings: StringSet = {
   changePhoto: 'Change photo',
   photoUrl: 'Photo url',
   signOut: 'Sign out',
+  failed: 'Ups... Failed!',
+  invalidUrl: 'Invalid url!',
 };
 
 export default strings;

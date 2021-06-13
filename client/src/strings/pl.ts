@@ -38,6 +38,8 @@ const strings: StringSet = {
   changePhoto: 'Zmień zdjęcie',
   photoUrl: 'Adres zdjęcia',
   signOut: 'Wyloguj się',
+  failed: 'Ups... Nie udało się!',
+  invalidUrl: 'Niepoprawne źródło',
 };
 
 export default strings;

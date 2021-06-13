@@ -61,4 +61,6 @@ export type StringId =
   | 'profile'
   | 'changePhoto'
   | 'photoUrl'
-  | 'signOut';
+  | 'signOut'
+  | 'failed'
+  | 'invalidUrl';

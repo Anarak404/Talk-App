@@ -2,6 +2,7 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 import React from 'react';
 import { Header } from 'react-native-elements';
 import { DrawerParamList } from '../Navigation';
+import { Logout } from './Logout';
 import { Settings } from './Settings';
 import { UserInfo } from './UserInfo';
 
@@ -22,6 +23,7 @@ export function SettingsScreen({ navigation }: IProps) {
       />
       <UserInfo />
       <Settings />
+      <Logout />
     </>
   );
 }

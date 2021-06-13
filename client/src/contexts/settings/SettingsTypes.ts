@@ -60,4 +60,5 @@ export type StringId =
   | 'newPassword'
   | 'profile'
   | 'changePhoto'
-  | 'photoUrl';
+  | 'photoUrl'
+  | 'signOut';

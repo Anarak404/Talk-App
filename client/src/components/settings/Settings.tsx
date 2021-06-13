@@ -1,13 +1,12 @@
 import React, { useCallback, useContext, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { ListItem, Overlay } from 'react-native-elements';
+import { ScrollView, StyleSheet } from 'react-native';
+import { Icon, ListItem, Overlay, Text } from 'react-native-elements';
 import { settingsContext } from '../../contexts';
 import { LanguageSelector } from './LanguageSelector';
 import { NameChange } from './NameChange';
 import { PasswordChange } from './PasswordChange';
-import { ThemeSelector } from './ThemeSelector';
-import { Icon, Text } from 'react-native-elements';
 import { PhotoChange } from './PhotoChange';
+import { ThemeSelector } from './ThemeSelector';
 
 type SettingsItem =
   | 'theme'
@@ -67,7 +66,7 @@ export function Settings() {
   };
 
   return (
-    <View>
+    <ScrollView>
       <Text style={styles.title}>{getString('profile')}</Text>
       <ListItem bottomDivider onPress={selectName}>
         <ListItem.Content>
@@ -104,7 +103,7 @@ export function Settings() {
       >
         {item && views[item]}
       </Overlay>
-    </View>
+    </ScrollView>
   );
 }
 

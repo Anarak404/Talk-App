@@ -37,6 +37,7 @@ const strings: StringSet = {
   profile: 'Profil',
   changePhoto: 'Zmień zdjęcie',
   photoUrl: 'Adres zdjęcia',
+  signOut: 'Wyloguj się',
 };
 
 export default strings;

@@ -13,3 +13,9 @@ interface IServer {
   photo: string | null;
   createDateTime: string;
 }
+
+export interface IResultResponse {
+  success: boolean;
+}
+
+export interface IProfileResponse extends IUser {}

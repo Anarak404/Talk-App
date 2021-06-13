@@ -2,13 +2,16 @@ package pl.talkapp.server.service.call;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import pl.talkapp.server.entity.Call;
 import pl.talkapp.server.eventBus.ConnectionPayload;
 import pl.talkapp.server.eventBus.DisconnectChannelEvent;
 import pl.talkapp.server.eventBus.JoinChannelEvent;
+import pl.talkapp.server.repository.CallRepository;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,9 +25,14 @@ public class ConnectionServiceImpl implements ConnectionService {
     private final Map<String, String> connections;
 
     private final ApplicationEventPublisher eventPublisher;
+    private final CallService callService;
+    private final CallRepository callRepository;
 
-    public ConnectionServiceImpl(ApplicationEventPublisher eventPublisher) {
+    public ConnectionServiceImpl(ApplicationEventPublisher eventPublisher,
+                                 CallService callService, CallRepository callRepository) {
         this.eventPublisher = eventPublisher;
+        this.callService = callService;
+        this.callRepository = callRepository;
         channels = new ConcurrentHashMap<>();
         connections = new ConcurrentHashMap<>();
     }
@@ -59,12 +67,13 @@ public class ConnectionServiceImpl implements ConnectionService {
             // remove channel if no users connected
             if (members.isEmpty()) {
                 channels.remove(channel);
+                Optional<Call> call = callRepository.findById(Long.valueOf(channel));
+                call.ifPresent(callService::endCall);
             }
 
             // notify connected users about disconnect of member
             eventPublisher.publishEvent(new DisconnectChannelEvent<>(this,
-                    new ConnectionPayload(userId,
-                    Set.copyOf(members))));
+                    new ConnectionPayload(userId, Set.copyOf(members))));
         }
 
         connections.remove(userId);

@@ -2,7 +2,6 @@ package pl.talkapp.server.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import pl.talkapp.server.dto.request.CallRequest;
 import pl.talkapp.server.dto.response.CallResponse;
-import pl.talkapp.server.dto.response.EndCallResponse;
 import pl.talkapp.server.entity.Call;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.service.call.CallService;
@@ -42,7 +40,7 @@ public class CallController {
 
         if (coordinates.isNotEmpty()) {
             call = callService.startWithLocation(me, participant, coordinates.getLocationX(),
-                coordinates.getLocationY());
+                    coordinates.getLocationY());
         } else {
             call = callService.startWithoutLocation(me, participant);
         }
@@ -52,7 +50,7 @@ public class CallController {
         return new ResponseEntity<>(new CallResponse(call.getId()), HttpStatus.CREATED);
     }
 
-    @PutMapping("/private/{id}/join")
+    @PutMapping("/join/{id}")
     public ResponseEntity<CallResponse> joinCall(@Valid @RequestBody CallRequest coordinates,
                                                  @PathVariable Long id) {
         User me = userService.getCurrentUser();
@@ -65,7 +63,7 @@ public class CallController {
 
             if (coordinates.isNotEmpty()) {
                 callService.joinWithLocation(call, me, coordinates.getLocationX(),
-                    coordinates.getLocationY());
+                        coordinates.getLocationY());
             } else {
                 callService.joinWithoutLocation(call, me);
             }
@@ -75,21 +73,4 @@ public class CallController {
 
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to join the call!");
     }
-
-    @GetMapping("/private/{id}/end")
-    public ResponseEntity<EndCallResponse> endCall(@PathVariable Long id) {
-        User me = userService.getCurrentUser();
-        User participant = userService.getUser(id).orElseThrow();
-
-        Optional<Call> ongoingCall = callService.getOngoingCall(me, participant);
-
-        if (ongoingCall.isPresent()) {
-            Call call = ongoingCall.get();
-            Long duration = callService.endCall(call);
-            return new ResponseEntity<>(new EndCallResponse(duration), HttpStatus.OK);
-        }
-
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid operation!");
-    }
-
 }

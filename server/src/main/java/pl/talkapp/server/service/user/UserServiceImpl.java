@@ -87,14 +87,18 @@ public class UserServiceImpl implements UserService {
 
         c1.forEach(call -> {
             UserModel u = new UserModel(call.getAttender());
-            LocalDateTime date = call.getEndDateTime().toLocalDateTime();
-            updateHistory(history, u, date);
+            if (call.getEndDateTime() != null) {
+                LocalDateTime date = call.getEndDateTime().toLocalDateTime();
+                updateHistory(history, u, date);
+            }
         });
 
         c2.forEach(call -> {
             UserModel u = new UserModel(call.getCaller());
-            LocalDateTime date = call.getEndDateTime().toLocalDateTime();
-            updateHistory(history, u, date);
+            if (call.getEndDateTime() != null) {
+                LocalDateTime date = call.getEndDateTime().toLocalDateTime();
+                updateHistory(history, u, date);
+            }
         });
 
         List<Map.Entry<UserModel, LocalDateTime>> sortedHistory =

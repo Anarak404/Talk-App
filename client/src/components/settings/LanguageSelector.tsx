@@ -13,12 +13,12 @@ export function LanguageSelector({ closeModal }: ISettingsViewProps) {
   const setLangPL = useCallback(() => {
     closeModal();
     setLanguage(Language.PL);
-  }, [setLanguage]);
+  }, [setLanguage, closeModal]);
 
   const setLangENG = useCallback(() => {
     closeModal();
     setLanguage(Language.ENG);
-  }, [setLanguage]);
+  }, [setLanguage, closeModal]);
 
   return (
     <View>

@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { UserAvatar } from '../call';
 import { Text } from 'react-native-elements';
+import { dataStoreContext } from '../../contexts';
+import { UserAvatar } from '../call';
 
 export function UserInfo() {
-  const name = 'Test';
+  const { me } = useContext(dataStoreContext);
+  const { name, photo } = me;
 
   return (
     <View style={styles.container}>
-      <UserAvatar size={100} name={name} />
+      <UserAvatar size={100} name={name} photo={photo ? photo : undefined} />
       <View style={styles.info}>
         <Text style={styles.text}>{name}</Text>
       </View>

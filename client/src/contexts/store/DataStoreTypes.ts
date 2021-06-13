@@ -12,6 +12,7 @@ export interface IDataStoreContext {
   saveMessage: React.MutableRefObject<(message: IMessageResponse) => void>;
   getMessages(user: number): IMessage[];
   saveMe(data: IAuthenticationResponse): void;
+  me: IUser;
 }
 
 export interface IDataStoreContextProps {

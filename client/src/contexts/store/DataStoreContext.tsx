@@ -28,6 +28,7 @@ const defaultValue: IDataStoreContext = {
   saveMessage: { current: (message: IMessageResponse) => void 0 },
   getMessages: (user: number) => [],
   saveMe: (data: IAuthenticationResponse) => void 0,
+  me: { id: 0, name: '', photo: null },
 };
 
 export const dataStoreContext = createContext<IDataStoreContext>(defaultValue);
@@ -172,6 +173,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
         saveMessage: saveMessageRef,
         getMessages,
         saveMe: setMe,
+        me: me ? { ...me.user } : { id: 0, name: '', photo: null },
       }}
     >
       {children}

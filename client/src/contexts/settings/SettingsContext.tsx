@@ -1,4 +1,6 @@
+import { useAsyncStorage } from '@react-native-community/async-storage';
 import React, { createContext, useCallback, useState } from 'react';
+import { useEffect } from 'react';
 import eng from '../../strings/eng';
 import pl from '../../strings/pl';
 import {
@@ -30,6 +32,38 @@ const dictionary: Record<Language, StringSet> = {
 export function SettingsContextProvider({ children }: ISettingsContextProps) {
   const [lang, setLanguage] = useState(Language.PL);
   const [theme, setTheme] = useState(AppTheme.LIGHT);
+  const [initialized, setInitialized] = useState(false);
+
+  const { getItem: getLang, setItem: persistLang } = useAsyncStorage('lang');
+  const { getItem: getTheme, setItem: persistTheme } = useAsyncStorage('theme');
+
+  useEffect(() => {
+    getLang().then((x) => {
+      if (x) {
+        setLanguage(Language[x as keyof typeof Language]);
+      }
+    });
+
+    getTheme().then((x) => {
+      if (x) {
+        setTheme(AppTheme[x as keyof typeof AppTheme]);
+      }
+    });
+
+    setInitialized(true);
+  }, []);
+
+  useEffect(() => {
+    if (initialized) {
+      persistLang(Language[lang]);
+    }
+  }, [lang]);
+
+  useEffect(() => {
+    if (initialized) {
+      persistTheme(AppTheme[theme]);
+    }
+  }, [theme]);
 
   const getString = useCallback(
     (text: StringId) => {

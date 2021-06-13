@@ -28,10 +28,11 @@ export class HttpClient {
     }
   }
 
-  public async post<T>(
+  public async send<T>(
     url: string,
     data: any,
-    requireAuthorization: boolean = true
+    requireAuthorization: boolean = true,
+    method: 'POST' | 'PUT'
   ): Promise<T> {
     url = this.prepareUrl(url);
     const headers = requireAuthorization
@@ -42,7 +43,7 @@ export class HttpClient {
 
     try {
       const response = await fetch(url, {
-        method: 'POST',
+        method,
         body: JSON.stringify(data),
         headers,
       });
@@ -53,6 +54,22 @@ export class HttpClient {
       }
       throw mapToErrorResponse(e, url);
     }
+  }
+
+  public async post<T>(
+    url: string,
+    data: any,
+    requireAuthorization: boolean = true
+  ): Promise<T> {
+    return this.send(url, data, requireAuthorization, 'POST');
+  }
+
+  public async put<T>(
+    url: string,
+    data: any,
+    requireAuthorization: boolean = true
+  ): Promise<T> {
+    return this.send(url, data, requireAuthorization, 'PUT');
   }
 
   private async handleResponse<T>(response: Response): Promise<T> {

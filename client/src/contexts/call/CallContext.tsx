@@ -10,17 +10,12 @@ import { mediaDevices, MediaStream } from 'react-native-webrtc';
 import SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
 import { serverAddress, startCall as startCallApi } from '../../api';
+import { onConnect } from '../../utils/RTCCallbacks';
 import { sessionContext } from '../session/SessionContext';
 import { dataStoreContext } from '../store/DataStoreContext';
 import { IUser } from '../store/DataStoreTypes';
 import { PeerConnection } from './call';
-import {
-  IAddPeer,
-  ICallContext,
-  ICallContextProps,
-  IIceCandidate,
-  ISessionDescription,
-} from './CallTypes';
+import { ICallContext, ICallContextProps } from './CallTypes';
 import { IIncomingCall } from './IncomingCallTypes';
 
 const defaultValue: ICallContext = {
@@ -74,7 +69,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
     setAttender(undefined);
     peer.current?.close();
     peer.current = undefined;
-  }, [setConnection, setInCall, setAttender, connection]);
+  }, [connection, setConnection, setInCall, setAttender, peer]);
 
   const disconnectWebsocketCallback = useRef(disconnect);
 
@@ -94,50 +89,32 @@ export function CallContextProvider({ children }: ICallContextProps) {
         {
           login: token,
         },
-        () => {
-          // TODO: change subscribe path
-          client.subscribe('/user/channel/addPeer', (m) => {
-            const body: IAddPeer = JSON.parse(m.body);
-            const { peerId, createOffer } = body;
-            const peerConnection = new PeerConnection(client, peerId, stream);
-            if (createOffer) {
-              peerConnection.createOffer();
-            }
-            peer.current = peerConnection;
-          });
-          client.subscribe('/user/channel/ICECandidate', (m) => {
-            const body: IIceCandidate = JSON.parse(m.body);
-            const { iceCandidate } = body;
-            peer.current?.addIceCandidate(iceCandidate);
-          });
-          client.subscribe('/user/channel/sessionDescription', (m) => {
-            const body: ISessionDescription = JSON.parse(m.body);
-            const { sessionDescription } = body;
-            peer.current?.setRemoteDescription(sessionDescription);
-          });
-          client.subscribe('/user/channel/disconnect', () =>
-            disconnectWebsocketCallback.current()
-          );
-          client.send(`/app/join`, JSON.stringify({ id: callId }));
-        },
-        () => disconnect()
+        onConnect(client, peer, stream, disconnectWebsocketCallback, callId),
+        disconnectWebsocketCallback.current
       );
 
       setConnection(client);
     },
-    [setConnection, token, PeerConnection, disconnect]
+    [token, peer, disconnectWebsocketCallback, stream, setConnection]
   );
 
   const startCall = useCallback(
     (userId: number) => {
       startCallApi(httpClient, userId, {})
         .then((d) => connectToCall(d.id))
-        .catch(() => disconnect());
+        .catch(() => disconnectWebsocketCallback.current());
 
       setAttender(findUser(userId));
       setInCall(true);
     },
-    [setInCall, setAttender, startCallApi, connectToCall, disconnect]
+    [
+      httpClient,
+      connectToCall,
+      disconnectWebsocketCallback,
+      setAttender,
+      findUser,
+      setInCall,
+    ]
   );
 
   const joinCall = useCallback(
@@ -146,7 +123,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
       setAttender(call.caller);
       setInCall(true);
     },
-    [connectToCall]
+    [connectToCall, setAttender, setInCall]
   );
 
   return (

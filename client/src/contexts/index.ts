@@ -1,9 +1,10 @@
+// export { PeerConnection } from './call/call';
 export { callContext, CallContextProvider } from './call/CallContext';
 export {
   incomingCallContext,
   IncomingCallContextProvider,
 } from './call/IncomingCallContext';
-export { ICaller, IIncomingCall } from './call/IncomingCallTypes';
+export { IIncomingCall } from './call/IncomingCallTypes';
 export {
   sessionContext,
   SessionContextProvider,
@@ -12,11 +13,10 @@ export {
   settingsContext,
   SettingsContextProvider,
 } from './settings/SettingsContext';
-export { StringSet } from './settings/SettingsTypes';
+export { AppTheme, Language, StringSet } from './settings/SettingsTypes';
 export {
   dataStoreContext,
   DataStoreContextProvider,
 } from './store/DataStoreContext';
 export { IUser } from './store/DataStoreTypes';
 export { userContext, UserContextProvider } from './user/UserContext';
-export { AppTheme, Language } from './settings/SettingsTypes';

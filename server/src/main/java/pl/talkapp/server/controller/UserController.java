@@ -13,7 +13,6 @@ import pl.talkapp.server.dto.request.LoginRequest;
 import pl.talkapp.server.dto.request.RegisterRequest;
 import pl.talkapp.server.dto.response.AuthenticationResponse;
 import pl.talkapp.server.dto.response.TokenResponse;
-import pl.talkapp.server.dto.response.UserInfoResponse;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.model.ServerModel;
 import pl.talkapp.server.model.UserModel;
@@ -85,10 +84,10 @@ public class UserController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<UserInfoResponse> findUser(@Valid @RequestBody EmailRequest email) {
+    public ResponseEntity<UserModel> findUser(@Valid @RequestBody EmailRequest email) {
         User user = userService.findUserByEmail(email.getEmail());
         if (user != null) {
-            return new ResponseEntity<>(new UserInfoResponse(new UserModel(user)), HttpStatus.OK);
+            return new ResponseEntity<>(new UserModel(user), HttpStatus.OK);
         }
 
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with email do not exist!");

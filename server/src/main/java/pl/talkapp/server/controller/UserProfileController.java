@@ -10,6 +10,7 @@ import pl.talkapp.server.dto.request.ChangePasswordRequest;
 import pl.talkapp.server.dto.request.NameRequest;
 import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.entity.User;
+import pl.talkapp.server.model.UserModel;
 import pl.talkapp.server.service.user.UserProfileService;
 import pl.talkapp.server.service.user.UserService;
 
@@ -38,18 +39,18 @@ public class UserProfileController {
     }
 
     @PutMapping("/nick")
-    public ResponseEntity<ResultResponse> changeName(@Valid @RequestBody NameRequest name) {
+    public ResponseEntity<UserModel> changeName(@Valid @RequestBody NameRequest name) {
         User me = userService.getCurrentUser();
-        userProfileService.changeName(me, name.getName());
+        User u = userProfileService.changeName(me, name.getName());
 
-        return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
+        return new ResponseEntity<>(new UserModel(u), HttpStatus.OK);
     }
 
     @PutMapping("/photo")
-    public ResponseEntity<ResultResponse> changePhoto(@Valid @RequestBody NameRequest photo) {
+    public ResponseEntity<UserModel> changePhoto(@Valid @RequestBody NameRequest photo) {
         User me = userService.getCurrentUser();
-        userProfileService.changePhoto(me, photo.getName());
+        User u = userProfileService.changePhoto(me, photo.getName());
 
-        return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
+        return new ResponseEntity<>(new UserModel(u), HttpStatus.OK);
     }
 }

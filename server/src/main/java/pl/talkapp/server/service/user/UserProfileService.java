@@ -5,7 +5,7 @@ import pl.talkapp.server.entity.User;
 public interface UserProfileService {
     boolean changePassword(User user, String currentPassword, String newPassword);
 
-    void changeName(User user, String nick);
+    User changeName(User user, String nick);
 
-    void changePhoto(User user, String photo);
+    User changePhoto(User user, String photo);
 }

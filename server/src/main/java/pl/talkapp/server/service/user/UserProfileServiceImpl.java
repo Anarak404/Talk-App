@@ -28,14 +28,16 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public void changeName(User user, String nick) {
+    public User changeName(User user, String nick) {
         user.setName(nick);
         userRepository.save(user);
+        return user;
     }
 
     @Override
-    public void changePhoto(User user, String photo) {
+    public User changePhoto(User user, String photo) {
         user.setPhoto(photo);
         userRepository.save(user);
+        return user;
     }
 }

@@ -32,4 +32,10 @@ public class UserProfileServiceImpl implements UserProfileService {
         user.setName(nick);
         userRepository.save(user);
     }
+
+    @Override
+    public void changePhoto(User user, String photo) {
+        user.setPhoto(photo);
+        userRepository.save(user);
+    }
 }

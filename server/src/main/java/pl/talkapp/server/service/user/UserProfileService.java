@@ -6,4 +6,6 @@ public interface UserProfileService {
     boolean changePassword(User user, String currentPassword, String newPassword);
 
     void changeName(User user, String nick);
+
+    void changePhoto(User user, String photo);
 }

@@ -38,9 +38,17 @@ public class UserProfileController {
     }
 
     @PutMapping("/nick")
-    public ResponseEntity<ResultResponse> changeName(@Valid NameRequest name) {
+    public ResponseEntity<ResultResponse> changeName(@Valid @RequestBody NameRequest name) {
         User me = userService.getCurrentUser();
         userProfileService.changeName(me, name.getName());
+
+        return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
+    }
+
+    @PutMapping("/photo")
+    public ResponseEntity<ResultResponse> changePhoto(@Valid @RequestBody NameRequest photo) {
+        User me = userService.getCurrentUser();
+        userProfileService.changePhoto(me, photo.getName());
 
         return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
     }

@@ -21,6 +21,12 @@ const strings: StringSet = {
   authenticationFailed: 'Nieprawidłowy login lub hasło',
   messagePlaceholder: 'Napisz wiadomość',
   settings: 'Ustawienia',
+  language: 'Język',
+  theme: 'Motyw',
+  selectLanguage: 'Wybierz język',
+  selectTheme: 'Wybierz motyw',
+  PL: 'Polski',
+  ENG: 'Angielski',
 };
 
 export default strings;

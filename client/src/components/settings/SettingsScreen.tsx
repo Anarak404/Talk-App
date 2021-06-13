@@ -1,10 +1,10 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import React from 'react';
-import { Header } from 'react-native-elements';
-import { DrawerParamList } from '../Navigation';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
-import { useContext } from 'react';
+import { Header } from 'react-native-elements';
 import { settingsContext } from '../../contexts';
+import { DrawerParamList } from '../Navigation';
+import { Settings } from './Settings';
 import { UserInfo } from './UserInfo';
 
 interface IProps {
@@ -29,6 +29,7 @@ export function SettingsScreen({ navigation }: IProps) {
         }}
       />
       <UserInfo />
+      <Settings />
     </>
   );
 }

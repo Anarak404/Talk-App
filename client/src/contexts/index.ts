@@ -19,3 +19,4 @@ export {
 } from './store/DataStoreContext';
 export { IUser } from './store/DataStoreTypes';
 export { userContext, UserContextProvider } from './user/UserContext';
+export { AppTheme, Language } from './settings/SettingsTypes';

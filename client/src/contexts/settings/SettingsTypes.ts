@@ -44,4 +44,10 @@ export type StringId =
   | 'serverError'
   | 'authenticationFailed'
   | 'messagePlaceholder'
-  | 'settings';
+  | 'settings'
+  | 'language'
+  | 'theme'
+  | 'selectLanguage'
+  | 'selectTheme'
+  | 'PL'
+  | 'ENG';

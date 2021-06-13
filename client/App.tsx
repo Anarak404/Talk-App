@@ -1,4 +1,5 @@
 import React from 'react';
+import { ThemeProvider } from 'react-native-elements';
 import { Navigation } from './src/components/Navigation';
 import {
   CallContextProvider,
@@ -9,14 +10,16 @@ import {
 
 export default function App() {
   return (
-    <DataStoreContextProvider>
-      <SettingsContextProvider>
-        <SessionContextProvider>
-          <CallContextProvider>
-            <Navigation />
-          </CallContextProvider>
-        </SessionContextProvider>
-      </SettingsContextProvider>
-    </DataStoreContextProvider>
+    <ThemeProvider>
+      <DataStoreContextProvider>
+        <SettingsContextProvider>
+          <SessionContextProvider>
+            <CallContextProvider>
+              <Navigation />
+            </CallContextProvider>
+          </SessionContextProvider>
+        </SettingsContextProvider>
+      </DataStoreContextProvider>
+    </ThemeProvider>
   );
 }

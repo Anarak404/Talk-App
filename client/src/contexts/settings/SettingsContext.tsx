@@ -1,6 +1,12 @@
 import { useAsyncStorage } from '@react-native-community/async-storage';
-import React, { createContext, useCallback, useState } from 'react';
-import { useEffect } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import { ThemeContext } from 'react-native-elements';
 import eng from '../../strings/eng';
 import pl from '../../strings/pl';
 import {
@@ -11,6 +17,7 @@ import {
   StringId,
   StringSet,
 } from './SettingsTypes';
+import { darkTheme, lightTheme } from './theme';
 
 const defaultValue: ISettingsContext = {
   setLanguage: (lang: Language) => void 0,
@@ -36,6 +43,7 @@ export function SettingsContextProvider({ children }: ISettingsContextProps) {
 
   const { getItem: getLang, setItem: persistLang } = useAsyncStorage('lang');
   const { getItem: getTheme, setItem: persistTheme } = useAsyncStorage('theme');
+  const { updateTheme } = useContext(ThemeContext);
 
   useEffect(() => {
     getLang().then((x) => {
@@ -46,7 +54,9 @@ export function SettingsContextProvider({ children }: ISettingsContextProps) {
 
     getTheme().then((x) => {
       if (x) {
-        setTheme(AppTheme[x as keyof typeof AppTheme]);
+        const savedTheme = AppTheme[x as keyof typeof AppTheme];
+        setTheme(savedTheme);
+        updateTheme(savedTheme === AppTheme.DARK ? darkTheme : lightTheme);
       }
     });
 
@@ -62,8 +72,9 @@ export function SettingsContextProvider({ children }: ISettingsContextProps) {
   useEffect(() => {
     if (initialized) {
       persistTheme(AppTheme[theme]);
+      updateTheme(theme === AppTheme.DARK ? darkTheme : lightTheme);
     }
-  }, [theme]);
+  }, [theme, updateTheme]);
 
   const getString = useCallback(
     (text: StringId) => {

@@ -1,12 +1,19 @@
 import React, { useCallback, useContext } from 'react';
-import { ScrollView, StyleSheet, View } from 'react-native';
-import { Divider, ListItem, Text } from 'react-native-elements';
+import { ScrollView, View } from 'react-native';
+import {
+  Divider,
+  FullTheme,
+  ListItem,
+  makeStyles,
+  Text,
+} from 'react-native-elements';
 import ListItemTitle from 'react-native-elements/dist/list/ListItemTitle';
 import { AppTheme, settingsContext } from '../../contexts';
 import { ISettingsViewProps } from './Settings';
 
 export function ThemeSelector({ closeModal }: ISettingsViewProps) {
   const { getString, setTheme } = useContext(settingsContext);
+  const styles = useStyles();
 
   const selectLightTheme = useCallback(() => {
     closeModal();
@@ -19,7 +26,7 @@ export function ThemeSelector({ closeModal }: ISettingsViewProps) {
   }, [setTheme, closeModal]);
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.title}>{getString('selectTheme')}</Text>
       <Divider />
       <ScrollView>
@@ -38,10 +45,13 @@ export function ThemeSelector({ closeModal }: ISettingsViewProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme: Partial<FullTheme>) => ({
   title: {
     textAlign: 'center',
     paddingVertical: 15,
     fontSize: 20,
   },
-});
+  container: {
+    backgroundColor: theme.colors?.primary,
+  },
+}));

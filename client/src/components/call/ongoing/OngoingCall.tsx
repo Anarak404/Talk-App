@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Avatars } from './Avatars';
 import { Controls } from './Controls';
 
@@ -12,10 +13,12 @@ export function OngoingCall() {
   };
 
   return (
-    <View style={styles.container}>
-      <Avatars me={me} attender={attender} />
-      <Controls />
-    </View>
+    <SafeAreaView>
+      <View style={styles.container}>
+        <Avatars me={me} attender={attender} />
+        <Controls />
+      </View>
+    </SafeAreaView>
   );
 }
 

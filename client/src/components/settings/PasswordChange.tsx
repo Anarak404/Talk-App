@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, ToastAndroid, View } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { ToastAndroid, View } from 'react-native';
+import { Button, FullTheme, Input, makeStyles } from 'react-native-elements';
 import { changePassword } from '../../api';
 import { sessionContext, settingsContext } from '../../contexts';
 import { isStrongPassword } from '../../utils/validators';
@@ -13,6 +13,8 @@ export function PasswordChange({ closeModal }: ISettingsViewProps) {
   const [loading, setLoading] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
+
+  const styles = useStyles();
 
   const onChangePassword = () => {
     if (!isStrongPassword(newPassword)) {
@@ -58,8 +60,9 @@ export function PasswordChange({ closeModal }: ISettingsViewProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme: Partial<FullTheme>) => ({
   container: {
     padding: 15,
+    backgroundColor: theme.backgroundColor,
   },
-});
+}));

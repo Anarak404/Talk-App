@@ -111,6 +111,8 @@ const styles = StyleSheet.create({
   overlay: {
     width: '75%',
     padding: 0,
+    borderRadius: 3,
+    overflow: 'hidden',
   },
   title: {
     fontSize: 18,

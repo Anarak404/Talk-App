@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, ToastAndroid, View } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { ToastAndroid, View } from 'react-native';
+import { Button, FullTheme, Input, makeStyles } from 'react-native-elements';
 import { changePhoto } from '../../api';
 import {
   dataStoreContext,
@@ -16,6 +16,8 @@ export function PhotoChange({ closeModal }: ISettingsViewProps) {
 
   const [photo, setPhoto] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const styles = useStyles();
 
   const changePhotoUrl = () => {
     const url = photo.trim();
@@ -50,8 +52,9 @@ export function PhotoChange({ closeModal }: ISettingsViewProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme: Partial<FullTheme>) => ({
   container: {
     padding: 15,
+    backgroundColor: theme.backgroundColor,
   },
-});
+}));

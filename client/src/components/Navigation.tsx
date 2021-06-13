@@ -1,11 +1,14 @@
 import {
   createDrawerNavigator,
+  DrawerContentComponentProps,
+  DrawerContentOptions,
   DrawerNavigationProp,
 } from '@react-navigation/drawer';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import React, { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { Dimensions } from 'react-native';
+import { withTheme } from 'react-native-elements';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { IncomingCallContextProvider, sessionContext } from '../contexts';
 import { Login, Register } from './authentication';
@@ -29,8 +32,15 @@ const Drawer = createDrawerNavigator<DrawerParamList>();
 
 const windowWidth = Dimensions.get('window').width;
 
-export function Navigation() {
+export const Navigation = withTheme(() => {
   const { loggedIn, isIncomingCall } = useContext(sessionContext);
+
+  const drawerContentComponent = useCallback(
+    (props: DrawerContentComponentProps<DrawerContentOptions>) => (
+      <DrawerContent {...props} />
+    ),
+    []
+  );
 
   return (
     <SafeAreaProvider>
@@ -40,7 +50,7 @@ export function Navigation() {
             <Drawer.Navigator
               edgeWidth={windowWidth / 3}
               drawerType="slide"
-              drawerContent={DrawerContent}
+              drawerContent={drawerContentComponent}
               drawerStyle={{ width: '80%' }}
               initialRouteName="Settings"
             >
@@ -65,4 +75,4 @@ export function Navigation() {
       </NavigationContainer>
     </SafeAreaProvider>
   );
-}
+}, 'theme');

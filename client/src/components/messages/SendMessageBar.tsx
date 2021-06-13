@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useRef } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
-import { Input } from 'react-native-elements';
+import { TextInput, View } from 'react-native';
+import { FullTheme, Input, makeStyles } from 'react-native-elements';
 import { Icon } from 'react-native-elements/dist/icons/Icon';
 import { settingsContext } from '../../contexts';
 
@@ -13,6 +13,8 @@ export function SendMessageBar({ sendMessage }: IProps) {
 
   const inputRef = useRef() as React.MutableRefObject<TextInput>;
   const message = useRef('');
+
+  const styles = useStyles();
 
   const setMessage = useCallback(
     (text: string) => {
@@ -44,7 +46,7 @@ export function SendMessageBar({ sendMessage }: IProps) {
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme: Partial<FullTheme>) => ({
   container: {
     width: '100%',
     flexDirection: 'row',
@@ -57,5 +59,6 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginHorizontal: 7,
+    color: theme.Icon?.color,
   },
-});
+}));

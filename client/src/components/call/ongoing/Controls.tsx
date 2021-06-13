@@ -1,10 +1,11 @@
 import React, { useContext } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { FAB, Icon } from 'react-native-elements';
+import { View } from 'react-native';
+import { FAB, FullTheme, Icon, makeStyles } from 'react-native-elements';
 import { callContext } from '../../../contexts';
 
 export function Controls() {
   const { endCall } = useContext(callContext);
+  const styles = useStyles();
 
   return (
     <View style={styles.container}>
@@ -21,7 +22,7 @@ export function Controls() {
 const buttonSize = 60;
 const iconSize = 25;
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme: Partial<FullTheme>) => ({
   container: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -34,6 +35,6 @@ const styles = StyleSheet.create({
     height: buttonSize,
   },
   disconnectButton: {
-    backgroundColor: '#ff0000',
+    backgroundColor: theme.red,
   },
-});
+}));

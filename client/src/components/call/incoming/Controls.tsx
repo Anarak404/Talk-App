@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { StyleProp, StyleSheet, View, ViewStyle } from 'react-native';
-import { Icon } from 'react-native-elements';
+import { StyleProp, View, ViewStyle } from 'react-native';
+import { FullTheme, Icon, makeStyles } from 'react-native-elements';
 import { FAB } from 'react-native-elements/dist/buttons/FAB';
 import { incomingCallContext } from '../../../contexts';
 
@@ -10,6 +10,7 @@ interface IProps {
 
 export function Controls({ style }: IProps) {
   const { answer, reject } = useContext(incomingCallContext);
+  const styles = useStyles();
 
   return (
     <View style={[style, styles.container]}>
@@ -32,7 +33,7 @@ export function Controls({ style }: IProps) {
 const buttonSize = 85;
 const iconSize = 40;
 
-const styles = StyleSheet.create({
+const useStyles = makeStyles((theme: Partial<FullTheme>) => ({
   container: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -45,9 +46,9 @@ const styles = StyleSheet.create({
     height: buttonSize,
   },
   rejectButton: {
-    backgroundColor: '#ff0000',
+    backgroundColor: theme.red,
   },
   answerButton: {
-    backgroundColor: '#00ff00',
+    backgroundColor: theme.green,
   },
-});
+}));

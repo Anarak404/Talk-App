@@ -73,4 +73,8 @@ export class PeerConnection {
       );
     }
   }
+
+  public close() {
+    this.connection.close();
+  }
 }

@@ -48,6 +48,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
   const [stream, setStream] = useState<MediaStream>();
 
   const { findUser } = useContext(dataStoreContext);
+  const { httpClient, token } = useContext(sessionContext);
 
   useEffect(() => {
     mediaDevices
@@ -61,22 +62,29 @@ export function CallContextProvider({ children }: ICallContextProps) {
       });
   }, []);
 
-  const { httpClient, token } = useContext(sessionContext);
-
   const toggleMute = useCallback(() => {
     setMuted((v) => !v);
   }, [setMuted]);
 
-  const endCall = useCallback(() => {
-    setInCall(false);
-  }, [setInCall]);
-
   const disconnect = useCallback(() => {
+    connection?.send('/app/disconnect', undefined);
     connection?.disconnect();
     setConnection(undefined);
     setInCall(false);
     setAttender(undefined);
+    peer.current?.close();
+    peer.current = undefined;
   }, [setConnection, setInCall, setAttender, connection]);
+
+  const disconnectWebsocketCallback = useRef(disconnect);
+
+  useEffect(() => {
+    disconnectWebsocketCallback.current = disconnect;
+  }, [disconnect]);
+
+  const endCall = useCallback(() => {
+    disconnect();
+  }, [disconnect]);
 
   const connectToCall = useCallback(
     async (callId: number) => {
@@ -107,6 +115,9 @@ export function CallContextProvider({ children }: ICallContextProps) {
             const { sessionDescription } = body;
             peer.current?.setRemoteDescription(sessionDescription);
           });
+          client.subscribe('/user/channel/disconnect', () =>
+            disconnectWebsocketCallback.current()
+          );
           client.send(`/app/join`, JSON.stringify({ id: callId }));
         },
         () => disconnect()
@@ -114,7 +125,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
 
       setConnection(client);
     },
-    [setConnection, token, PeerConnection]
+    [setConnection, token, PeerConnection, disconnect]
   );
 
   const startCall = useCallback(

@@ -34,3 +34,7 @@ export interface ISessionDescription {
   peerId: number;
   sessionDescription: RTCSessionDescriptionType;
 }
+
+export interface IRemovePeer {
+  peerId: number;
+}

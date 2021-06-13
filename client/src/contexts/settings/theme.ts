@@ -1,7 +1,7 @@
 import { Theme } from 'react-native-elements';
 
 const red = '#d90429';
-const green = '#70e000';
+const green = '#29bf12';
 
 export const darkTheme: Theme = {
   colors: {

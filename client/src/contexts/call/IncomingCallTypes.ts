@@ -1,7 +1,8 @@
 import React from 'react';
+import { IUser } from '../store/DataStoreTypes';
 
 export interface IIncomingCallContext {
-  caller: ICaller;
+  caller: IUser;
   answer(): void;
   reject(): void;
 }
@@ -12,11 +13,5 @@ export interface IIncomingCallContextProps {
 
 export interface IIncomingCall {
   id: number;
-  caller: ICaller;
-}
-
-export interface ICaller {
-  id: number;
-  name: string;
-  photo: string | null;
+  caller: IUser;
 }

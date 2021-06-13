@@ -15,7 +15,7 @@ interface IProps {
 }
 
 export function UserScreen({ route, navigation }: IProps) {
-  const { inCall, attenderId } = useContext(callContext);
+  const { inCall, attender } = useContext(callContext);
 
   const styles = useStyles();
 
@@ -28,7 +28,7 @@ export function UserScreen({ route, navigation }: IProps) {
   return (
     <UserContextProvider userId={userId}>
       <View style={styles.container}>
-        {inCall && userId === attenderId ? (
+        {inCall && userId === attender?.id ? (
           <OngoingCall />
         ) : (
           <UserHeader openDrawer={openDrawer} />

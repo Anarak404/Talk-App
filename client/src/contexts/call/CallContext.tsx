@@ -11,6 +11,8 @@ import SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
 import { serverAddress, startCall as startCallApi } from '../../api';
 import { sessionContext } from '../session/SessionContext';
+import { dataStoreContext } from '../store/DataStoreContext';
+import { IUser } from '../store/DataStoreTypes';
 import { PeerConnection } from './call';
 import {
   IAddPeer,
@@ -19,15 +21,16 @@ import {
   IIceCandidate,
   ISessionDescription,
 } from './CallTypes';
+import { IIncomingCall } from './IncomingCallTypes';
 
 const defaultValue: ICallContext = {
   muted: false,
   inCall: false,
-  attenderId: 0,
+  attender: undefined,
   toggleMute: () => void 0,
   endCall: () => void 0,
   startCall: (userId: number) => void 0,
-  joinCall: (callId: number) => void 0,
+  joinCall: (caller: IIncomingCall) => void 0,
 };
 
 export const callContext = createContext<ICallContext>(defaultValue);
@@ -39,10 +42,12 @@ const url = `${serverAddress}/join`;
 export function CallContextProvider({ children }: ICallContextProps) {
   const [muted, setMuted] = useState(false);
   const [inCall, setInCall] = useState(false);
-  const [attenderId, setAttenderId] = useState(0);
+  const [attender, setAttender] = useState<IUser>();
   const [connection, setConnection] = useState<Stomp.Client>();
   const peer = useRef<PeerConnection>();
   const [stream, setStream] = useState<MediaStream>();
+
+  const { findUser } = useContext(dataStoreContext);
 
   useEffect(() => {
     mediaDevices
@@ -70,8 +75,8 @@ export function CallContextProvider({ children }: ICallContextProps) {
     connection?.disconnect();
     setConnection(undefined);
     setInCall(false);
-    setAttenderId(0);
-  }, [setConnection, setInCall, setAttenderId, connection]);
+    setAttender(undefined);
+  }, [setConnection, setInCall, setAttender, connection]);
 
   const connectToCall = useCallback(
     async (callId: number) => {
@@ -118,15 +123,17 @@ export function CallContextProvider({ children }: ICallContextProps) {
         .then((d) => connectToCall(d.id))
         .catch(() => disconnect());
 
-      setAttenderId(userId);
+      setAttender(findUser(userId));
       setInCall(true);
     },
-    [setInCall, setAttenderId, startCallApi, connectToCall, disconnect]
+    [setInCall, setAttender, startCallApi, connectToCall, disconnect]
   );
 
   const joinCall = useCallback(
-    (callId: number) => {
-      connectToCall(callId);
+    (call: IIncomingCall) => {
+      connectToCall(call.id);
+      setAttender(call.caller);
+      setInCall(true);
     },
     [connectToCall]
   );
@@ -136,7 +143,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
       value={{
         muted,
         inCall,
-        attenderId,
+        attender,
         toggleMute,
         endCall,
         startCall,

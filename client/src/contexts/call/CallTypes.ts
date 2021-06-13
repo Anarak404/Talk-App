@@ -3,15 +3,17 @@ import {
   RTCIceCandidateType,
   RTCSessionDescriptionType,
 } from 'react-native-webrtc';
+import { IUser } from '../store/DataStoreTypes';
+import { IIncomingCall } from './IncomingCallTypes';
 
 export interface ICallContext {
   muted: boolean;
   inCall: boolean;
-  attenderId: number;
+  attender?: IUser;
   toggleMute(): void;
   endCall(): void;
   startCall(userId: number): void;
-  joinCall(callId: number): void;
+  joinCall(call: IIncomingCall): void;
 }
 
 export interface ICallContextProps {

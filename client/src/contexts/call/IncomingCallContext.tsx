@@ -25,9 +25,9 @@ export function IncomingCallContextProvider({
   const [caller] = useState(incomingCall.caller);
 
   const answer = useCallback(() => {
-    joinCall(incomingCall.id);
+    joinCall(incomingCall);
     rejectOrAnswerCall();
-  }, [rejectOrAnswerCall, joinCall, incomingCall.id]);
+  }, [rejectOrAnswerCall, joinCall, incomingCall]);
 
   const reject = useCallback(() => {
     rejectOrAnswerCall();

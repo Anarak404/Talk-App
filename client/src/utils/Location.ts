@@ -1,9 +1,5 @@
 import { PermissionsAndroid, Platform } from 'react-native';
-import {
-  GeoCoordinates,
-  GeoPosition,
-  getCurrentPosition,
-} from 'react-native-geolocation-service';
+import * as Geolocation from 'react-native-geolocation-service';
 
 const hasLocationPermission = async () => {
   if (Platform.OS === 'android' && Platform.Version < 23) {
@@ -29,7 +25,7 @@ const hasLocationPermission = async () => {
   return false;
 };
 
-export const getPosition = async (): Promise<GeoCoordinates> => {
+export const getPosition = async (): Promise<Geolocation.GeoCoordinates> => {
   const hasPermission = await hasLocationPermission();
 
   return new Promise((resolve, reject) => {
@@ -38,16 +34,11 @@ export const getPosition = async (): Promise<GeoCoordinates> => {
       return;
     }
 
-    getCurrentPosition(
-      (location: GeoPosition) => resolve(location.coords),
-      (e) => reject(e),
-      {
-        enableHighAccuracy: true,
-        distanceFilter: 0,
-        forceRequestLocation: true,
-        showLocationDialog: true,
-        maximumAge: 10000,
-      }
+    /// @ts-ignore
+    Geolocation.default.getCurrentPosition(
+      (location: Geolocation.GeoPosition) => resolve(location.coords),
+      (e: Geolocation.ErrorCallback | undefined) => reject(e),
+      { enableHighAccuracy: true }
     );
   });
 };

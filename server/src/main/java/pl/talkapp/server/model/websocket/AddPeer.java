@@ -4,7 +4,7 @@ import lombok.Value;
 
 @Value
 public class AddPeer {
-    String peerId;
+    Long peerId;
 
     boolean createOffer;
 }

@@ -4,5 +4,5 @@ import lombok.Value;
 
 @Value
 public class RemovePeer {
-    String peerId;
+    Long peerId;
 }

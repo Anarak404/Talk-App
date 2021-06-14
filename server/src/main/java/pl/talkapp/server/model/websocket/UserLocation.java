@@ -6,7 +6,7 @@ import pl.talkapp.server.model.Location;
 @Value
 public class UserLocation {
 
-    String userId;
+    Long userId;
     Location location;
 
 }

@@ -31,9 +31,9 @@ public class ChannelListener {
             String me = payload.getUserId();
 
             template.convertAndSendToUser(user, "/channel/addPeer",
-                new AddPeer(me, false));
+                new AddPeer(Long.valueOf(me), false));
             template.convertAndSendToUser(me, "/channel/addPeer",
-                new AddPeer(user, true));
+                new AddPeer(Long.valueOf(user), true));
         });
     }
 
@@ -43,8 +43,8 @@ public class ChannelListener {
         String id = payload.getUserId();
 
         payload.getChannelMembers().forEach(user -> {
-            template.convertAndSendToUser(user, "/channel/disconnect", new RemovePeer(id));
-            template.convertAndSendToUser(id, "/channel/disconnect", new RemovePeer(user));
+            template.convertAndSendToUser(user, "/channel/disconnect", new RemovePeer(Long.valueOf(id)));
+            template.convertAndSendToUser(id, "/channel/disconnect", new RemovePeer(Long.valueOf(user)));
         });
     }
 

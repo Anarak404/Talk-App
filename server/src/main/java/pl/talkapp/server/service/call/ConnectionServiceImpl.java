@@ -66,7 +66,7 @@ public class ConnectionServiceImpl implements ConnectionService {
         if (userData != null) {
             List<UserLocation> usersLocation =
                 userData.entrySet().stream()
-                    .map(e -> new UserLocation(e.getKey(), e.getValue()))
+                    .map(e -> new UserLocation(Long.valueOf(e.getKey()), e.getValue()))
                     .collect(Collectors.toList());
 
             eventPublisher.publishEvent(new GeolocationEvent<>(this,

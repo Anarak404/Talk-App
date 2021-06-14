@@ -5,10 +5,11 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import pl.talkapp.server.dto.request.IdRequest;
 import pl.talkapp.server.dto.request.websocket.ICECandidatePayload;
+import pl.talkapp.server.dto.request.websocket.JoinRequest;
 import pl.talkapp.server.dto.request.websocket.MessageRequest;
 import pl.talkapp.server.dto.request.websocket.SessionDescriptionPayload;
+import pl.talkapp.server.model.Location;
 import pl.talkapp.server.model.Message;
 import pl.talkapp.server.service.call.ConnectionService;
 import pl.talkapp.server.service.message.MessageService;
@@ -30,10 +31,11 @@ public class WebSocketController {
     }
 
     @MessageMapping("/join")
-    public void joinChannel(@Payload IdRequest req, SimpMessageHeaderAccessor headerAccessor) {
+    public void joinChannel(@Payload JoinRequest req, SimpMessageHeaderAccessor headerAccessor) {
         String userId = headerAccessor.getUser().getName();
         Long callId = req.getId();
-        connectionService.joinCall(callId, userId);
+        Location location = req.getLocation();
+        connectionService.joinCall(callId, userId, location);
     }
 
     @MessageMapping("/relayICECandidate")

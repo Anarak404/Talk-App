@@ -86,12 +86,26 @@ export function CallContextProvider({ children }: ICallContextProps) {
     disconnectWebsocketCallback.current = disconnect;
   }, [disconnect]);
 
+  const getLocation = useCallback(async () => {
+    const location: ICallRequest = {};
+
+    try {
+      const coordinates = await getPosition();
+      location.locationX = coordinates.longitude;
+      location.locationY = coordinates.latitude;
+    } catch (e) {
+      console.log('Unable to get location', e);
+    }
+
+    return location;
+  }, []);
+
   const endCall = useCallback(() => {
     disconnect();
   }, [disconnect]);
 
   const connectToCall = useCallback(
-    async (callId: number) => {
+    async (callId: number, location: ICallRequest) => {
       const client = Stomp.over(new SockJS(url));
 
       client.connect(
@@ -112,7 +126,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
             disconnectWebsocketCallback.current()
           );
 
-          client.send(`/app/join`, JSON.stringify({ id: callId }));
+          client.send(`/app/join`, JSON.stringify({ id: callId, location }));
         },
         disconnectWebsocketCallback.current
       );
@@ -124,24 +138,17 @@ export function CallContextProvider({ children }: ICallContextProps) {
 
   const startCall = useCallback(
     async (userId: number) => {
-      const location: ICallRequest = {};
-
-      try {
-        const coordinates = await getPosition();
-        location.locationX = coordinates.longitude;
-        location.locationY = coordinates.latitude;
-      } catch (e) {
-        console.log('Unable to get location', e);
-      }
+      const location = await getLocation();
 
       startCallApi(httpClient, userId, location)
-        .then((d) => connectToCall(d.id))
+        .then((d) => connectToCall(d.id, location))
         .catch(() => disconnectWebsocketCallback.current());
 
       setAttender(findUser(userId));
       setInCall(true);
     },
     [
+      getLocation,
       httpClient,
       connectToCall,
       disconnectWebsocketCallback,
@@ -152,12 +159,14 @@ export function CallContextProvider({ children }: ICallContextProps) {
   );
 
   const joinCall = useCallback(
-    (call: IIncomingCall) => {
-      connectToCall(call.id);
+    async (call: IIncomingCall) => {
+      const location = await getLocation();
+
+      connectToCall(call.id, location);
       setAttender(call.caller);
       setInCall(true);
     },
-    [connectToCall, setAttender, setInCall]
+    [getLocation, connectToCall, setAttender, setInCall]
   );
 
   return (

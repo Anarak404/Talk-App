@@ -14,6 +14,7 @@ export interface ICallContext {
   endCall(): void;
   startCall(userId: number): void;
   joinCall(call: IIncomingCall): void;
+  locations: IGeolocation[];
 }
 
 export interface ICallContextProps {

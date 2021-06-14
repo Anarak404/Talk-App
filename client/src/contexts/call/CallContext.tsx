@@ -36,6 +36,7 @@ const defaultValue: ICallContext = {
   endCall: () => void 0,
   startCall: (userId: number) => void 0,
   joinCall: (caller: IIncomingCall) => void 0,
+  locations: [],
 };
 
 export const callContext = createContext<ICallContext>(defaultValue);
@@ -51,6 +52,8 @@ export function CallContextProvider({ children }: ICallContextProps) {
   const [connection, setConnection] = useState<Stomp.Client>();
   const peer = useRef<PeerConnection>();
   const [stream, setStream] = useState<MediaStream>();
+  const [locations, setLocations] = useState<IGeolocation[]>([]);
+  const setLocationsRef = useRef(setLocations);
 
   const { findUser } = useContext(dataStoreContext);
   const { httpClient, token } = useContext(sessionContext);
@@ -131,7 +134,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
           );
           client.subscribe('/user/channel/geolocation', (m) => {
             const body: IGeolocation[] = JSON.parse(m.body);
-            // handle geolocation
+            setLocationsRef.current(body);
           });
 
           client.send(`/app/join`, JSON.stringify({ id: callId, location }));
@@ -141,7 +144,14 @@ export function CallContextProvider({ children }: ICallContextProps) {
 
       setConnection(client);
     },
-    [token, peer, disconnectWebsocketCallback, stream, setConnection]
+    [
+      token,
+      peer,
+      disconnectWebsocketCallback,
+      stream,
+      setConnection,
+      setLocationsRef,
+    ]
   );
 
   const startCall = useCallback(
@@ -193,6 +203,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
         endCall,
         startCall,
         joinCall,
+        locations,
       }}
     >
       {children}

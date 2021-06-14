@@ -8,7 +8,7 @@ import {
   ISessionDescription,
 } from '../contexts/call/CallTypes';
 
-const onIceCandidate = (
+export const onIceCandidate = (
   peer: React.MutableRefObject<PeerConnection | undefined>
 ) => {
   return (m: Stomp.Message) => {
@@ -18,7 +18,7 @@ const onIceCandidate = (
   };
 };
 
-const onSessionDescription = (
+export const onSessionDescription = (
   peer: React.MutableRefObject<PeerConnection | undefined>
 ) => {
   return (m: Stomp.Message) => {
@@ -28,7 +28,7 @@ const onSessionDescription = (
   };
 };
 
-const onAddPeer = (
+export const onAddPeer = (
   peer: React.MutableRefObject<PeerConnection | undefined>,
   client: Stomp.Client,
   stream: MediaStream | undefined
@@ -41,27 +41,5 @@ const onAddPeer = (
       peerConnection.createOffer();
     }
     peer.current = peerConnection;
-  };
-};
-
-export const onConnect = (
-  client: Stomp.Client,
-  peer: React.MutableRefObject<PeerConnection | undefined>,
-  stream: MediaStream | undefined,
-  disconnectCallback: React.MutableRefObject<() => void>,
-  callId: number
-) => {
-  return () => {
-    client.subscribe('/user/channel/addPeer', onAddPeer(peer, client, stream));
-    client.subscribe('/user/channel/ICECandidate', onIceCandidate(peer));
-    client.subscribe(
-      '/user/channel/sessionDescription',
-      onSessionDescription(peer)
-    );
-    client.subscribe('/user/channel/disconnect', () =>
-      disconnectCallback.current()
-    );
-
-    client.send(`/app/join`, JSON.stringify({ id: callId }));
   };
 };

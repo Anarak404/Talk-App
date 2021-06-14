@@ -15,7 +15,11 @@ import {
   startCall as startCallApi,
 } from '../../api';
 import { getPosition } from '../../utils/Location';
-import { onConnect } from '../../utils/RTCCallbacks';
+import {
+  onAddPeer,
+  onIceCandidate,
+  onSessionDescription,
+} from '../../utils/RTCCallbacks';
 import { sessionContext } from '../session/SessionContext';
 import { dataStoreContext } from '../store/DataStoreContext';
 import { IUser } from '../store/DataStoreTypes';
@@ -94,7 +98,22 @@ export function CallContextProvider({ children }: ICallContextProps) {
         {
           login: token,
         },
-        onConnect(client, peer, stream, disconnectWebsocketCallback, callId),
+        () => {
+          client.subscribe(
+            '/user/channel/addPeer',
+            onAddPeer(peer, client, stream)
+          );
+          client.subscribe('/user/channel/ICECandidate', onIceCandidate(peer));
+          client.subscribe(
+            '/user/channel/sessionDescription',
+            onSessionDescription(peer)
+          );
+          client.subscribe('/user/channel/disconnect', () =>
+            disconnectWebsocketCallback.current()
+          );
+
+          client.send(`/app/join`, JSON.stringify({ id: callId }));
+        },
         disconnectWebsocketCallback.current
       );
 

@@ -12,7 +12,7 @@ interface IProps extends IUser {
 
 export function Friend({ id, name, photo, navigation }: IProps) {
   const changeUser = useCallback(() => {
-    navigation.navigate('User', { id: id });
+    navigation.navigate('User', { id });
   }, [id, navigation]);
 
   return (

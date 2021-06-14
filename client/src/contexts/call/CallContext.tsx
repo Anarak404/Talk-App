@@ -9,7 +9,12 @@ import React, {
 import { mediaDevices, MediaStream } from 'react-native-webrtc';
 import SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
-import { serverAddress, startCall as startCallApi } from '../../api';
+import {
+  ICallRequest,
+  serverAddress,
+  startCall as startCallApi,
+} from '../../api';
+import { getPosition } from '../../utils/Location';
 import { onConnect } from '../../utils/RTCCallbacks';
 import { sessionContext } from '../session/SessionContext';
 import { dataStoreContext } from '../store/DataStoreContext';
@@ -99,8 +104,21 @@ export function CallContextProvider({ children }: ICallContextProps) {
   );
 
   const startCall = useCallback(
-    (userId: number) => {
-      startCallApi(httpClient, userId, {})
+    async (userId: number) => {
+      const location: ICallRequest = {};
+      console.error(getPosition);
+      try {
+        const coordinates = await getPosition();
+        location.locationX = coordinates.longitude;
+        location.locationY = coordinates.latitude;
+        console.log(coordinates);
+      } catch (e) {
+        console.error(e);
+      }
+
+      console.warn(location);
+
+      startCallApi(httpClient, userId, location)
         .then((d) => connectToCall(d.id))
         .catch(() => disconnectWebsocketCallback.current());
 

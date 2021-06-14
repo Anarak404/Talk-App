@@ -12,4 +12,4 @@ export {
   IResultResponse,
 } from './user/types';
 
-export const serverAddress = 'http://192.168.0.220:8080';
+export const serverAddress = 'http://192.168.0.73:8080';

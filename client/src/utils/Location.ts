@@ -1,5 +1,5 @@
 import { PermissionsAndroid, Platform } from 'react-native';
-import * as Geolocation from 'react-native-geolocation-service';
+import Geolocation from 'react-native-geolocation-service';
 
 const hasLocationPermission = async () => {
   if (Platform.OS === 'android' && Platform.Version < 23) {
@@ -34,10 +34,9 @@ export const getPosition = async (): Promise<Geolocation.GeoCoordinates> => {
       return;
     }
 
-    /// @ts-ignore
-    Geolocation.default.getCurrentPosition(
+    Geolocation.getCurrentPosition(
       (location: Geolocation.GeoPosition) => resolve(location.coords),
-      (e: Geolocation.ErrorCallback | undefined) => reject(e),
+      (e) => reject(e),
       { enableHighAccuracy: true }
     );
   });

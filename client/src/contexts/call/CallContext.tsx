@@ -106,17 +106,14 @@ export function CallContextProvider({ children }: ICallContextProps) {
   const startCall = useCallback(
     async (userId: number) => {
       const location: ICallRequest = {};
-      console.error(getPosition);
+
       try {
         const coordinates = await getPosition();
         location.locationX = coordinates.longitude;
         location.locationY = coordinates.latitude;
-        console.log(coordinates);
       } catch (e) {
-        console.error(e);
+        console.log('Unable to get location', e);
       }
-
-      console.warn(location);
 
       startCallApi(httpClient, userId, location)
         .then((d) => connectToCall(d.id))

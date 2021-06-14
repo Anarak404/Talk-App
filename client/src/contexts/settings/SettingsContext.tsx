@@ -52,13 +52,17 @@ export function SettingsContextProvider({ children }: ISettingsContextProps) {
       }
     });
 
-    getTheme().then((x) => {
-      if (x) {
-        const savedTheme = AppTheme[x as keyof typeof AppTheme];
-        setTheme(savedTheme);
-        updateTheme(savedTheme === AppTheme.DARK ? darkTheme : lightTheme);
-      }
-    });
+    getTheme()
+      .then((x) => {
+        if (x) {
+          const savedTheme = AppTheme[x as keyof typeof AppTheme];
+          setTheme(savedTheme);
+          updateTheme(savedTheme === AppTheme.DARK ? darkTheme : lightTheme);
+        }
+      })
+      .catch(() =>
+        updateTheme(theme === AppTheme.DARK ? darkTheme : lightTheme)
+      );
 
     setInitialized(true);
   }, []);

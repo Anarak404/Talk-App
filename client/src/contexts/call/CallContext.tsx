@@ -9,11 +9,7 @@ import React, {
 import { mediaDevices, MediaStream } from 'react-native-webrtc';
 import SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
-import {
-  ICallRequest,
-  serverAddress,
-  startCall as startCallApi,
-} from '../../api';
+import { serverAddress, startCall as startCallApi } from '../../api';
 import { getPosition } from '../../utils/Location';
 import {
   onAddPeer,
@@ -24,7 +20,12 @@ import { sessionContext } from '../session/SessionContext';
 import { dataStoreContext } from '../store/DataStoreContext';
 import { IUser } from '../store/DataStoreTypes';
 import { PeerConnection } from './call';
-import { ICallContext, ICallContextProps } from './CallTypes';
+import {
+  ICallContext,
+  ICallContextProps,
+  IGeolocation,
+  ILocation,
+} from './CallTypes';
 import { IIncomingCall } from './IncomingCallTypes';
 
 const defaultValue: ICallContext = {
@@ -87,12 +88,15 @@ export function CallContextProvider({ children }: ICallContextProps) {
   }, [disconnect]);
 
   const getLocation = useCallback(async () => {
-    const location: ICallRequest = {};
+    const location: ILocation = {
+      x: null,
+      y: null,
+    };
 
     try {
       const coordinates = await getPosition();
-      location.locationX = coordinates.longitude;
-      location.locationY = coordinates.latitude;
+      location.x = coordinates.longitude;
+      location.y = coordinates.latitude;
     } catch (e) {
       console.log('Unable to get location', e);
     }
@@ -105,7 +109,7 @@ export function CallContextProvider({ children }: ICallContextProps) {
   }, [disconnect]);
 
   const connectToCall = useCallback(
-    async (callId: number, location: ICallRequest) => {
+    async (callId: number, location: ILocation) => {
       const client = Stomp.over(new SockJS(url));
 
       client.connect(
@@ -125,6 +129,10 @@ export function CallContextProvider({ children }: ICallContextProps) {
           client.subscribe('/user/channel/disconnect', () =>
             disconnectWebsocketCallback.current()
           );
+          client.subscribe('/user/channel/geolocation', (m) => {
+            const body: IGeolocation[] = JSON.parse(m.body);
+            // handle geolocation
+          });
 
           client.send(`/app/join`, JSON.stringify({ id: callId, location }));
         },
@@ -140,7 +148,13 @@ export function CallContextProvider({ children }: ICallContextProps) {
     async (userId: number) => {
       const location = await getLocation();
 
-      startCallApi(httpClient, userId, location)
+      startCallApi(
+        httpClient,
+        userId,
+        location.x && location.y
+          ? { locationX: location.x, locationY: location.y }
+          : {}
+      )
         .then((d) => connectToCall(d.id, location))
         .catch(() => disconnectWebsocketCallback.current());
 

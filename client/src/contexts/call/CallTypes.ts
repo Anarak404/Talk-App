@@ -38,3 +38,13 @@ export interface ISessionDescription {
 export interface IRemovePeer {
   peerId: number;
 }
+
+export interface ILocation {
+  x: number | null;
+  y: number | null;
+}
+
+export interface IGeolocation {
+  userId: number;
+  location: ILocation;
+}

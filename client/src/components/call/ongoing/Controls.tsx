@@ -3,7 +3,11 @@ import { View } from 'react-native';
 import { FAB, FullTheme, Icon, makeStyles } from 'react-native-elements';
 import { callContext } from '../../../contexts';
 
-export function Controls() {
+interface IProps {
+  showMap(): void;
+}
+
+export function Controls({ showMap }: IProps) {
   const { endCall } = useContext(callContext);
   const styles = useStyles();
 
@@ -14,6 +18,12 @@ export function Controls() {
         icon={<Icon name="call-end" size={iconSize} />}
         containerStyle={styles.buttonContainer}
         onPress={endCall}
+      />
+      <FAB
+        buttonStyle={[styles.buttonStyle]}
+        icon={<Icon name="map" size={iconSize} type="material-community" />}
+        containerStyle={styles.buttonContainer}
+        onPress={showMap}
       />
     </View>
   );

@@ -1,10 +1,10 @@
 import { RouteProp } from '@react-navigation/core';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback, useContext, useState } from 'react';
 import { View } from 'react-native';
-import { FullTheme, makeStyles } from 'react-native-elements';
+import { FullTheme, makeStyles, Overlay } from 'react-native-elements';
 import { callContext, UserContextProvider } from '../../contexts';
-import { OngoingCall } from '../call';
+import { Map, OngoingCall } from '../call';
 import { DrawerParamList } from '../Navigation';
 import { MessagesView } from './MessagesView';
 import { UserHeader } from './UserHeader';
@@ -16,12 +16,16 @@ interface IProps {
 
 export function UserScreen({ route, navigation }: IProps) {
   const { inCall, attender } = useContext(callContext);
-
   const styles = useStyles();
+  const [visible, setVisible] = useState(false);
 
   const openDrawer = useCallback(() => {
     navigation.openDrawer();
   }, [navigation]);
+
+  const toggleVisible = useCallback(() => {
+    setVisible((v) => !v);
+  }, [setVisible]);
 
   const userId = route.params.id;
 
@@ -29,11 +33,18 @@ export function UserScreen({ route, navigation }: IProps) {
     <UserContextProvider userId={userId}>
       <View style={styles.container}>
         {inCall && userId === attender?.id ? (
-          <OngoingCall />
+          <OngoingCall showMap={toggleVisible} />
         ) : (
           <UserHeader openDrawer={openDrawer} />
         )}
         <MessagesView />
+        <Overlay
+          isVisible={visible && inCall}
+          onBackdropPress={toggleVisible}
+          fullScreen
+        >
+          <Map />
+        </Overlay>
       </View>
     </UserContextProvider>
   );

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet } from 'react-native';
 import { Header } from 'react-native-elements';
+import { serverContext } from '../../contexts';
 import { ServerIcons } from './ServerIcons';
 
 interface IProps {
@@ -8,6 +9,8 @@ interface IProps {
 }
 
 export function ServerHeader({ openDrawer }: IProps) {
+  const { name } = useContext(serverContext);
+
   return (
     <Header
       placement="left"
@@ -17,7 +20,7 @@ export function ServerHeader({ openDrawer }: IProps) {
         size,
       }}
       centerComponent={{
-        text: 'Server',
+        text: name,
         style: styles.name,
       }}
       rightComponent={<ServerIcons />}

@@ -1,18 +1,27 @@
 import React, { createContext, useEffect, useState } from 'react';
+import { useContext } from 'react';
+import { IServer } from '../../api';
+import { dataStoreContext } from '../store/DataStoreContext';
 import { IServerContext, IServerContextProps } from './ServerTypes';
 
-const defaultValue: IServerContext = {};
+const defaultValue: IServerContext = {
+  name: '',
+};
 
 export const serverContext = createContext<IServerContext>(defaultValue);
 
 const { Provider } = serverContext;
 
 export function ServerContext({ serverId, children }: IServerContextProps) {
-  const [id, setId] = useState(serverId);
+  const { servers } = useContext(dataStoreContext);
+  const [server, setServer] = useState<IServer>();
 
-  useEffect(() => {
-    setId(serverId);
-  }, [serverId]);
+  useEffect(
+    () => setServer(servers.find((s) => s.id === serverId)),
+    [serverId]
+  );
 
-  return <Provider value={{}}>{children}</Provider>;
+  return (
+    <Provider value={{ name: server ? server.name : '' }}>{children}</Provider>
+  );
 }

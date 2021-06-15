@@ -43,12 +43,13 @@ const strings: StringSet = {
   joinCodePlaceholder: 'Enter server code',
   join: 'Join',
   add: 'Add',
-  invalidJoinCode: 'Server not found!',
+  invalidJoinCode: 'Failed to join the server. The code has probably expired',
   successJoin: 'Successfully joined the server ',
   noResults: 'No results',
   findFriends: 'Find friends',
   findServers: 'Find servers',
   success: 'Completed successfully!',
+  copiedCodeToClipboard: 'Copied code to clipboard',
 };
 
 export default strings;

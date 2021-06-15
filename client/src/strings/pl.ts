@@ -43,12 +43,14 @@ const strings: StringSet = {
   joinCodePlaceholder: 'Podaj kod serwera',
   join: 'Dołącz',
   add: 'Dodaj',
-  invalidJoinCode: 'Nie znaleziono serwera z takim kodem!',
+  invalidJoinCode:
+    'Nie udało się dołączyć do serwera. Kod prawdopodobnie wygasł',
   successJoin: 'Udało się dołączyć do serwera',
   noResults: 'Brak wyników',
   findFriends: 'Szukaj przyjaciół',
   findServers: 'Szukaj serwerów',
   success: 'Wykonano pomyślnie!',
+  copiedCodeToClipboard: 'Skopiowano kod do schowka',
 };
 
 export default strings;

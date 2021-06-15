@@ -1,5 +1,6 @@
 export interface IServerContext {
   name: string;
+  generateCode(): Promise<boolean>;
 }
 
 export interface IServerContextProps {

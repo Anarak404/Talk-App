@@ -72,4 +72,5 @@ export type StringId =
   | 'noResults'
   | 'findServers'
   | 'findFriends'
-  | 'success';
+  | 'success'
+  | 'copiedCodeToClipboard';

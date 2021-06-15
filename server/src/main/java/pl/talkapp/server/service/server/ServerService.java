@@ -15,4 +15,6 @@ public interface ServerService {
     List<Server> getServersForUser(User user);
 
     Server getServer(Long id);
+
+    List<User> getServerMembers(Server server);
 }

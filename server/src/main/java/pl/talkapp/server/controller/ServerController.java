@@ -20,6 +20,7 @@ import pl.talkapp.server.entity.Server;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.model.MessageModel;
 import pl.talkapp.server.model.ServerModel;
+import pl.talkapp.server.model.UserModel;
 import pl.talkapp.server.service.message.MessageService;
 import pl.talkapp.server.service.server.InvitationService;
 import pl.talkapp.server.service.server.ServerService;
@@ -28,6 +29,7 @@ import pl.talkapp.server.service.user.UserService;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/server")
@@ -113,6 +115,17 @@ public class ServerController {
             Server server = serverService.getServer(id);
             List<MessageModel> conversation = messageService.getServerConversation(server);
             return new ResponseEntity<>(conversation, HttpStatus.OK);
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/users")
+    public ResponseEntity<List<UserModel>> getServerMembers(@PathVariable Long id) {
+        try {
+            Server server = serverService.getServer(id);
+            List<User> users = serverService.getServerMembers(server);
+            return new ResponseEntity<>(users.stream().map(UserModel::new).collect(Collectors.toList()), HttpStatus.OK);
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage());
         }

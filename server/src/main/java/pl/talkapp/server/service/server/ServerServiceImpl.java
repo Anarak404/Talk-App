@@ -74,4 +74,10 @@ public class ServerServiceImpl implements ServerService {
             throw new NoSuchElementException("Server does not exist!");
         });
     }
+
+    @Override
+    public List<User> getServerMembers(Server server) {
+        List<ServerUser> users = serverUserRepository.findAllByServer(server);
+        return users.stream().map(ServerUser::getUser).collect(Collectors.toList());
+    }
 }

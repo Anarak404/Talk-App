@@ -1,6 +1,6 @@
 import { RouteProp } from '@react-navigation/core';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { FullTheme, makeStyles, Overlay } from 'react-native-elements';
 import { callContext, UserContextProvider } from '../../contexts';
@@ -29,6 +29,12 @@ export function UserScreen({ route, navigation }: IProps) {
 
   const userId = route.params.id;
 
+  useEffect(() => {
+    if (!inCall) {
+      setVisible(false);
+    }
+  }, [inCall]);
+
   return (
     <UserContextProvider userId={userId}>
       <View style={styles.container}>
@@ -38,11 +44,7 @@ export function UserScreen({ route, navigation }: IProps) {
           <UserHeader openDrawer={openDrawer} />
         )}
         <MessagesView />
-        <Overlay
-          isVisible={visible && inCall}
-          onBackdropPress={toggleVisible}
-          fullScreen
-        >
+        <Overlay isVisible={visible} onBackdropPress={toggleVisible} fullScreen>
           <Map />
         </Overlay>
       </View>

@@ -12,5 +12,6 @@ export {
   IResultResponse,
   IServer,
 } from './user/types';
+export { joinServer } from './server/join';
 
 export const serverAddress = 'http://192.168.0.73:8080';

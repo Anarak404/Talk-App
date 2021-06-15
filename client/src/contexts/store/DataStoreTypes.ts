@@ -15,6 +15,7 @@ export interface IDataStoreContext {
   me: IUser;
   saveMe(me: IUser): void;
   servers: IServer[];
+  saveServer(server: IServer): void;
 }
 
 export interface IDataStoreContextProps {

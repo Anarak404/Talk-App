@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { IAuthenticationResponse } from '../../api';
+import { IAuthenticationResponse, IServer } from '../../api';
 import {
   IMessageResponse,
   IMessageStore,
@@ -31,6 +31,7 @@ const defaultValue: IDataStoreContext = {
   me: { id: 0, name: '', photo: null },
   saveMe: (me: IUser) => void 0,
   servers: [],
+  saveServer: (server: IServer) => void 0,
 };
 
 export const dataStoreContext = createContext<IDataStoreContext>(defaultValue);
@@ -171,6 +172,17 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
     [setMe]
   );
 
+  const saveServer = useCallback(
+    (server: IServer) => {
+      setMe((me) => {
+        if (me) {
+          return { ...me, servers: [...me.servers, server] };
+        }
+      });
+    },
+    [setMe]
+  );
+
   const saveMessageRef = useRef(saveMessage);
 
   useEffect(() => {
@@ -192,6 +204,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
         saveMe,
         me: me ? { ...me.user } : { id: 0, name: '', photo: null },
         servers: me ? [...me.servers] : [],
+        saveServer,
       }}
     >
       {children}

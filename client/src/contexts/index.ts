@@ -5,6 +5,7 @@ export {
   IncomingCallContextProvider,
 } from './call/IncomingCallContext';
 export { IIncomingCall } from './call/IncomingCallTypes';
+export { serverContext, ServerContext } from './server/ServerContext';
 export {
   sessionContext,
   SessionContextProvider,

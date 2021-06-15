@@ -26,7 +26,7 @@ export function DrawerContent({
     <SafeAreaView style={styles.drawer}>
       <View style={styles.container}>
         <View style={[styles.leftBar]}>
-          <Servers style={styles.servers} />
+          <Servers style={styles.servers} navigation={navigation} />
           <Icon
             name="search"
             size={iconSize}

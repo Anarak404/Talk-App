@@ -7,9 +7,10 @@ interface IProps {
   name: string;
   photo?: string;
   style?: StyleProp<ViewStyle>;
+  onPress?: () => void;
 }
 
-export function UserAvatar({ size, name, photo, style }: IProps) {
+export function UserAvatar({ size, name, photo, style, onPress }: IProps) {
   name = name.trim().toUpperCase();
 
   if (name.length > 2) {
@@ -28,6 +29,7 @@ export function UserAvatar({ size, name, photo, style }: IProps) {
       size={size}
       title={photo ? undefined : name}
       containerStyle={[styles.container, style]}
+      onPress={onPress}
     />
   );
 }

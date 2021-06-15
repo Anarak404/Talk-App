@@ -15,6 +15,7 @@ import { Login, Register } from './authentication';
 import { IncomingCall } from './call';
 import { DrawerContent } from './menu/DrawerContent';
 import { SearchFriend } from './search/SearchFriend';
+import { ServerScreen } from './server/ServerScreen';
 import { SettingsScreen } from './settings/SettingsScreen';
 import { UserScreen } from './user/UserScreen';
 
@@ -22,6 +23,7 @@ export type DrawerParamList = {
   User: { id: number };
   Settings: {};
   SearchFriend: {};
+  Server: { id: number };
 };
 
 export type UserScreenNavigationProp = DrawerNavigationProp<
@@ -59,6 +61,7 @@ export const Navigation = withTheme(() => {
               <Drawer.Screen name="User" component={UserScreen} />
               <Drawer.Screen name="Settings" component={SettingsScreen} />
               <Drawer.Screen name="SearchFriend" component={SearchFriend} />
+              <Drawer.Screen name="Server" component={ServerScreen} />
             </Drawer.Navigator>
             {isIncomingCall && (
               <IncomingCallContextProvider>

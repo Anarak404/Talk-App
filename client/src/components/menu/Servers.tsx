@@ -1,4 +1,5 @@
-import React, { useContext } from 'react';
+import React from 'react';
+import { useContext } from 'react';
 import { ScrollView, StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { dataStoreContext } from '../../contexts';
 import { UserAvatar } from '../call';
@@ -11,7 +12,7 @@ export function Servers({ style }: IProps) {
   const { servers } = useContext(dataStoreContext);
 
   return (
-    <ScrollView style={[style]} contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={[style, styles.container]}>
       {servers.map((e, index) => {
         const isLast = servers.length === index - 1;
 

@@ -18,14 +18,24 @@ export function DrawerContent({
     navigation.navigate('Settings');
   }, [navigation]);
 
+  const goToSearchFriend = useCallback(() => {
+    navigation.navigate('SearchFriend');
+  }, [navigation]);
+
   return (
     <SafeAreaView style={styles.drawer}>
       <View style={styles.container}>
         <View style={[styles.leftBar]}>
-          <Servers />
+          <Servers style={styles.servers} />
+          <Icon
+            name="search"
+            size={iconSize}
+            onPress={goToSearchFriend}
+            containerStyle={styles.iconContainer}
+          />
           <Icon
             name="settings"
-            size={45}
+            size={iconSize}
             onPress={goToSettings}
             containerStyle={styles.iconContainer}
           />
@@ -35,6 +45,8 @@ export function DrawerContent({
     </SafeAreaView>
   );
 }
+
+const iconSize = 40;
 
 const useStyles = makeStyles((theme: Partial<FullTheme>) => ({
   drawer: {
@@ -58,6 +70,9 @@ const useStyles = makeStyles((theme: Partial<FullTheme>) => ({
     flexDirection: 'row',
   },
   iconContainer: {
-    padding: 10,
+    paddingBottom: 8,
+  },
+  servers: {
+    flex: 1,
   },
 }));

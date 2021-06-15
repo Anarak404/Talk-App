@@ -90,7 +90,7 @@ public class UserController {
             return new ResponseEntity<>(new UserModel(user), HttpStatus.OK);
         }
 
-        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User with email do not exist!");
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User with email do not exist!");
     }
 
     private ResponseEntity<AuthenticationResponse> getResponse(User user) {

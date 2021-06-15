@@ -51,9 +51,14 @@ public class UserFriendController {
     public ResponseEntity<ResultResponse> addFriend(@Valid @RequestBody IdRequest friend) {
         User me = userService.getCurrentUser();
         User f = userService.getUser(friend.getId()).orElseThrow();
-        friendsService.addFriend(me, f);
-
-        return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
+        boolean result;
+        try {
+            friendsService.addFriend(me, f);
+            result = true;
+        } catch (Exception e) {
+            result = false;
+        }
+        return new ResponseEntity<>(new ResultResponse(result), HttpStatus.OK);
     }
 
     @DeleteMapping("")

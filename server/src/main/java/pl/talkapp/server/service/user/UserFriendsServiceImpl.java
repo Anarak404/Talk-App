@@ -24,10 +24,12 @@ public class UserFriendsServiceImpl implements UserFriendsService {
 
     @Override
     public void addFriend(User user, User friend) {
-        UserFriend f = new UserFriend(user, friend);
-        UserFriend f2 = new UserFriend(friend, user);
-        friendRepository.save(f);
-        friendRepository.save(f2);
+        if (user != friend) {
+            UserFriend f = new UserFriend(user, friend);
+            UserFriend f2 = new UserFriend(friend, user);
+            friendRepository.save(f);
+            friendRepository.save(f2);
+        }
     }
 
     @Override

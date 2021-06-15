@@ -35,6 +35,8 @@ public class UserFriendsServiceImpl implements UserFriendsService {
     @Override
     public void deleteFriend(User user, User friend) {
         Optional<UserFriend> f = friendRepository.findByUserAndFriend(user, friend);
+        Optional<UserFriend> f2 = friendRepository.findByUserAndFriend(friend, user);
         f.ifPresent(friendRepository::delete);
+        f2.ifPresent(friendRepository::delete);
     }
 }

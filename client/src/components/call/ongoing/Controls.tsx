@@ -16,7 +16,7 @@ export function Controls({ showMap }: IProps) {
       <FAB
         buttonStyle={[styles.buttonStyle, styles.disconnectButton]}
         icon={<Icon name="call-end" size={iconSize} />}
-        containerStyle={styles.buttonContainer}
+        containerStyle={[styles.buttonContainer, styles.margin]}
         onPress={endCall}
       />
       <FAB
@@ -46,5 +46,8 @@ const useStyles = makeStyles((theme: Partial<FullTheme>) => ({
   },
   disconnectButton: {
     backgroundColor: theme.red,
+  },
+  margin: {
+    marginRight: 15,
   },
 }));

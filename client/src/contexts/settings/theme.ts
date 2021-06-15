@@ -34,6 +34,7 @@ export const darkTheme: Theme = {
   green,
   backgroundColor: '#2b2b2b',
   secondaryBackgroundColor: '#6a040f',
+  indicatorColor: '#eee',
 };
 
 export const lightTheme: Theme = {
@@ -67,4 +68,5 @@ export const lightTheme: Theme = {
   green,
   backgroundColor: '#fff',
   secondaryBackgroundColor: '#fdc280',
+  indicatorColor: '#370617',
 };

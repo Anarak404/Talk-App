@@ -63,4 +63,12 @@ export type StringId =
   | 'photoUrl'
   | 'signOut'
   | 'failed'
-  | 'invalidUrl';
+  | 'invalidUrl'
+  | 'joinCodePlaceholder'
+  | 'join'
+  | 'add'
+  | 'invalidJoinCode'
+  | 'successJoin'
+  | 'noResults'
+  | 'findServers'
+  | 'findFriends';

@@ -40,6 +40,14 @@ const strings: StringSet = {
   signOut: 'Wyloguj się',
   failed: 'Ups... Nie udało się!',
   invalidUrl: 'Niepoprawne źródło',
+  joinCodePlaceholder: 'Podaj kod serwera',
+  join: 'Dołącz',
+  add: 'Dodaj',
+  invalidJoinCode: 'Nie znaleziono serwera z takim kodem!',
+  successJoin: 'Udało się dołączyć do serwera',
+  noResults: 'Brak wyników',
+  findFriends: 'Szukaj przyjaciół',
+  findServers: 'Szukaj serwerów',
 };
 
 export default strings;

@@ -40,6 +40,14 @@ const strings: StringSet = {
   signOut: 'Sign out',
   failed: 'Ups... Failed!',
   invalidUrl: 'Invalid url!',
+  joinCodePlaceholder: 'Enter server code',
+  join: 'Join',
+  add: 'Add',
+  invalidJoinCode: 'Server not found!',
+  successJoin: 'Successfully joined the server ',
+  noResults: 'No results',
+  findFriends: 'Find friends',
+  findServers: 'Find servers',
 };
 
 export default strings;

@@ -7,7 +7,7 @@ export interface IAuthenticationResponse {
   friends: IUser[];
 }
 
-interface IServer {
+export interface IServer {
   id: number;
   name: string;
   photo: string | null;

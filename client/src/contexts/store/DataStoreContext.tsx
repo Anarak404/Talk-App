@@ -30,6 +30,7 @@ const defaultValue: IDataStoreContext = {
   saveAuthenticationResponse: (data: IAuthenticationResponse) => void 0,
   me: { id: 0, name: '', photo: null },
   saveMe: (me: IUser) => void 0,
+  servers: [],
 };
 
 export const dataStoreContext = createContext<IDataStoreContext>(defaultValue);
@@ -190,6 +191,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
         saveAuthenticationResponse: setMe,
         saveMe,
         me: me ? { ...me.user } : { id: 0, name: '', photo: null },
+        servers: me ? [...me.servers] : [],
       }}
     >
       {children}

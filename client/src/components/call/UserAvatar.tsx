@@ -1,14 +1,15 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleProp, StyleSheet, ViewStyle } from 'react-native';
 import { Avatar } from 'react-native-elements';
 
 interface IProps {
   size: number | 'small' | 'medium' | 'large' | 'xlarge';
   name: string;
   photo?: string;
+  style?: StyleProp<ViewStyle>;
 }
 
-export function UserAvatar({ size, name, photo }: IProps) {
+export function UserAvatar({ size, name, photo, style }: IProps) {
   name = name.trim().toUpperCase();
 
   if (name.length > 2) {
@@ -26,7 +27,7 @@ export function UserAvatar({ size, name, photo }: IProps) {
       source={photo ? { uri: photo } : undefined}
       size={size}
       title={photo ? undefined : name}
-      containerStyle={styles.container}
+      containerStyle={[styles.container, style]}
     />
   );
 }

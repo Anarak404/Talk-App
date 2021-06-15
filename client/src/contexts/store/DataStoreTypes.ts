@@ -1,5 +1,5 @@
 import React from 'react';
-import { IAuthenticationResponse } from '../../api';
+import { IAuthenticationResponse, IServer } from '../../api';
 import { IMessage, IMessageResponse } from '../../components/messages';
 
 export interface IDataStoreContext {
@@ -14,6 +14,7 @@ export interface IDataStoreContext {
   saveAuthenticationResponse(data: IAuthenticationResponse): void;
   me: IUser;
   saveMe(me: IUser): void;
+  servers: IServer[];
 }
 
 export interface IDataStoreContextProps {

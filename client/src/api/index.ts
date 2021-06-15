@@ -10,6 +10,7 @@ export {
   IAuthenticationResponse,
   IProfileResponse,
   IResultResponse,
+  IServer,
 } from './user/types';
 
 export const serverAddress = 'http://192.168.0.73:8080';

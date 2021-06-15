@@ -71,4 +71,5 @@ export type StringId =
   | 'successJoin'
   | 'noResults'
   | 'findServers'
-  | 'findFriends';
+  | 'findFriends'
+  | 'success';

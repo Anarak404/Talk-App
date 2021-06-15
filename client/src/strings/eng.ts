@@ -48,6 +48,7 @@ const strings: StringSet = {
   noResults: 'No results',
   findFriends: 'Find friends',
   findServers: 'Find servers',
+  success: 'Completed successfully!',
 };
 
 export default strings;

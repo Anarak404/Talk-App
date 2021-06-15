@@ -1,7 +1,8 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
-import React from 'react';
+import React, { useContext } from 'react';
 import { View } from 'react-native';
 import { FullTheme, Header, makeStyles } from 'react-native-elements';
+import { dataStoreContext } from '../../contexts';
 import { DrawerParamList } from '../Navigation';
 import { Logout } from './Logout';
 import { Settings } from './Settings';
@@ -13,6 +14,7 @@ interface IProps {
 
 export function SettingsScreen({ navigation }: IProps) {
   const styles = useStyles();
+  const { me } = useContext(dataStoreContext);
 
   return (
     <View style={styles.container}>
@@ -24,7 +26,7 @@ export function SettingsScreen({ navigation }: IProps) {
           size,
         }}
       />
-      <UserInfo />
+      <UserInfo {...me} />
       <Settings />
       <Logout />
     </View>

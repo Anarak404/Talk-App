@@ -1,5 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { StyleProp, ToastAndroid, View, ViewStyle } from 'react-native';
+import {
+  StyleProp,
+  StyleSheet,
+  ToastAndroid,
+  View,
+  ViewStyle,
+} from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { joinServer } from '../../api';
 import {
@@ -39,7 +45,7 @@ export function JoinServer({ style }: IProp) {
   };
 
   return (
-    <View style={style}>
+    <View style={[style, styles.container]}>
       <Input
         placeholder={getString('joinCodePlaceholder')}
         onChangeText={setText}
@@ -48,7 +54,17 @@ export function JoinServer({ style }: IProp) {
         title={getString('join')}
         loading={loading}
         onPress={onButtonClick}
+        containerStyle={styles.button}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+  },
+  button: {
+    width: '60%',
+  },
+});

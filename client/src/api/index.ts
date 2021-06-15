@@ -13,5 +13,6 @@ export {
   IServer,
 } from './user/types';
 export { joinServer } from './server/join';
+export { addFriend } from './friend/addFriend';
 
 export const serverAddress = 'http://192.168.0.73:8080';

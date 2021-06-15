@@ -17,7 +17,7 @@ public interface UserService {
 
     Optional<User> getUser(Long id);
 
-    User findUserByEmail(String email);
+    User findUserByEmail(User me, String email);
 
     List<UserModel> getHistory(User user);
 }

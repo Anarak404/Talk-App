@@ -85,7 +85,8 @@ public class UserController {
 
     @PostMapping("/search")
     public ResponseEntity<UserModel> findUser(@Valid @RequestBody EmailRequest email) {
-        User user = userService.findUserByEmail(email.getEmail());
+        User me = userService.getCurrentUser();
+        User user = userService.findUserByEmail(me, email.getEmail());
         if (user != null) {
             return new ResponseEntity<>(new UserModel(user), HttpStatus.OK);
         }

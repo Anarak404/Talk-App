@@ -5,7 +5,8 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { useMemo } from 'react';
+import { getPrivateMessages } from '../../api';
+import { IMessage } from '../../components/messages';
 import { callContext } from '../call/CallContext';
 import { sessionContext } from '../session/SessionContext';
 import { dataStoreContext } from '../store/DataStoreContext';
@@ -26,9 +27,10 @@ const { Provider } = userContext;
 export function UserContextProvider({ userId, children }: IUserContextProps) {
   const [id, setId] = useState(userId);
   const [user, setUser] = useState<IUser>();
+  const [messages, setMessages] = useState<IMessage[]>([]);
 
   const { startCall } = useContext(callContext);
-  const { websocket } = useContext(sessionContext);
+  const { websocket, httpClient } = useContext(sessionContext);
   const { findUser, getMessages } = useContext(dataStoreContext);
 
   useEffect(() => {
@@ -40,7 +42,20 @@ export function UserContextProvider({ userId, children }: IUserContextProps) {
     if (user) {
       setUser(user);
     }
-    // TODO: fetch user from server if not found
+
+    setMessages(getMessages(id));
+    getPrivateMessages(httpClient, id).then((messages) =>
+      setMessages(
+        messages.map((e) => {
+          return {
+            id: e.id,
+            name: e.user.name,
+            photo: e.user.photo ? e.user.photo : undefined,
+            text: e.message,
+          };
+        })
+      )
+    );
   }, [id]);
 
   const start = useCallback(() => {
@@ -57,7 +72,16 @@ export function UserContextProvider({ userId, children }: IUserContextProps) {
     [id, websocket]
   );
 
-  const messages = useMemo(() => getMessages(id), [getMessages, id]);
+  useEffect(() => {
+    const newMessages = getMessages(id);
+    setMessages((messages) => {
+      const saveMessagesIds = messages.map((m) => m.id);
+      return [
+        ...messages,
+        ...newMessages.filter((e) => !saveMessagesIds.includes(e.id)),
+      ];
+    });
+  }, [getMessages]);
 
   return (
     <Provider value={{ startCall: start, sendMessage, user, messages }}>

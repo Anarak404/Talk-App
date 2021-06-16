@@ -15,5 +15,6 @@ export {
   IResultResponse,
   IServer,
 } from './user/types';
+export { getPrivateMessages } from './friend/getMessages';
 
 export const serverAddress = 'http://192.168.0.73:8080';

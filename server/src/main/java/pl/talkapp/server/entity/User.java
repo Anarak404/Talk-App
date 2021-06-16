@@ -2,9 +2,11 @@ package pl.talkapp.server.entity;
 
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -13,8 +15,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.time.LocalDateTime;
@@ -49,33 +49,38 @@ public class User {
     @CreationTimestamp
     LocalDateTime creationDateTime;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "caller")
     List<Call> callers;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "attender")
     List<Call> attenders;
 
-    @OneToMany(mappedBy = "user")
-    List<UserBlacklist> users;
-
-    @OneToMany(mappedBy = "blacklistUser")
-    List<UserBlacklist> blacklistUsers;
-
+    @ToString.Exclude
     @OneToMany(mappedBy = "sender")
     List<Message> messages;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "receiver")
     List<PrivateMessage> receivedMessages;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "user")
     List<UserFriend> friendList;
 
+    @Getter(AccessLevel.NONE)
+    @ToString.Exclude
     @OneToMany(mappedBy = "friend")
     List<UserFriend> userFriends;
 
-    @ManyToOne
-    @JoinColumn(name = "status", nullable = false)
-    Status status;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "owner")
+    List<Server> servers;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user")
+    List<ServerUser> serverUsers;
 
 }
 

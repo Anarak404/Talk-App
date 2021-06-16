@@ -21,10 +21,16 @@ public class JwtTokenProvider {
     private String secretKey;
 
     @Value("${security.jwt.token.expire-length:300000}")
-    private long validityInMilliseconds;
+    private long tokenValidityInMilliseconds;
+
+    @Value("${security.jwt.refresh-token.expire-length:300000}")
+    private long refreshTokenValidityInMilliseconds;
 
     @Value("${security.jwt.token.header:Authorization}")
     private String authorizationHeader;
+
+    @Value("${security.jwt.refresh-token.header:Authorization}")
+    private String refreshAuthorizationHeader;
 
     private Algorithm algorithm;
 
@@ -36,12 +42,24 @@ public class JwtTokenProvider {
 
     public String createToken(Long userId) {
         Date now = new Date();
-        Date expirationDate = new Date(now.getTime() + validityInMilliseconds);
+        Date tokenExpirationDate = new Date(now.getTime() + tokenValidityInMilliseconds);
 
+        return getToken(userId, now, tokenExpirationDate);
+    }
+
+    public String createRefreshToken(Long userId) {
+        Date now = new Date();
+        Date refreshTokenExpirationDate =
+                new Date(now.getTime() + refreshTokenValidityInMilliseconds);
+
+        return getToken(userId, now, refreshTokenExpirationDate);
+    }
+
+    private String getToken(Long userId, Date now, Date tokenExpirationDate) {
         return JWT.create()
                 .withSubject(String.valueOf(userId))
                 .withIssuedAt(now)
-                .withExpiresAt(expirationDate)
+                .withExpiresAt(tokenExpirationDate)
                 .sign(algorithm);
     }
 
@@ -51,7 +69,6 @@ public class JwtTokenProvider {
             jwtVerifier.verify(token);
             return true;
         } catch (Exception e) {
-//            TODO: refresh token
             return false;
         }
     }
@@ -63,6 +80,16 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader(authorizationHeader);
 
+        return getToken(bearerToken);
+    }
+
+    public String resolveRefreshToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(refreshAuthorizationHeader);
+
+        return getToken(bearerToken);
+    }
+
+    private String getToken(String bearerToken) {
         String prefix = "Bearer ";
 
         if (bearerToken != null && bearerToken.startsWith(prefix)) {
@@ -73,7 +100,8 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        return new UsernamePasswordAuthenticationToken(getUserId(token), "", Collections.emptyList());
+        return new UsernamePasswordAuthenticationToken(getUserId(token), "",
+                Collections.emptyList());
     }
 
 }

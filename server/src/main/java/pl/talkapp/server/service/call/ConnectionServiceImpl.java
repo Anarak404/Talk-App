@@ -2,79 +2,107 @@ package pl.talkapp.server.service.call;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
-import pl.talkapp.server.eventBus.ChannelEvent;
+import pl.talkapp.server.entity.Call;
 import pl.talkapp.server.eventBus.ConnectionPayload;
+import pl.talkapp.server.eventBus.DisconnectChannelEvent;
+import pl.talkapp.server.eventBus.GeolocationEvent;
+import pl.talkapp.server.eventBus.GeolocationPayload;
+import pl.talkapp.server.eventBus.JoinChannelEvent;
+import pl.talkapp.server.model.Location;
+import pl.talkapp.server.model.websocket.UserLocation;
+import pl.talkapp.server.repository.CallRepository;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 public class ConnectionServiceImpl implements ConnectionService {
 
-    private final static String privatePrefix = "p";
-    private final static String serverPrefix = "s";
+    // key = callId, value = Map<userId, Location>
+    private final Map<String, Map<String, Location>> channels;
 
-    // key = channel, value = Set of session ids
-    private final Map<String, Set<String>> channels;
-
-    // key = session id, value = channel
+    // key = user id, value = channel (empty string if no channel)
     private final Map<String, String> connections;
 
     private final ApplicationEventPublisher eventPublisher;
+    private final CallService callService;
+    private final CallRepository callRepository;
 
-    public ConnectionServiceImpl(ApplicationEventPublisher eventPublisher) {
+    public ConnectionServiceImpl(ApplicationEventPublisher eventPublisher,
+                                 CallService callService, CallRepository callRepository) {
         this.eventPublisher = eventPublisher;
-        channels = new HashMap<>();
-        connections = new HashMap<>();
+        this.callService = callService;
+        this.callRepository = callRepository;
+        channels = new ConcurrentHashMap<>();
+        connections = new ConcurrentHashMap<>();
     }
 
-    private String channelName(String prefix, long id) {
-        return String.format("%s-%d", prefix, id);
+    private Set<String> join(String channel, String userId, Location location) {
+        Map<String, Location> users = channels.getOrDefault(channel,
+            new ConcurrentHashMap<>());
+        Set<String> members = new HashSet<>(users.keySet());
+
+        users.put(userId, location);
+        channels.put(channel, users);
+        return members;
     }
 
-    private void join(String channel, String sessionId) {
-        Set<String> sessions = channels.getOrDefault(channel, new HashSet<>());
-        sessions.add(sessionId);
-        Set<String> members = channels.put(channel, sessions);
+    @Override
+    public void joinCall(Long callId, String userId, Location location) {
+        String channel = callId.toString();
+        Set<String> members = join(channel, userId, location);
+        connections.put(userId, channel);
 
-        eventPublisher.publishEvent(new ChannelEvent<>(this, new ConnectionPayload(sessionId,
+        eventPublisher.publishEvent(new JoinChannelEvent<>(this, new ConnectionPayload(userId,
             members)));
+
+        Map<String, Location> userData = channels.get(channel);
+        if (userData != null) {
+            List<UserLocation> usersLocation =
+                userData.entrySet().stream()
+                    .map(e -> new UserLocation(Long.valueOf(e.getKey()), e.getValue()))
+                    .collect(Collectors.toList());
+
+            eventPublisher.publishEvent(new GeolocationEvent<>(this,
+                new GeolocationPayload(usersLocation, userData.keySet())));
+        }
     }
 
     @Override
-    public void joinPrivateChannel(long channelId, String sessionId) {
-        String channel = channelName(privatePrefix, channelId);
-        join(channel, sessionId);
-        connections.put(sessionId, channel);
-    }
-
-    @Override
-    public void joinServerChannel(long serverId, String sessionId) {
-        String channel = channelName(serverPrefix, serverId);
-        join(channel, sessionId);
-        connections.put(sessionId, channel);
-    }
-
-    @Override
-    public void disconnect(String sessionId) {
-        String channel = connections.get(sessionId);
+    public void disconnect(String userId) {
+        String channel = connections.get(userId);
 
         if (channel != null) {
-            Set<String> members = channels.getOrDefault(channel, new HashSet<>());
-            members.remove(sessionId);
+            Map<String, Location> members = channels.getOrDefault(channel, new HashMap<>());
+            members.remove(userId);
 
             // remove channel if no users connected
             if (members.isEmpty()) {
                 channels.remove(channel);
+                Optional<Call> call = callRepository.findById(Long.valueOf(channel));
+                call.ifPresent(callService::endCall);
             }
 
             // notify connected users about disconnect of member
-            eventPublisher.publishEvent(new ChannelEvent<>(this, new ConnectionPayload(sessionId,
-                members)));
+            eventPublisher.publishEvent(new DisconnectChannelEvent<>(this,
+                new ConnectionPayload(userId, new HashSet<>(members.keySet()))));
         }
 
-        connections.remove(sessionId);
+        connections.remove(userId);
+    }
+
+    @Override
+    public void rejectCall(Long userId, Long callId) {
+        Map<String, Location> channel = channels.get(callId.toString());
+        if (channel != null) {
+            eventPublisher.publishEvent(new DisconnectChannelEvent<>(this,
+                new ConnectionPayload(userId.toString(), new HashSet<>(channel.keySet()))));
+        }
     }
 }

@@ -2,17 +2,14 @@ package pl.talkapp.server.dto.request;
 
 import lombok.AccessLevel;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import pl.talkapp.server.model.BlacklistAction;
+
+import javax.validation.constraints.Email;
 
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@NoArgsConstructor
-public class BlacklistRequest {
+public class EmailRequest {
 
-    Long id;
-
-    BlacklistAction action;
-
+    @Email
+    String email;
 }

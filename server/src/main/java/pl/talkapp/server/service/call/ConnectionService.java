@@ -1,10 +1,13 @@
 package pl.talkapp.server.service.call;
 
+import pl.talkapp.server.model.Location;
+
 public interface ConnectionService {
 
-    void joinPrivateChannel(long channelId, String sessionId);
+    void joinCall(Long callId, String userId, Location location);
 
-    void joinServerChannel(long serverId, String sessionId);
+    void disconnect(String userId);
 
-    void disconnect(String sessionId);
+    void rejectCall(Long userId, Long callId);
+
 }

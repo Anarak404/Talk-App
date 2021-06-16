@@ -23,4 +23,6 @@ public class RegisterRequest {
     @Password
     String password;
 
+    String token;
+
 }

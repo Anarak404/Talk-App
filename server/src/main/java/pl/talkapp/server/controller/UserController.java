@@ -17,6 +17,7 @@ import pl.talkapp.server.entity.User;
 import pl.talkapp.server.model.ServerModel;
 import pl.talkapp.server.model.UserModel;
 import pl.talkapp.server.security.JwtTokenProvider;
+import pl.talkapp.server.service.notification.NotificationService;
 import pl.talkapp.server.service.server.ServerService;
 import pl.talkapp.server.service.user.UserService;
 
@@ -32,12 +33,14 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenProvider tokenProvider;
     private final ServerService serverService;
+    private final NotificationService notificationService;
 
     public UserController(UserService userService, JwtTokenProvider tokenProvider,
-                          ServerService serverService) {
+                          ServerService serverService, NotificationService notificationService) {
         this.userService = userService;
         this.tokenProvider = tokenProvider;
         this.serverService = serverService;
+        this.notificationService = notificationService;
     }
 
     @PostMapping("")
@@ -46,6 +49,7 @@ public class UserController {
         try {
             User user = userService.register(credentials.getName(), credentials.getEmail(),
                     credentials.getPassword());
+            notificationService.registerToken(user.getId(), credentials.getToken());
 
             return new ResponseEntity<>(
                     new AuthenticationResponse(tokenProvider.createToken(user.getId()),
@@ -64,6 +68,7 @@ public class UserController {
         User user = userService.login(credentials.getEmail(), credentials.getPassword())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED,
                         "Authentication failed"));
+        notificationService.registerToken(user.getId(), credentials.getToken());
 
         return getResponse(user);
     }

@@ -39,8 +39,8 @@ public class NotificationServiceImpl implements NotificationService {
     private void initialize() {
         try {
             FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(firebaseConfig).getInputStream()))
-                .build();
+                    .setCredentials(GoogleCredentials.fromStream(new ClassPathResource(firebaseConfig).getInputStream()))
+                    .build();
 
             if (FirebaseApp.getApps().isEmpty()) {
                 FirebaseApp.initializeApp(options);
@@ -55,12 +55,14 @@ public class NotificationServiceImpl implements NotificationService {
 
     private Message createMessage(PushNotification notification, String token) {
         return Message.builder()
-            .setToken(token)
-            .setNotification(Notification.builder()
-                .setTitle(notification.getTitle())
-                .setBody(notification.getBody())
-                .build())
-            .build();
+                .setToken(token)
+                .setNotification(Notification.builder()
+                        .setTitle(notification.getTitle())
+                        .setBody(notification.getBody())
+                        .build())
+                .putData("type", notification.getType())
+                .putData("subject", notification.getSubject())
+                .build();
     }
 
     @Override
@@ -80,9 +82,9 @@ public class NotificationServiceImpl implements NotificationService {
     public void sendNotificationToUsers(PushNotification notification, Set<Long> usersIds) {
         usersIds.retainAll(new HashSet<>(userTokens.keySet()));
         List<String> tokens =
-            usersIds.stream().map(id -> userTokens.getOrDefault(id, ""))
-                .filter(String::isBlank)
-                .collect(Collectors.toList());
+                usersIds.stream().map(id -> userTokens.getOrDefault(id, ""))
+                        .filter(String::isBlank)
+                        .collect(Collectors.toList());
 
         for (String token : tokens) {
             Message message = createMessage(notification, token);
@@ -96,6 +98,8 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public void registerToken(Long userId, String token) {
-        userTokens.put(userId, token);
+        if (token != null && !token.isBlank()) {
+            userTokens.put(userId, token);
+        }
     }
 }

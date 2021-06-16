@@ -7,5 +7,7 @@ public class PushNotification {
 
     String body;
     String title;
+    String type;
+    String subject;
 
 }

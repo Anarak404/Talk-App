@@ -16,7 +16,9 @@ import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.entity.UserFriend;
 import pl.talkapp.server.model.MessageModel;
+import pl.talkapp.server.model.PushNotification;
 import pl.talkapp.server.service.message.MessageService;
+import pl.talkapp.server.service.notification.NotificationService;
 import pl.talkapp.server.service.user.UserFriendsService;
 import pl.talkapp.server.service.user.UserService;
 
@@ -31,12 +33,15 @@ public class UserFriendController {
     private final UserService userService;
     private final UserFriendsService friendsService;
     private final MessageService messageService;
+    private final NotificationService notificationService;
 
     public UserFriendController(UserService userService, UserFriendsService friendsService,
-                                MessageService messageService) {
+                                MessageService messageService,
+                                NotificationService notificationService) {
         this.userService = userService;
         this.friendsService = friendsService;
         this.messageService = messageService;
+        this.notificationService = notificationService;
     }
 
     @GetMapping("")
@@ -54,6 +59,8 @@ public class UserFriendController {
         boolean result;
         try {
             friendsService.addFriend(me, f);
+            notificationService.sendNotificationToUser(new PushNotification(f.getName() + " added" +
+                    " you to friends!", "New friend", "FRIEND", me.getName()), friend.getId());
             result = true;
         } catch (Exception e) {
             result = false;

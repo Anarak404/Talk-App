@@ -21,7 +21,7 @@ interface IProp {
 export function JoinServer({ style }: IProp) {
   const { getString } = useContext(settingsContext);
   const { httpClient } = useContext(sessionContext);
-  const { saveServer } = useContext(dataStoreContext);
+  const { refetchProfile } = useContext(dataStoreContext);
   const [loading, setLoading] = useState(false);
   const [text, setText] = useState('');
 
@@ -35,7 +35,7 @@ export function JoinServer({ style }: IProp) {
             `${getString('successJoin')} ${e.name}`,
             ToastAndroid.LONG
           );
-          saveServer(e);
+          refetchProfile(httpClient);
         })
         .catch(() =>
           ToastAndroid.show(getString('invalidJoinCode'), ToastAndroid.LONG)

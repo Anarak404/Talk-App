@@ -17,7 +17,7 @@ export function FindFriend() {
   const [text, setText] = useState('');
   const { getString } = useContext(settingsContext);
   const { httpClient } = useContext(sessionContext);
-  const { saveFriend, saveUser } = useContext(dataStoreContext);
+  const { refetchProfile, saveUser } = useContext(dataStoreContext);
   const [friend, setFriend] = useState<IUser>();
   const [loading, setLoading] = useState(false);
 
@@ -45,7 +45,7 @@ export function FindFriend() {
             ToastAndroid.LONG
           );
           setFriend(undefined);
-          saveFriend(person.id);
+          refetchProfile(httpClient);
           saveUser(person);
         })
         .finally(() => setLoading(false));
@@ -56,7 +56,7 @@ export function FindFriend() {
     setLoading,
     setFriend,
     getString,
-    saveFriend,
+    refetchProfile,
     saveUser,
   ]);
 

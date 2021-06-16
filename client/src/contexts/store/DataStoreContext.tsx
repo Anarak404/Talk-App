@@ -7,7 +7,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { getProfile, IAuthenticationResponse, IServer } from '../../api';
+import { getProfile, IAuthenticationResponse } from '../../api';
 import { HttpClient } from '../../api/client';
 import {
   IMessageResponse,
@@ -22,16 +22,12 @@ import {
 const defaultValue: IDataStoreContext = {
   findUser: (id: number) => undefined,
   saveUser: (user: IUser) => void 0,
-  saveUsers: (users: IUser[]) => void 0,
   friends: [],
-  saveFriends: (friends: number[]) => void 0,
-  saveFriend: (friend: number) => void 0,
   saveMessage: { current: (message: IMessageResponse) => void 0 },
   getMessages: (user: number) => [],
   saveAuthenticationResponse: (data: IAuthenticationResponse) => void 0,
   me: { id: 0, name: '', photo: null },
   servers: [],
-  saveServer: (server: IServer) => void 0,
   refetchProfile: (httpClient: HttpClient) => void 0,
 };
 
@@ -71,6 +67,12 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
     persistFriends(JSON.stringify(friends));
   }, [friends]);
 
+  useEffect(() => {
+    if (me) {
+      setFriends(me.friends.map((f) => f.id));
+    }
+  }, [me]);
+
   const findUser = useCallback(
     (id: number) => users.find((u) => u.id === id),
     [users]
@@ -80,39 +82,6 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
     (user: IUser) =>
       setUsers((users) => [...users.filter((u) => u.id !== user.id), user]),
     [setUsers]
-  );
-
-  const saveUsers = useCallback(
-    (data: IUser[]) => {
-      const ids = [...data.map((u) => u.id)];
-      setUsers((users) => [
-        ...users.filter((u) => !ids.includes(u.id)),
-        ...data,
-      ]);
-    },
-    [setUsers]
-  );
-
-  const saveFriend = useCallback(
-    (friendId: number) => {
-      setFriends((friends) => {
-        if (!friends.includes(friendId)) {
-          return [...friends, friendId];
-        }
-        return friends;
-      });
-    },
-    [setFriends]
-  );
-
-  const saveFriends = useCallback(
-    (friendsId: number[]) => {
-      setFriends((friends) => [
-        ...friends.filter((f) => !friendsId.includes(f)),
-        ...friendsId,
-      ]);
-    },
-    [setFriends]
   );
 
   const saveMessage = useCallback(
@@ -169,38 +138,32 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
     [setMe]
   );
 
-  const saveServer = useCallback(
-    (server: IServer) => {
-      setMe((me) => {
-        if (me) {
-          return { ...me, servers: [...me.servers, server] };
-        }
-      });
-    },
-    [setMe]
-  );
-
   const saveMessageRef = useRef(saveMessage);
 
   useEffect(() => {
     saveMessageRef.current = saveMessage;
   }, [saveMessage]);
 
+  const saveAuthenticationResponse = useCallback(
+    (response: IAuthenticationResponse) => {
+      setMe(response);
+      setFriends(response.friends.map((f) => f.id));
+      setUsers([...response.friends, response.user]);
+    },
+    [setMe, setFriends, setUsers]
+  );
+
   return (
     <Provider
       value={{
         findUser,
         saveUser,
-        saveUsers,
         friends: friendsList,
-        saveFriend,
-        saveFriends,
         saveMessage: saveMessageRef,
         getMessages,
-        saveAuthenticationResponse: setMe,
+        saveAuthenticationResponse,
         me: me ? { ...me.user } : { id: 0, name: '', photo: null },
         servers: me ? [...me.servers] : [],
-        saveServer,
         refetchProfile,
       }}
     >

@@ -6,16 +6,12 @@ import { IMessage, IMessageResponse } from '../../components/messages';
 export interface IDataStoreContext {
   findUser(id: number): IUser | undefined;
   saveUser(user: IUser): void;
-  saveUsers(users: IUser[]): void;
   friends: IUser[];
-  saveFriends(friendsId: number[]): void;
-  saveFriend(friendId: number): void;
   saveMessage: React.MutableRefObject<(message: IMessageResponse) => void>;
   getMessages(user: number): IMessage[];
   saveAuthenticationResponse(data: IAuthenticationResponse): void;
   me: IUser;
   servers: IServer[];
-  saveServer(server: IServer): void;
   refetchProfile(httpClient: HttpClient): void;
 }
 

@@ -51,7 +51,7 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
   const [incomingCall, setIncomingCall] =
     useState<IIncomingCall>(defaultIncomingCall);
 
-  const { saveUsers, saveFriends, saveMessage, saveAuthenticationResponse } =
+  const { saveMessage, saveAuthenticationResponse } =
     useContext(dataStoreContext);
 
   const logIn = useCallback(
@@ -59,8 +59,6 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
       const { user, friends, token } = response;
       setLoggedIn(true);
       setToken(token);
-      saveUsers([user, ...friends]);
-      saveFriends([...friends.map((f) => f.id)]);
       saveAuthenticationResponse(response);
       httpClient.token = token;
 
@@ -95,7 +93,6 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
       httpClient,
       setLoggedIn,
       setToken,
-      saveFriends,
       saveMessage,
     ]
   );

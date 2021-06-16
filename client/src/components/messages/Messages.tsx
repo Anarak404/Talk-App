@@ -1,16 +1,15 @@
 import React from 'react';
-import { ScrollView, StyleProp, ViewStyle } from 'react-native';
+import { ScrollView, StyleProp, ViewStyle, StyleSheet } from 'react-native';
 import { IMessage } from '.';
 import { Message } from './Message';
 
 interface IProps {
   messages: IMessage[];
-  style?: StyleProp<ViewStyle>;
 }
 
-export function Messages({ messages, style }: IProps) {
+export function Messages({ messages }: IProps) {
   return (
-    <ScrollView contentContainerStyle={style}>
+    <ScrollView contentContainerStyle={styles.messages}>
       {messages.map((e, index) => (
         <Message
           message={e}
@@ -21,3 +20,9 @@ export function Messages({ messages, style }: IProps) {
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  messages: {
+    padding: 10,
+  },
+});

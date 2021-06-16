@@ -12,4 +12,5 @@ export const login = async (httpClient: HttpClient, e: ILoginRequest) => {
 export interface ILoginRequest {
   email: string;
   password: string;
+  token: string;
 }

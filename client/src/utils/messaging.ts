@@ -12,7 +12,7 @@ export const checkPermission = async () => {
   }
 };
 
-const getToken = async () => {
+export const getToken = async () => {
   let fcmToken = await AsyncStorage.getItem(tokenKey);
   if (!fcmToken) {
     fcmToken = await firebase.messaging().getToken();
@@ -21,6 +21,7 @@ const getToken = async () => {
       await AsyncStorage.setItem(tokenKey, fcmToken);
     }
   }
+  return fcmToken;
 };
 
 const requestPermission = async () => {

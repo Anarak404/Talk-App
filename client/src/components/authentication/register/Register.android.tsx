@@ -1,10 +1,11 @@
 import { useNavigation } from '@react-navigation/core';
 import { StatusCodes } from 'http-status-codes';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Keyboard, StyleSheet, ToastAndroid, View } from 'react-native';
 import { Button, Icon, Input } from 'react-native-elements';
 import { ErrorResponse, register } from '../../../api';
 import { sessionContext, settingsContext } from '../../../contexts';
+import { getToken } from '../../../utils/messaging';
 import {
   isEmail,
   isStrongPassword,
@@ -27,6 +28,12 @@ export function Register() {
   const [nickError, setNickError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [passwordsNotEqual, setPasswordsNotEqual] = useState(false);
+
+  const [token, setToken] = useState('');
+
+  useEffect(() => {
+    getToken().then((token) => setToken(token));
+  }, []);
 
   const signinView = useCallback(() => {
     navigate('Login');
@@ -51,7 +58,7 @@ export function Register() {
 
     setLoading(true);
 
-    register(httpClient, { email, password, name })
+    register(httpClient, { email, password, name, token })
       .then((e) => logIn(e))
       .catch((e: ErrorResponse) => {
         const message =

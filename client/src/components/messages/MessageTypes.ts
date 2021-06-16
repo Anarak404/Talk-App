@@ -7,12 +7,15 @@ export interface IMessage {
   text: string;
 }
 
-export interface IMessageResponse {
+export interface IMessageResponse extends IServerMessageResponse {
+  receiver: IUser;
+}
+
+export interface IServerMessageResponse {
   id: number;
   sender: IUser;
-  receiver: IUser;
   message: string;
-  dateTime: string;
+  datetime: string;
 }
 
 export interface IMessageStore {

@@ -12,6 +12,7 @@ import { HttpClient } from '../../api/client';
 import {
   IMessageResponse,
   IMessageStore,
+  IServerMessageResponse,
 } from '../../components/messages/MessageTypes';
 import {
   IDataStoreContext,
@@ -24,6 +25,9 @@ const defaultValue: IDataStoreContext = {
   saveUser: (user: IUser) => void 0,
   friends: [],
   saveMessage: { current: (message: IMessageResponse) => void 0 },
+  saveServerMessage: {
+    current: (serverId: number, message: IServerMessageResponse) => void 0,
+  },
   getMessages: (user: number) => [],
   saveAuthenticationResponse: (data: IAuthenticationResponse) => void 0,
   me: { id: 0, name: '', photo: null },
@@ -40,6 +44,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
   const [users, setUsers] = useState<IUser[]>([]);
   const [friends, setFriends] = useState<number[]>([]);
   const [messages, setMessages] = useState<IMessageStore[]>([]);
+  const [serverMessages, setServerMessages] = useState<IMessageStore[]>([]);
   const [me, setMe] = useState<IAuthenticationResponse>();
 
   const {
@@ -96,35 +101,52 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
     [setUsers]
   );
 
+  const replaceMessages = useCallback(
+    (
+      messages: IMessageStore[],
+      key: number,
+      message: IServerMessageResponse
+    ) => {
+      const index = messages.findIndex((x) => x.key === key);
+      const { name, photo } = message.sender;
+      const newMessage = {
+        id: message.id,
+        text: message.message,
+        name,
+        photo: photo ? photo : undefined,
+      };
+
+      if (index === -1) {
+        return [...messages, { key, messages: [newMessage] }];
+      }
+
+      const data = messages[index];
+      data.messages = [...data.messages, newMessage];
+      messages.splice(index, 1, data);
+
+      return [...messages];
+    },
+    []
+  );
+
   const saveMessage = useCallback(
     (message: IMessageResponse) => {
       const senderId = message.sender.id;
       const receiverId = message.receiver.id;
       // if my message, set key as receiver id, otherwise senderId
       const key = senderId === me?.user.id ? receiverId : senderId;
-
-      setMessages((m) => {
-        const index = m.findIndex((x) => x.key === key);
-        const { name, photo } = message.sender;
-        const newMessage = {
-          id: message.id,
-          text: message.message,
-          name,
-          photo: photo ? photo : undefined,
-        };
-
-        if (index === -1) {
-          return [...m, { key, messages: [newMessage] }];
-        }
-
-        const data = m[index];
-        data.messages = [...data.messages, newMessage];
-        m.splice(index, 1, data);
-
-        return [...m];
-      });
+      setMessages((messages) => replaceMessages(messages, key, message));
     },
-    [me, setMessages]
+    [me, setMessages, replaceMessages]
+  );
+
+  const saveServerMessage = useCallback(
+    (serverId: number, message: IServerMessageResponse) => {
+      setServerMessages((messages) =>
+        replaceMessages(messages, serverId, message)
+      );
+    },
+    [setServerMessages, replaceMessages]
   );
 
   const getMessages = useCallback(
@@ -151,6 +173,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
   );
 
   const saveMessageRef = useRef(saveMessage);
+  const saveServerMessageRef = useRef(saveServerMessage);
 
   useEffect(() => {
     saveMessageRef.current = saveMessage;
@@ -181,6 +204,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
         saveUser,
         friends: friendsList,
         saveMessage: saveMessageRef,
+        saveServerMessage: saveServerMessageRef,
         getMessages,
         saveAuthenticationResponse,
         me: me ? { ...me.user } : { id: 0, name: '', photo: null },

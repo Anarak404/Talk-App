@@ -13,9 +13,14 @@ import { IIncomingCall } from '..';
 import { IAuthenticationResponse, serverAddress } from '../../api';
 import { HttpClient } from '../../api/client';
 import { IMessageResponse } from '../../components/messages';
+import { IServerMessageResponse } from '../../components/messages/MessageTypes';
 import { checkPermission } from '../../utils/messaging';
 import { dataStoreContext } from '../store/DataStoreContext';
-import { ISessionContext, ISessionContextProps } from './SessionTypes';
+import {
+  ISessionContext,
+  ISessionContextProps,
+  SubscribedChannel,
+} from './SessionTypes';
 
 const defaultIncomingCall: IIncomingCall = {
   id: 0,
@@ -46,18 +51,26 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
   const [loggedIn, setLoggedIn] = useState(false);
   const [httpClient, setHttpClient] = useState<HttpClient>();
   const [token, setToken] = useState('');
+  const [subscribedChannels, setSubscribedChannels] = useState<
+    SubscribedChannel[]
+  >([]);
 
   const [isIncomingCall, setIsIncomingCall] = useState(false);
   const [client, setClient] = useState<Stomp.Client>();
   const [incomingCall, setIncomingCall] =
     useState<IIncomingCall>(defaultIncomingCall);
 
-  const { saveMessage, saveAuthenticationResponse, wipeData } =
-    useContext(dataStoreContext);
+  const {
+    saveMessage,
+    saveAuthenticationResponse,
+    wipeData,
+    servers,
+    saveServerMessage,
+  } = useContext(dataStoreContext);
 
   const logIn = useCallback(
     (response: IAuthenticationResponse) => {
-      const { token } = response;
+      const { token, servers } = response;
       setLoggedIn(true);
       setToken(token);
       saveAuthenticationResponse(response);
@@ -79,6 +92,18 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
             const body: IMessageResponse = JSON.parse(response.body);
             saveMessage.current(body);
           });
+
+          setSubscribedChannels([
+            ...servers.map((s) => {
+              return {
+                id: s.id,
+                subscription: client.subscribe(`/messages/${s.id}`, (m) => {
+                  const body: IServerMessageResponse = JSON.parse(m.body);
+                  saveServerMessage.current(s.id, body);
+                }),
+              };
+            }),
+          ]);
         },
         () => {
           console.log('ERROR!');
@@ -127,6 +152,37 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
     },
     []
   );
+
+  useEffect(() => {
+    if (client && client.connected) {
+      const serversIds = servers.map((s) => s.id);
+      const subscribedChannelsIds = subscribedChannels.map((s) => s.id);
+
+      const newChannels = servers.filter(
+        (c) => !subscribedChannelsIds.includes(c.id)
+      );
+
+      const deletedChannels = subscribedChannels.filter(
+        (s) => !serversIds.includes(s.id)
+      );
+
+      deletedChannels.forEach((c) => c.subscription.unsubscribe());
+      const newSubsriptions = newChannels.map((c) => {
+        return {
+          id: c.id,
+          subscription: client.subscribe(`/messages/${c.id}`, (m) => {
+            const body: IServerMessageResponse = JSON.parse(m.body);
+            saveServerMessage.current(c.id, body);
+          }),
+        };
+      });
+
+      setSubscribedChannels([
+        ...newSubsriptions,
+        ...subscribedChannels.filter((s) => !deletedChannels.includes(s)),
+      ]);
+    }
+  }, [servers, client]);
 
   useEffect(() => {
     checkPermission();

@@ -19,3 +19,8 @@ export interface ISessionContext {
 export interface ISessionContextProps {
   children?: React.ReactNode;
 }
+
+export interface SubscribedChannel {
+  id: number;
+  subscription: Stomp.Subscription;
+}

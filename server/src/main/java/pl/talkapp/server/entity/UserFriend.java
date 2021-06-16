@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_friend")
@@ -44,5 +45,6 @@ public class UserFriend {
         this.user = user;
         this.friend = friend;
         id = new UserFriendKey(user.getId(), friend.getId());
+        date = Timestamp.valueOf(LocalDateTime.now());
     }
 }

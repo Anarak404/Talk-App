@@ -68,7 +68,7 @@ public class UserController {
         return getResponse(user);
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<AuthenticationResponse> userInformation() {
         User user = userService.getCurrentUser();
 

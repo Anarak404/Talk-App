@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,6 +13,7 @@ import pl.talkapp.server.dto.request.EmailRequest;
 import pl.talkapp.server.dto.request.LoginRequest;
 import pl.talkapp.server.dto.request.RegisterRequest;
 import pl.talkapp.server.dto.response.AuthenticationResponse;
+import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.dto.response.TokenResponse;
 import pl.talkapp.server.entity.User;
 import pl.talkapp.server.model.ServerModel;
@@ -86,6 +88,12 @@ public class UserController {
 
         return new ResponseEntity<>(new TokenResponse(tokenProvider.createToken(user.getId()),
                 tokenProvider.createRefreshToken(user.getId())), HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ResultResponse> logout(@RequestHeader("Authorization") String token) {
+        userService.logout(token);
+        return new ResponseEntity<>(new ResultResponse(true), HttpStatus.OK);
     }
 
     @PostMapping("/search")

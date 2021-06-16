@@ -11,6 +11,8 @@ public interface UserService {
 
     Optional<User> login(String email, String password);
 
+    void logout(String token);
+
     Long getCurrentUserId();
 
     User getCurrentUser();

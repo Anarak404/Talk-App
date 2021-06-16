@@ -14,6 +14,7 @@ import pl.talkapp.server.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,6 +27,8 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final CallRepository callRepository;
     private final UserFriendRepository friendRepository;
+
+    List<String> blacklist = new LinkedList<>();
 
     public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder,
                            CallRepository callRepository, UserFriendRepository friendRepository) {
@@ -50,6 +53,12 @@ public class UserServiceImpl implements UserService {
             }
             return u;
         });
+    }
+
+    @Override
+    public void logout(String token) {
+        String t = token.substring(7);
+        blacklist.add(token);
     }
 
     @Override

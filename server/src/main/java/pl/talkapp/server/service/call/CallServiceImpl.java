@@ -1,6 +1,5 @@
 package pl.talkapp.server.service.call;
 
-import org.hibernate.cfg.NotYetImplementedException;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import pl.talkapp.server.entity.Call;
@@ -11,7 +10,6 @@ import pl.talkapp.server.repository.CallRepository;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class CallServiceImpl implements CallService {
@@ -49,28 +47,6 @@ public class CallServiceImpl implements CallService {
         callRepository.save(call);
 
         return call;
-    }
-
-    @Override
-    public void joinWithoutLocation(Call call, User user) {
-        // TODO: dodać łączenie z websocketami
-        throw new NotYetImplementedException();
-    }
-
-    @Override
-    public void joinWithLocation(Call call, User user, Double attenderX,
-                                 Double attenderY) {
-        call.setAttenderX(attenderX);
-        call.setAttenderY(attenderY);
-
-        callRepository.save(call);
-
-        // TODO: dodać łączenie z websocketami
-    }
-
-    @Override
-    public Optional<Call> getOngoingCall(User user1, User user2) {
-        return callRepository.findOngoingCall(user1, user2);
     }
 
     @Override

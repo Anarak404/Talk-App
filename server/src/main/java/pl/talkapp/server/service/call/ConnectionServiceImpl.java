@@ -96,4 +96,13 @@ public class ConnectionServiceImpl implements ConnectionService {
 
         connections.remove(userId);
     }
+
+    @Override
+    public void rejectCall(Long userId, Long callId) {
+        Map<String, Location> channel = channels.get(callId.toString());
+        if (channel != null) {
+            eventPublisher.publishEvent(new DisconnectChannelEvent<>(this,
+                new ConnectionPayload(userId.toString(), new HashSet<>(channel.keySet()))));
+        }
+    }
 }

@@ -83,7 +83,7 @@ public class NotificationServiceImpl implements NotificationService {
         usersIds.retainAll(new HashSet<>(userTokens.keySet()));
         List<String> tokens =
                 usersIds.stream().map(id -> userTokens.getOrDefault(id, ""))
-                        .filter(String::isBlank)
+                        .filter(s -> !s.isBlank())
                         .collect(Collectors.toList());
 
         for (String token : tokens) {
@@ -101,5 +101,6 @@ public class NotificationServiceImpl implements NotificationService {
         if (token != null && !token.isBlank()) {
             userTokens.put(userId, token);
         }
+        System.err.println(userTokens);
     }
 }

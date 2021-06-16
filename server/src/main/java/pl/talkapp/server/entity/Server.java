@@ -18,7 +18,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.util.List;
@@ -49,8 +48,8 @@ public class Server {
     User owner;
 
     @ToString.Exclude
-    @OneToOne(mappedBy = "server")
-    ServerMessage serverMessage;
+    @OneToMany(mappedBy = "server")
+    List<ServerMessage> serverMessages;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "server")

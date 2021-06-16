@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { rejectCall } from '../../api';
 import { sessionContext } from '../session/SessionContext';
 import { callContext } from './CallContext';
 import {
@@ -20,7 +21,8 @@ const { Provider } = incomingCallContext;
 export function IncomingCallContextProvider({
   children,
 }: IIncomingCallContextProps) {
-  const { incomingCall, rejectOrAnswerCall } = useContext(sessionContext);
+  const { incomingCall, rejectOrAnswerCall, httpClient } =
+    useContext(sessionContext);
   const { joinCall } = useContext(callContext);
   const [caller] = useState(incomingCall.caller);
 
@@ -30,8 +32,9 @@ export function IncomingCallContextProvider({
   }, [rejectOrAnswerCall, joinCall, incomingCall]);
 
   const reject = useCallback(() => {
+    rejectCall(httpClient, incomingCall.id);
     rejectOrAnswerCall();
-  }, [rejectOrAnswerCall]);
+  }, [rejectOrAnswerCall, incomingCall, httpClient]);
 
   return <Provider value={{ caller, answer, reject }}>{children}</Provider>;
 }

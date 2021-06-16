@@ -1,3 +1,4 @@
+export { rejectCall } from './call/rejectCall';
 export { startCall } from './call/start';
 export { ICallRequest, ICallResponse } from './call/types';
 export { ErrorResponse, IError } from './error';
@@ -20,5 +21,4 @@ export {
   IResultResponse,
   IServer,
 } from './user/types';
-
 export const serverAddress = 'http://192.168.0.73:8080';

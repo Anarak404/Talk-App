@@ -7,5 +7,6 @@ declare module 'react-native-elements' {
     red?: string;
     green?: string;
     indicatorColor?: string;
+    darkerBackgroundColor?: string;
   }
 }

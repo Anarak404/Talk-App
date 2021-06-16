@@ -58,6 +58,8 @@ export function SettingsContextProvider({ children }: ISettingsContextProps) {
           const savedTheme = AppTheme[x as keyof typeof AppTheme];
           setTheme(savedTheme);
           updateTheme(savedTheme === AppTheme.DARK ? darkTheme : lightTheme);
+        } else {
+          updateTheme(theme === AppTheme.DARK ? darkTheme : lightTheme);
         }
       })
       .catch(() =>

@@ -6,7 +6,11 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { generateCode as generateCodeApi, IServer } from '../../api';
+import {
+  generateCode as generateCodeApi,
+  IServer,
+  getServerMessages as getServerMessagesApi,
+} from '../../api';
 import { IMessage } from '../../components/messages';
 import { sessionContext } from '../session/SessionContext';
 import { dataStoreContext } from '../store/DataStoreContext';
@@ -32,6 +36,19 @@ export function ServerContext({ serverId, children }: IServerContextProps) {
   useEffect(() => {
     setServer(servers.find((s) => s.id === serverId));
     setMessages(getServerMessages(serverId));
+
+    getServerMessagesApi(httpClient, serverId).then((messages) =>
+      setMessages(
+        messages.map((e) => {
+          return {
+            id: e.id,
+            name: e.user.name,
+            photo: e.user.photo ? e.user.photo : undefined,
+            text: e.message,
+          };
+        })
+      )
+    );
   }, [serverId]);
 
   useEffect(() => {

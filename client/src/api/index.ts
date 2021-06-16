@@ -4,6 +4,7 @@ export { ErrorResponse, IError } from './error';
 export { addFriend } from './friend/addFriend';
 export { getPrivateMessages } from './friend/getMessages';
 export { generateCode } from './server/generateCode';
+export { getServerMessages } from './server/getServerMessages';
 export { joinServer } from './server/join';
 export { changeNick, IChangeNickRequest } from './user/changeNick';
 export { changePassword, IChangePasswordRequest } from './user/changePassword';

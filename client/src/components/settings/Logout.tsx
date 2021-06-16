@@ -1,18 +1,17 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useContext } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Button } from 'react-native-elements';
-import { settingsContext } from '../../contexts';
+import { sessionContext, settingsContext } from '../../contexts';
 
 export function Logout() {
   const { getString } = useContext(settingsContext);
-
-  const logOut = useCallback(() => {}, []);
+  const { logout } = useContext(sessionContext);
 
   return (
     <View>
       <Button
         title={getString('signOut')}
-        onPress={logOut}
+        onPress={logout}
         buttonStyle={styles.button}
       />
     </View>

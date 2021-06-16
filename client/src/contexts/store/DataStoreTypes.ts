@@ -13,6 +13,7 @@ export interface IDataStoreContext {
   me: IUser;
   servers: IServer[];
   refetchProfile(httpClient: HttpClient): void;
+  wipeData(): void;
 }
 
 export interface IDataStoreContextProps {

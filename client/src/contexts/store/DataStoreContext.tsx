@@ -29,6 +29,7 @@ const defaultValue: IDataStoreContext = {
   me: { id: 0, name: '', photo: null },
   servers: [],
   refetchProfile: (httpClient: HttpClient) => void 0,
+  wipeData: () => void 0,
 };
 
 export const dataStoreContext = createContext<IDataStoreContext>(defaultValue);
@@ -41,9 +42,16 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
   const [messages, setMessages] = useState<IMessageStore[]>([]);
   const [me, setMe] = useState<IAuthenticationResponse>();
 
-  const { getItem: getUsers, setItem: persistUsers } = useAsyncStorage('users');
-  const { getItem: getFriends, setItem: persistFriends } =
-    useAsyncStorage('friends');
+  const {
+    getItem: getUsers,
+    setItem: persistUsers,
+    removeItem: removeUsers,
+  } = useAsyncStorage('users');
+  const {
+    getItem: getFriends,
+    setItem: persistFriends,
+    removeItem: removeFriends,
+  } = useAsyncStorage('friends');
 
   useEffect(() => {
     getUsers().then((d: string | null) => {
@@ -60,11 +68,15 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
   }, []);
 
   useEffect(() => {
-    persistUsers(JSON.stringify(users));
+    if (users.length > 0) {
+      persistUsers(JSON.stringify(users));
+    }
   }, [users]);
 
   useEffect(() => {
-    persistFriends(JSON.stringify(friends));
+    if (friends.length > 0) {
+      persistFriends(JSON.stringify(friends));
+    }
   }, [friends]);
 
   useEffect(() => {
@@ -153,6 +165,15 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
     [setMe, setFriends, setUsers]
   );
 
+  const wipeData = useCallback(() => {
+    setUsers([]);
+    setFriends([]);
+    setMessages([]);
+    setMe(undefined);
+    removeUsers();
+    removeFriends();
+  }, [setUsers, setFriends, setMessages, setMe, removeUsers, removeFriends]);
+
   return (
     <Provider
       value={{
@@ -165,6 +186,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
         me: me ? { ...me.user } : { id: 0, name: '', photo: null },
         servers: me ? [...me.servers] : [],
         refetchProfile,
+        wipeData,
       }}
     >
       {children}

@@ -13,6 +13,7 @@ export interface ISessionContext {
   incomingCall: IIncomingCall;
   rejectOrAnswerCall(): void;
   websocket?: Stomp.Client;
+  logout(): void;
 }
 
 export interface ISessionContextProps {

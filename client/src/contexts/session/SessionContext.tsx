@@ -29,12 +29,13 @@ const defaultIncomingCall: IIncomingCall = {
 const defaultValue: ISessionContext = {
   loggedIn: false,
   logIn: (user: IAuthenticationResponse) => void 0,
-  httpClient: new HttpClient(),
+  httpClient: new HttpClient(''),
   token: '',
   isIncomingCall: false,
   incomingCall: defaultIncomingCall,
   rejectOrAnswerCall: () => void 0,
   websocket: undefined,
+  logout: () => void 0,
 };
 
 export const sessionContext = createContext<ISessionContext>(defaultValue);
@@ -43,7 +44,7 @@ const { Provider } = sessionContext;
 
 export function SessionContextProvider({ children }: ISessionContextProps) {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [httpClient] = useState(new HttpClient());
+  const [httpClient, setHttpClient] = useState<HttpClient>();
   const [token, setToken] = useState('');
 
   const [isIncomingCall, setIsIncomingCall] = useState(false);
@@ -51,16 +52,16 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
   const [incomingCall, setIncomingCall] =
     useState<IIncomingCall>(defaultIncomingCall);
 
-  const { saveMessage, saveAuthenticationResponse } =
+  const { saveMessage, saveAuthenticationResponse, wipeData } =
     useContext(dataStoreContext);
 
   const logIn = useCallback(
     (response: IAuthenticationResponse) => {
-      const { user, friends, token } = response;
+      const { token } = response;
       setLoggedIn(true);
       setToken(token);
       saveAuthenticationResponse(response);
-      httpClient.token = token;
+      setHttpClient(new HttpClient(token));
 
       const url = `${serverAddress}/connect`;
       const client = Stomp.over(new SockJS(url));
@@ -94,6 +95,7 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
       setLoggedIn,
       setToken,
       saveMessage,
+      setHttpClient,
     ]
   );
 
@@ -101,6 +103,21 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
     setIsIncomingCall(false);
     setIncomingCall(defaultIncomingCall);
   }, [setIncomingCall, setIsIncomingCall]);
+
+  const logout = useCallback(() => {
+    setLoggedIn(false);
+    setToken('');
+    setHttpClient(undefined);
+    setClient((c) => {
+      if (c) {
+        if (c.connected) {
+          c.disconnect();
+        }
+        return undefined;
+      }
+    });
+    wipeData();
+  }, [setLoggedIn, setToken, setHttpClient, setClient, wipeData]);
 
   useEffect(
     () => () => {
@@ -124,13 +141,14 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
     <Provider
       value={{
         loggedIn,
-        httpClient,
+        httpClient: httpClient ? httpClient : new HttpClient(''),
         logIn,
         token,
         isIncomingCall,
         incomingCall,
         rejectOrAnswerCall,
         websocket: client,
+        logout,
       }}
     >
       {children}

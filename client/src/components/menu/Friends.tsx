@@ -14,9 +14,9 @@ export function Friends({ style, navigation }: IProps) {
 
   return (
     <ScrollView style={[style]}>
-      {friends.map((f) => (
-        <Friend {...f} key={f.id} navigation={navigation} />
-      ))}
+      {friends.map(
+        (f) => f && <Friend {...f} key={f.id} navigation={navigation} />
+      )}
     </ScrollView>
   );
 }

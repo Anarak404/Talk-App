@@ -3,11 +3,8 @@ import { ErrorResponse, IError, mapToErrorResponse } from './error';
 
 export class HttpClient {
   private static apiUrl = serverAddress;
-  private _token = '';
 
-  public set token(token: string) {
-    this._token = token;
-  }
+  constructor(private token: string) {}
 
   public async get<T>(
     url: string,
@@ -88,12 +85,12 @@ export class HttpClient {
   }
 
   private authorizationHeaders() {
-    if (this._token.length === 0) {
+    if (this.token.length === 0) {
       throw new Error('User not logged in!');
     }
 
     const headers = new Headers();
-    headers.append('Authorization', `Bearer ${this._token}`);
+    headers.append('Authorization', `Bearer ${this.token}`);
     return headers;
   }
 }

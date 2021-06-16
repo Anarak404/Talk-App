@@ -47,13 +47,17 @@ const strings: StringSet = {
     'Nie udało się dołączyć do serwera. Kod prawdopodobnie wygasł',
   successJoin: 'Udało się dołączyć do serwera',
   noResults: 'Brak wyników',
-  findFriends: 'Szukaj przyjaciół',
+  findFriends: 'Szukaj kolegów',
   findServers: 'Szukaj serwerów',
   success: 'Wykonano pomyślnie!',
   copiedCodeToClipboard: 'Skopiowano kod do schowka',
   create: 'Utwórz',
   invalidServerName: 'Nazwa serwera powinna mieć co najmniej 3 znaki',
   serverName: 'Nazwa serwera',
+  joinServerPushNotificationTitle: 'Nowy członek na serwerze',
+  joinServerPushNotification: 'dołączył/a do serwera na którym jesteś',
+  addFriendPushNotification: 'dodał/a Cię do znajomych',
+  addFriendPushNotificationTitle: 'Masz nowego kolegę :)',
 };
 
 export default strings;

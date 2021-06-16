@@ -76,4 +76,8 @@ export type StringId =
   | 'copiedCodeToClipboard'
   | 'create'
   | 'invalidServerName'
-  | 'serverName';
+  | 'serverName'
+  | 'joinServerPushNotification'
+  | 'joinServerPushNotificationTitle'
+  | 'addFriendPushNotification'
+  | 'addFriendPushNotificationTitle';

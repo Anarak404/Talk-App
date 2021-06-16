@@ -31,10 +31,7 @@ export function JoinServer({ style }: IProp) {
       setLoading(true);
       joinServer(httpClient, { name: code })
         .then((e) => {
-          ToastAndroid.show(
-            `${getString('successJoin')} ${e.name}`,
-            ToastAndroid.LONG
-          );
+          ToastAndroid.show(`${getString('successJoin')}`, ToastAndroid.LONG);
           refetchProfile(httpClient);
         })
         .catch(() =>

@@ -53,6 +53,10 @@ const strings: StringSet = {
   create: 'Create',
   invalidServerName: 'Server name must have at least 3 characters',
   serverName: 'Server name',
+  joinServerPushNotificationTitle: 'New member on server',
+  joinServerPushNotification: 'joined to server',
+  addFriendPushNotification: 'added you to friend list',
+  addFriendPushNotificationTitle: 'You have a new friend',
 };
 
 export default strings;

@@ -4,9 +4,9 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
-import { Alert } from 'react-native';
 import SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
 import { IIncomingCall } from '..';
@@ -15,6 +15,8 @@ import { HttpClient } from '../../api/client';
 import { IMessageResponse } from '../../components/messages';
 import { IServerMessageResponse } from '../../components/messages/MessageTypes';
 import { checkPermission } from '../../utils/messaging';
+import { showNotification } from '../../utils/Notifications';
+import { settingsContext } from '../settings/SettingsContext';
 import { dataStoreContext } from '../store/DataStoreContext';
 import {
   ISessionContext,
@@ -66,7 +68,10 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
     wipeData,
     servers,
     saveServerMessage,
+    refetchProfile,
   } = useContext(dataStoreContext);
+
+  const { getString } = useContext(settingsContext);
 
   const logIn = useCallback(
     (response: IAuthenticationResponse) => {
@@ -184,12 +189,41 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
     }
   }, [servers, client]);
 
+  const refetchToolkit = useRef({ refetchProfile, httpClient, getString });
+
+  useEffect(() => {
+    refetchToolkit.current = { httpClient, refetchProfile, getString };
+  }, [httpClient, refetchProfile, getString]);
+
   useEffect(() => {
     checkPermission();
     const unsubscribe = messaging().onMessage(async (m) => {
-      Alert.alert('title', 'wiadomosc');
+      const { httpClient, refetchProfile, getString } = refetchToolkit.current;
+
+      const data = m.data as {
+        subject: string;
+        type: 'FRIEND' | 'SERVER';
+      };
+
+      const message = getString(
+        data.type === 'FRIEND'
+          ? 'addFriendPushNotification'
+          : 'joinServerPushNotification'
+      );
+      const title = getString(
+        data.type === 'FRIEND'
+          ? 'addFriendPushNotificationTitle'
+          : 'joinServerPushNotificationTitle'
+      );
+
+      showNotification(data.subject + ' ' + message, title);
+
+      if (httpClient) {
+        console.log('poszlo');
+        refetchProfile(httpClient);
+      }
     });
-    console.log('subscribe');
+
     return unsubscribe;
   }, []);
 

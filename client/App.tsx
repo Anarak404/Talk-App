@@ -7,6 +7,9 @@ import {
   SessionContextProvider,
   SettingsContextProvider,
 } from './src/contexts';
+import { createNotificationChannel } from './src/utils/Notifications';
+
+createNotificationChannel();
 
 export default function App() {
   return (

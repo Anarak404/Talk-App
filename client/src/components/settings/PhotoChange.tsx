@@ -12,7 +12,7 @@ import { ISettingsViewProps } from './Settings';
 export function PhotoChange({ closeModal }: ISettingsViewProps) {
   const { getString } = useContext(settingsContext);
   const { httpClient } = useContext(sessionContext);
-  const { saveMe } = useContext(dataStoreContext);
+  const { refetchProfile } = useContext(dataStoreContext);
 
   const [photo, setPhoto] = useState('');
   const [loading, setLoading] = useState(false);
@@ -30,8 +30,8 @@ export function PhotoChange({ closeModal }: ISettingsViewProps) {
 
     setLoading(true);
     changePhoto(httpClient, { name: url })
-      .then((x) => {
-        saveMe(x);
+      .then(() => {
+        refetchProfile(httpClient);
         closeModal();
       })
       .catch(() => {

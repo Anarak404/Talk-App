@@ -1,5 +1,6 @@
 import React from 'react';
 import { IAuthenticationResponse, IServer } from '../../api';
+import { HttpClient } from '../../api/client';
 import { IMessage, IMessageResponse } from '../../components/messages';
 
 export interface IDataStoreContext {
@@ -13,9 +14,9 @@ export interface IDataStoreContext {
   getMessages(user: number): IMessage[];
   saveAuthenticationResponse(data: IAuthenticationResponse): void;
   me: IUser;
-  saveMe(me: IUser): void;
   servers: IServer[];
   saveServer(server: IServer): void;
+  refetchProfile(httpClient: HttpClient): void;
 }
 
 export interface IDataStoreContextProps {

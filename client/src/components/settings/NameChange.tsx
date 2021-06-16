@@ -13,7 +13,7 @@ import { ISettingsViewProps } from './Settings';
 export function NameChange({ closeModal }: ISettingsViewProps) {
   const { getString } = useContext(settingsContext);
   const { httpClient } = useContext(sessionContext);
-  const { saveMe } = useContext(dataStoreContext);
+  const { refetchProfile } = useContext(dataStoreContext);
 
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,9 +31,9 @@ export function NameChange({ closeModal }: ISettingsViewProps) {
 
     setLoading(true);
     changeNick(httpClient, { name: nick })
-      .then((x) => {
+      .then(() => {
         closeModal();
-        saveMe(x);
+        refetchProfile(httpClient);
       })
       .catch(() => {
         ToastAndroid.show(getString('failed'), ToastAndroid.LONG);

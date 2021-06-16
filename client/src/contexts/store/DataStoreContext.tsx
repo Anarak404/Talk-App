@@ -7,7 +7,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { IAuthenticationResponse, IServer } from '../../api';
+import { getProfile, IAuthenticationResponse, IServer } from '../../api';
+import { HttpClient } from '../../api/client';
 import {
   IMessageResponse,
   IMessageStore,
@@ -29,9 +30,9 @@ const defaultValue: IDataStoreContext = {
   getMessages: (user: number) => [],
   saveAuthenticationResponse: (data: IAuthenticationResponse) => void 0,
   me: { id: 0, name: '', photo: null },
-  saveMe: (me: IUser) => void 0,
   servers: [],
   saveServer: (server: IServer) => void 0,
+  refetchProfile: (httpClient: HttpClient) => void 0,
 };
 
 export const dataStoreContext = createContext<IDataStoreContext>(defaultValue);
@@ -158,15 +159,11 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
     [friends, findUser]
   );
 
-  const saveMe = useCallback(
-    (me: IUser) => {
-      setMe((m) => {
-        if (m) {
-          return {
-            ...m,
-            user: me,
-          };
-        }
+  const refetchProfile = useCallback(
+    (httpClient: HttpClient) => {
+      getProfile(httpClient).then((response) => {
+        const { friends, servers, token, user } = response;
+        setMe({ friends, servers, token, user });
       });
     },
     [setMe]
@@ -201,10 +198,10 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
         saveMessage: saveMessageRef,
         getMessages,
         saveAuthenticationResponse: setMe,
-        saveMe,
         me: me ? { ...me.user } : { id: 0, name: '', photo: null },
         servers: me ? [...me.servers] : [],
         saveServer,
+        refetchProfile,
       }}
     >
       {children}

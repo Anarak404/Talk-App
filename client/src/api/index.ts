@@ -3,6 +3,7 @@ export { ICallRequest, ICallResponse } from './call/types';
 export { ErrorResponse, IError } from './error';
 export { addFriend } from './friend/addFriend';
 export { getPrivateMessages } from './friend/getMessages';
+export { createServer } from './server/createServer';
 export { generateCode } from './server/generateCode';
 export { getServerMessages } from './server/getServerMessages';
 export { joinServer } from './server/join';

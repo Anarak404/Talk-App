@@ -22,11 +22,22 @@ export function DrawerContent({
     navigation.navigate('SearchFriend');
   }, [navigation]);
 
+  const goToCreateServer = useCallback(() => {
+    navigation.navigate('CreateServer');
+  }, [navigation]);
+
   return (
     <SafeAreaView style={styles.drawer}>
       <View style={styles.container}>
         <View style={[styles.leftBar]}>
           <Servers style={styles.servers} navigation={navigation} />
+          <Icon
+            name="plus"
+            type="material-community"
+            size={iconSize}
+            onPress={goToCreateServer}
+            containerStyle={styles.iconContainer}
+          />
           <Icon
             name="search"
             size={iconSize}

@@ -51,6 +51,9 @@ const strings: StringSet = {
   findServers: 'Szukaj serwerów',
   success: 'Wykonano pomyślnie!',
   copiedCodeToClipboard: 'Skopiowano kod do schowka',
+  create: 'Utwórz',
+  invalidServerName: 'Nazwa serwera powinna mieć co najmniej 3 znaki',
+  serverName: 'Nazwa serwera',
 };
 
 export default strings;

@@ -73,4 +73,7 @@ export type StringId =
   | 'findServers'
   | 'findFriends'
   | 'success'
-  | 'copiedCodeToClipboard';
+  | 'copiedCodeToClipboard'
+  | 'create'
+  | 'invalidServerName'
+  | 'serverName';

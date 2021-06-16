@@ -50,6 +50,9 @@ const strings: StringSet = {
   findServers: 'Find servers',
   success: 'Completed successfully!',
   copiedCodeToClipboard: 'Copied code to clipboard',
+  create: 'Create',
+  invalidServerName: 'Server name must have at least 3 characters',
+  serverName: 'Server name',
 };
 
 export default strings;

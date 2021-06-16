@@ -7,4 +7,6 @@ public class MessageModel {
     UserModel user;
 
     String message;
+
+    Long id;
 }

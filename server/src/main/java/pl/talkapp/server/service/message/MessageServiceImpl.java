@@ -100,10 +100,10 @@ public class MessageServiceImpl implements MessageService {
                 privateMessageRepository.findAllByReceiverAndSender(me, receiver);
 
         sentMessages.forEach(message -> conversation.put(new MessageModel(new UserModel(me),
-                message.getContent()), message.getDateTime().toLocalDateTime()));
+                message.getContent(), message.getId()), message.getDateTime().toLocalDateTime()));
 
         receivedMessages.forEach(message -> conversation.put(new MessageModel(new UserModel(receiver),
-                message.getContent()), message.getDateTime().toLocalDateTime()));
+                message.getContent(), message.getId()), message.getDateTime().toLocalDateTime()));
 
         return getMessageModels(conversation);
     }
@@ -114,7 +114,7 @@ public class MessageServiceImpl implements MessageService {
         List<ServerMessage> serverMessages = serverMessageRepository.findAllByServer(server);
 
         serverMessages.forEach(message -> conversation.put(new MessageModel(new UserModel(message.getSender()),
-                message.getContent()), message.getDateTime().toLocalDateTime()));
+                message.getContent(), message.getId()), message.getDateTime().toLocalDateTime()));
 
         return getMessageModels(conversation);
     }

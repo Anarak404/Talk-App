@@ -7,4 +7,7 @@ public interface ConnectionService {
     void joinCall(Long callId, String userId, Location location);
 
     void disconnect(String userId);
+
+    void rejectCall(Long userId, Long callId);
+
 }

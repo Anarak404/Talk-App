@@ -122,7 +122,7 @@ public class MessageServiceImpl implements MessageService {
     private List<MessageModel> getMessageModels(Map<MessageModel, LocalDateTime> conversation) {
         List<Map.Entry<MessageModel, LocalDateTime>> sortedConversation =
                 new ArrayList<>(conversation.entrySet());
-        sortedConversation.sort((o1, o2) -> o2.getValue().compareTo(o1.getValue()));
+        sortedConversation.sort(Map.Entry.comparingByValue());
 
         return sortedConversation.stream().map(Map.Entry::getKey).collect(Collectors.toList());
     }

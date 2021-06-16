@@ -15,6 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.MapsId;
 import javax.persistence.Table;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "server_user")
@@ -44,5 +45,6 @@ public class ServerUser {
         this.server = server;
         this.user = user;
         id = new ServerUserKey(server.getId(), user.getId());
+        joinDateTime = Timestamp.valueOf(LocalDateTime.now());
     }
 }

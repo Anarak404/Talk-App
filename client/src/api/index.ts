@@ -5,6 +5,7 @@ export { addFriend } from './friend/addFriend';
 export { getPrivateMessages } from './friend/getMessages';
 export { createServer } from './server/createServer';
 export { generateCode } from './server/generateCode';
+export { getMembers } from './server/getMembers';
 export { getServerMessages } from './server/getServerMessages';
 export { joinServer } from './server/join';
 export { changeNick, IChangeNickRequest } from './user/changeNick';

@@ -6,9 +6,10 @@ import { ServerIcons } from './ServerIcons';
 
 interface IProps {
   openDrawer(): void;
+  showMembers(): void;
 }
 
-export function ServerHeader({ openDrawer }: IProps) {
+export function ServerHeader({ showMembers, openDrawer }: IProps) {
   const { name } = useContext(serverContext);
 
   return (
@@ -23,7 +24,7 @@ export function ServerHeader({ openDrawer }: IProps) {
         text: name,
         style: styles.name,
       }}
-      rightComponent={<ServerIcons />}
+      rightComponent={<ServerIcons showMembers={showMembers} />}
       centerContainerStyle={styles.centerContainer}
     />
   );

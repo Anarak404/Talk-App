@@ -1,3 +1,4 @@
+import { IUser } from '..';
 import { IMessage } from '../../components/messages';
 
 export interface IServerContext {
@@ -5,6 +6,8 @@ export interface IServerContext {
   generateCode(): Promise<boolean>;
   sendMessage(message: string): void;
   messages: IMessage[];
+  fetchMembers(): void;
+  members: IUser[];
 }
 
 export interface IServerContextProps {

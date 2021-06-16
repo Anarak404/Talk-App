@@ -10,10 +10,12 @@ import {
   generateCode as generateCodeApi,
   IServer,
   getServerMessages as getServerMessagesApi,
+  getMembers,
 } from '../../api';
 import { IMessage } from '../../components/messages';
 import { sessionContext } from '../session/SessionContext';
 import { dataStoreContext } from '../store/DataStoreContext';
+import { IUser } from '../store/DataStoreTypes';
 import { IServerContext, IServerContextProps } from './ServerTypes';
 
 const defaultValue: IServerContext = {
@@ -21,6 +23,8 @@ const defaultValue: IServerContext = {
   generateCode: () => new Promise((resolve, reject) => {}),
   sendMessage: (message: string) => void 0,
   messages: [],
+  fetchMembers: () => new Promise((resolve, reject) => {}),
+  members: [],
 };
 
 export const serverContext = createContext<IServerContext>(defaultValue);
@@ -32,6 +36,7 @@ export function ServerContext({ serverId, children }: IServerContextProps) {
   const { httpClient, websocket } = useContext(sessionContext);
   const [server, setServer] = useState<IServer>();
   const [messages, setMessages] = useState<IMessage[]>([]);
+  const [members, setMembers] = useState<IUser[]>([]);
 
   useEffect(() => {
     setServer(servers.find((s) => s.id === serverId));
@@ -49,6 +54,7 @@ export function ServerContext({ serverId, children }: IServerContextProps) {
         })
       )
     );
+    setMembers([]);
   }, [serverId]);
 
   useEffect(() => {
@@ -87,6 +93,12 @@ export function ServerContext({ serverId, children }: IServerContextProps) {
     [websocket, server]
   );
 
+  const fetchMembers = useCallback(() => {
+    getMembers(httpClient, serverId)
+      .then((d) => setMembers(d))
+      .catch(() => setMembers([]));
+  }, [serverId, httpClient, setMembers]);
+
   return (
     <Provider
       value={{
@@ -94,6 +106,8 @@ export function ServerContext({ serverId, children }: IServerContextProps) {
         generateCode,
         sendMessage,
         messages,
+        fetchMembers,
+        members,
       }}
     >
       {children}

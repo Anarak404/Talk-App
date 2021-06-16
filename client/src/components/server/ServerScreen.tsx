@@ -1,11 +1,12 @@
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RouteProp } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View } from 'react-native';
-import { FullTheme, makeStyles } from 'react-native-elements';
+import { FullTheme, makeStyles, Overlay } from 'react-native-elements';
 import { ServerContext } from '../../contexts';
 import { DrawerParamList } from '../Navigation';
 import { ServerHeader } from './ServerHeader';
+import { ServerMembers } from './ServerMembers';
 import { ServerMessagesView } from './ServerMessagesView';
 
 interface IProps {
@@ -16,6 +17,12 @@ interface IProps {
 export function ServerScreen({ navigation, route }: IProps) {
   const styles = useStyles();
   const serverId = route.params.id;
+  const [visible, setVisible] = useState(false);
+
+  const toggleVisibility = useCallback(
+    () => setVisible((v) => !v),
+    [setVisible]
+  );
 
   const openDrawer = useCallback(() => {
     navigation.openDrawer();
@@ -24,8 +31,15 @@ export function ServerScreen({ navigation, route }: IProps) {
   return (
     <ServerContext serverId={serverId}>
       <View style={styles.container}>
-        <ServerHeader openDrawer={openDrawer} />
+        <ServerHeader openDrawer={openDrawer} showMembers={toggleVisibility} />
         <ServerMessagesView />
+        <Overlay
+          isVisible={visible}
+          overlayStyle={styles.overlay}
+          onBackdropPress={toggleVisibility}
+        >
+          <ServerMembers />
+        </Overlay>
       </View>
     </ServerContext>
   );
@@ -35,5 +49,10 @@ const useStyles = makeStyles((theme: Partial<FullTheme>) => ({
   container: {
     backgroundColor: theme.backgroundColor,
     flex: 1,
+  },
+  overlay: {
+    backgroundColor: theme.backgroundColor,
+    width: '75%',
+    height: '75%',
   },
 }));

@@ -1,12 +1,20 @@
-import React, { useCallback } from 'react';
-import { useContext } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { StyleSheet, ToastAndroid, View } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { serverContext, settingsContext } from '../../contexts';
 
-export function ServerIcons() {
-  const { generateCode } = useContext(serverContext);
+interface IProps {
+  showMembers(): void;
+}
+
+export function ServerIcons({ showMembers }: IProps) {
+  const { generateCode, fetchMembers } = useContext(serverContext);
   const { getString } = useContext(settingsContext);
+
+  const fetchAndShowMembers = useCallback(() => {
+    fetchMembers();
+    showMembers();
+  }, [showMembers, fetchMembers]);
 
   const onSharePress = useCallback(() => {
     generateCode().then((success) =>
@@ -19,7 +27,12 @@ export function ServerIcons() {
 
   return (
     <View style={styles.container}>
-      <Icon name="users" type="font-awesome-5" size={size} />
+      <Icon
+        name="users"
+        type="font-awesome-5"
+        size={size}
+        onPress={fetchAndShowMembers}
+      />
       <Icon
         name="share"
         size={size + 3}

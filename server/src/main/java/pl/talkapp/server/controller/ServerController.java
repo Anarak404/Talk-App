@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import pl.talkapp.server.dto.request.CodeRequest;
 import pl.talkapp.server.dto.request.NameRequest;
+import pl.talkapp.server.dto.request.ServerRequest;
 import pl.talkapp.server.dto.response.CodeResponse;
 import pl.talkapp.server.dto.response.ResultResponse;
 import pl.talkapp.server.dto.response.ServerResponse;
@@ -49,9 +50,9 @@ public class ServerController {
     }
 
     @PostMapping("")
-    public ResponseEntity<ServerResponse> createServer(@Valid @RequestBody NameRequest name) {
+    public ResponseEntity<ServerResponse> createServer(@Valid @RequestBody ServerRequest name) {
         User me = userService.getCurrentUser();
-        Server server = serverService.createServer(me, name.getName());
+        Server server = serverService.createServer(me, name.getName(), name.getPhoto());
 
         return new ResponseEntity<>(new ServerResponse(new ServerModel(server)),
                 HttpStatus.CREATED);

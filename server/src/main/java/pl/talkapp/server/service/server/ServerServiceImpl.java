@@ -25,9 +25,10 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public Server createServer(User user, String name) {
+    public Server createServer(User user, String name, String photo) {
         Server server = new Server(name);
         server.setOwner(user);
+        server.setPhoto(photo);
         serverRepository.save(server);
 
         ServerUser serverUser = new ServerUser(server, user);

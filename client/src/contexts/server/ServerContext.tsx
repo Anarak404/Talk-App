@@ -24,15 +24,26 @@ export const serverContext = createContext<IServerContext>(defaultValue);
 const { Provider } = serverContext;
 
 export function ServerContext({ serverId, children }: IServerContextProps) {
-  const { servers } = useContext(dataStoreContext);
+  const { servers, getServerMessages } = useContext(dataStoreContext);
   const { httpClient, websocket } = useContext(sessionContext);
   const [server, setServer] = useState<IServer>();
   const [messages, setMessages] = useState<IMessage[]>([]);
 
-  useEffect(
-    () => setServer(servers.find((s) => s.id === serverId)),
-    [serverId]
-  );
+  useEffect(() => {
+    setServer(servers.find((s) => s.id === serverId));
+    setMessages(getServerMessages(serverId));
+  }, [serverId]);
+
+  useEffect(() => {
+    const newMessages = getServerMessages(serverId);
+    setMessages((messages) => {
+      const savedMessagesIds = messages.map((m) => m.id);
+      return [
+        ...messages,
+        ...newMessages.filter((e) => !savedMessagesIds.includes(e.id)),
+      ];
+    });
+  }, [getServerMessages]);
 
   const generateCode = useCallback(async () => {
     if (server) {

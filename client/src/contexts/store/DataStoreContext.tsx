@@ -29,6 +29,7 @@ const defaultValue: IDataStoreContext = {
     current: (serverId: number, message: IServerMessageResponse) => void 0,
   },
   getMessages: (user: number) => [],
+  getServerMessages: (serverId: number) => [],
   saveAuthenticationResponse: (data: IAuthenticationResponse) => void 0,
   me: { id: 0, name: '', photo: null },
   servers: [],
@@ -157,6 +158,14 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
     [messages]
   );
 
+  const getServerMessages = useCallback(
+    (serverId: number) => {
+      const m = serverMessages.find((x) => x.key === serverId);
+      return m ? [...m.messages] : [];
+    },
+    [serverMessages]
+  );
+
   const friendsList = useMemo(
     () => [...friends.map((x) => findUser(x) as IUser)],
     [friends, findUser]
@@ -206,6 +215,7 @@ export function DataStoreContextProvider({ children }: IDataStoreContextProps) {
         saveMessage: saveMessageRef,
         saveServerMessage: saveServerMessageRef,
         getMessages,
+        getServerMessages,
         saveAuthenticationResponse,
         me: me ? { ...me.user } : { id: 0, name: '', photo: null },
         servers: me ? [...me.servers] : [],

@@ -13,6 +13,7 @@ export interface IDataStoreContext {
     (serverId: number, message: IServerMessageResponse) => void
   >;
   getMessages(user: number): IMessage[];
+  getServerMessages(user: number): IMessage[];
   saveAuthenticationResponse(data: IAuthenticationResponse): void;
   me: IUser;
   servers: IServer[];

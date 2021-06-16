@@ -31,25 +31,27 @@ export function DrawerContent({
       <View style={styles.container}>
         <View style={[styles.leftBar]}>
           <Servers style={styles.servers} navigation={navigation} />
-          <Icon
-            name="plus"
-            type="material-community"
-            size={iconSize}
-            onPress={goToCreateServer}
-            containerStyle={styles.iconContainer}
-          />
-          <Icon
-            name="search"
-            size={iconSize}
-            onPress={goToSearchFriend}
-            containerStyle={styles.iconContainer}
-          />
-          <Icon
-            name="settings"
-            size={iconSize}
-            onPress={goToSettings}
-            containerStyle={styles.iconContainer}
-          />
+          <View>
+            <Icon
+              name="plus"
+              type="material-community"
+              size={iconSize}
+              onPress={goToCreateServer}
+              containerStyle={styles.iconContainer}
+            />
+            <Icon
+              name="search"
+              size={iconSize}
+              onPress={goToSearchFriend}
+              containerStyle={styles.iconContainer}
+            />
+            <Icon
+              name="settings"
+              size={iconSize}
+              onPress={goToSettings}
+              containerStyle={styles.iconContainer}
+            />
+          </View>
         </View>
         <Friends style={[styles.friends]} navigation={navigation} />
       </View>

@@ -9,11 +9,11 @@ interface IProps {
   navigation: DrawerNavigationHelpers;
 }
 
-export function Servers({ style, navigation }: IProps) {
+export function Servers({ navigation }: IProps) {
   const { servers } = useContext(dataStoreContext);
 
   return (
-    <ScrollView contentContainerStyle={[style, styles.container]}>
+    <ScrollView contentContainerStyle={styles.container}>
       {servers.map((e, index) => {
         const isLast = servers.length === index - 1;
 

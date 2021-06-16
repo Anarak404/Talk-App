@@ -1,3 +1,4 @@
+import messaging from '@react-native-firebase/messaging';
 import React, {
   createContext,
   useCallback,
@@ -5,12 +6,14 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import { Alert } from 'react-native';
 import SockJS from 'sockjs-client';
 import * as Stomp from 'webstomp-client';
 import { IIncomingCall } from '..';
 import { IAuthenticationResponse, serverAddress } from '../../api';
 import { HttpClient } from '../../api/client';
 import { IMessageResponse } from '../../components/messages';
+import { checkPermission } from '../../utils/messaging';
 import { dataStoreContext } from '../store/DataStoreContext';
 import { ISessionContext, ISessionContextProps } from './SessionTypes';
 
@@ -110,6 +113,15 @@ export function SessionContextProvider({ children }: ISessionContextProps) {
     },
     []
   );
+
+  useEffect(() => {
+    checkPermission();
+    const unsubscribe = messaging().onMessage(async (m) => {
+      Alert.alert('title', 'wiadomosc');
+    });
+    console.log('subscribe');
+    return unsubscribe;
+  }, []);
 
   return (
     <Provider
